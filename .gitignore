@@ -1,0 +1,8 @@
+**/.vs/**
+Exe/**
+Include/**
+Lib/**
+out*/**
+Project*/**
+
+CMakeSettings.json

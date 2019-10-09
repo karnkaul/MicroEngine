@@ -1,0 +1,12 @@
+[submodule "Source/Game/GameTypes"]
+	path = Source/Game/GameTypes
+	url = https://github.com/karnkaul/LEGameTypes.git
+[submodule "Source/Game/Logger"]
+	path = Source/Game/Logger
+	url = https://github.com/karnkaul/LELogger.git
+[submodule "Source/Game/Asserts"]
+	path = Source/Game/Asserts
+	url = https://github.com/karnkaul/LEAsserts.git
+[submodule "Source/Game/Delegate"]
+	path = Source/Game/Delegate
+	url = https://github.com/karnkaul/LEDelegate.git
