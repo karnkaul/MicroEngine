@@ -2,13 +2,11 @@ cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 
 include(FetchContent)
 
-## Suppress ZERO-CHECK
-set(CMAKE_SUPPRESS_REGENERATION true)
-
 ## Build Configurations
 set(CMAKE_CONFIGURATION_TYPES
-	"Debug"
-	"RelWithDebInfo"
+	Debug
+	RelWithDebInfo
+	Release
 	CACHE STRING "" FORCE
 )
 set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "")
@@ -21,10 +19,10 @@ if(NOT CMAKE_VS_PLATFORM_NAME STREQUAL "x64")
 endif()
 
 ## Globals
-set(TP_SRC_PATH "${CMAKE_SOURCE_DIR}/ThirdParty")
-set(LIB_PATH "${CMAKE_SOURCE_DIR}/Build/Lib")
-set(INC_PATH "${CMAKE_SOURCE_DIR}/Include")
-set(EXE_PATH "${CMAKE_SOURCE_DIR}/Build")
+set(TP_SRC_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty")
+set(LIB_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Build/Lib")
+set(INC_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Include")
+set(EXE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Build")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${LIB_PATH}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${LIB_PATH}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${EXE_PATH}")
@@ -91,8 +89,9 @@ include("Source/Source.cmake")
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${SOURCES})
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
-target_compile_definitions(${PROJECT_NAME} PUBLIC SFML_STATIC)
+target_compile_definitions(${PROJECT_NAME} PUBLIC SFML_STATIC $<$<CONFIG:Debug>:DEBUGGING>)
 target_include_directories(${PROJECT_NAME} PUBLIC "${INC_PATH}")
+target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Source/Game")
 target_link_directories(${PROJECT_NAME} PUBLIC "${LIB_PATH}")
 target_link_libraries(${PROJECT_NAME} PUBLIC
 	sfml-graphics-s$<$<CONFIG:Debug>:-d>
@@ -105,4 +104,6 @@ add_dependencies(${PROJECT_NAME}
 	sfml-window
 	sfml-system
 )
+set(EXE_NAME Untitled$<$<NOT:$<CONFIG:Release>>:-$<CONFIG>>${EXE_SUFFIX})
+set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME ${EXE_NAME})
 post_target()

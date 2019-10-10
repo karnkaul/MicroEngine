@@ -1,7 +1,6 @@
 **/.vs/**
-Exe/**
 Include/**
-Lib/**
+Build/**
 out/**
 ThirdParty/**
 

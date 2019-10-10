@@ -1,5 +1,8 @@
 #include <thread>
 #include "SFML/Graphics.hpp"
+#include "Engine/Input/Input.h"
+#include "Logger/Logger.h"
+#include "Engine/Viewport/Viewport.h"
 #include "GameLoop.h"
 
 namespace ME
@@ -25,31 +28,36 @@ State state;
 
 std::unique_ptr<sf::CircleShape> uCircle;
 
-void Create(sf::RenderWindow& outRW, u32 width, u32 height, const std::string& title)
+void Create(Viewport& outVP, u32 width, u32 height, const std::string& title)
 {
-	outRW.create(sf::VideoMode(width, height), title);
-	sf::View centreView(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(width, height));
-	outRW.setView(centreView);
+	ViewportData data;
+	data.viewportSize.width = width;
+	data.viewportSize.height = height;
+	data.title = title;
+	outVP.SetData(std::move(data));
+	outVP.Create();
+	sf::View view(sf::Vector2f(0, 0), sf::Vector2f(static_cast<f32>(width), static_cast<f32>(height)));
+	outVP.setView(view);
 }
 
-void PollEvents(sf::RenderWindow& rw)
+void PollEvents(Input& input, Viewport& vp)
 {
-	sf::Event ev;
-	while (rw.pollEvent(ev))
+	auto vpEvent = input.PollEvents(vp);
+	switch (vpEvent)
 	{
-		switch (ev.type)
-		{
-		default:
-			break;
-		case sf::Event::Closed:
-			state.bClosed = true;
-			break;
-		}
+	default:
+		break;
+
+	case ViewportEventType::Closed:
+		state.bClosed = true;
+		break;
 	}
 }
 
-void Tick(Time /*dt*/)
+void Tick(Input& input, Time /*dt*/)
 {
+	input.TakeSnapshot();
+	input.FireCallbacks();
 	// Fire input
 	// Update game state
 
@@ -90,17 +98,22 @@ void Cleanup()
 s32 GameLoop::Run()
 {
 	state = State();
-	sf::RenderWindow rw;
-	Create(rw, 1280, 720, "Test");
+	Input input;
+	Token t = input.Register([](const Input::Frame& frame) -> bool {
+		LOGIF_I(frame.IsPressed(KeyCode::A), "A pressed!");
+		return false;
+	});
+	Viewport viewport;
+	Create(viewport, 1280, 720, "Test");
 	Time frameStart = Time::Now();
 	Time frameTime;
-	while (rw.isOpen() && !state.Expired())
+	while (viewport.isOpen() && !state.Expired())
 	{
 		Time dt = Time::Now() - frameStart;
 		frameStart = Time::Now();
-		PollEvents(rw);
-		Tick(dt);
-		Render(rw);
+		PollEvents(input, viewport);
+		Tick(input, dt);
+		Render(viewport);
 		frameTime = Time::Now() - frameStart;
 		Sleep(frameTime);
 	}

@@ -1,4 +1,4 @@
-function(pre_target)
+macro(pre_target)
 	## Don't need network / audio
 	set(SFML_BUILD_NETWORK OFF CACHE BOOL "" FORCE)
 	set(SFML_BUILD_AUDIO OFF CACHE BOOL "" FORCE)
@@ -7,8 +7,6 @@ function(pre_target)
 		string(REPLACE "Zi" "Z7" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 		string(REPLACE "ZI" "Z7" CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
 		string(REPLACE "Zi" "Z7" CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
-		string(REPLACE "ZI" "Z7" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
-		string(REPLACE "Zi" "Z7" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
 		# Force SFML static libraries
 		set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 		# Copy compiler's extlibs to LIB_PATH
@@ -35,9 +33,12 @@ function(pre_target)
 			gdi32
 			winmm
 			opengl32
-			PARENT_SCOPE
 		)
 	elseif(PLATFORM STREQUAL "Linux")
+		set(EXE_SUFFIX ".lx")
+		if(CMAKE_SYSTEM_PROCESSOR MATCHES "arm")
+			set(EXE_SUFFIX ".lxa")
+		endif()
 		# Set RPATH
 		set(CMAKE_INSTALL_RPATH_USE_ORIGIN ON)
 		set(CMAKE_INSTALL_RPATH "$ORIGIN/Lib")
@@ -56,14 +57,12 @@ function(pre_target)
 			udev
 			X11
 			Xrandr
-			PARENT_SCOPE
 		)
 	endif()
-endfunction()
+endmacro()
 
 function(post_target)
 	if(W_CLANG OR LX_CLANG)
-		#set(COMPILE_FLAGS "-Werror=return-type -Wextra -Wconversion -Wunreachable-code -Wdeprecated-declarations -Wtype-limits")
 		target_compile_options(${PROJECT_NAME} PRIVATE
 			-Werror=return-type
 			-Wextra
@@ -82,7 +81,9 @@ function(post_target)
 			$<$<OR:$<CONFIG:RelWithDebInfo>,$<CONFIG:Release>>:
 				-O2
 			>
-			-g
+			$<$<OR:$<CONFIG:RelWithDebInfo>,$<CONFIG:Debug>>:
+				-g
+			>
 			-Wextra
 			-Werror=return-type
 			-fexceptions
@@ -108,7 +109,7 @@ function(post_target)
 					/OPT:NOREF
 				>
 				$<$<OR:$<CONFIG:RelWithDebInfo>,$<CONFIG:Release>>:
-					/ENTRY:mainCRTStartup
+					/ENTRY:mainCRTStartup		# Call into main() and not WinMain()
 					/SUBSYSTEM:WINDOWS
 					/OPT:REF
 					/OPT:ICF
