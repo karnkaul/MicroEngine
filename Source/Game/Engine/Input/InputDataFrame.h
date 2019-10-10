@@ -39,27 +39,11 @@ struct MouseInput
 	bool bInViewport = false;
 };
 
-struct JoyState
-{
-	s16 id;
-	Vector2 xy;
-	Vector2 zr;
-	Vector2 uv;
-	Vector2 pov;
-	std::vector<KeyType> pressed;
-};
-
-struct JoyInput
-{
-	std::vector<JoyState> m_states;
-};
-
 struct InputDataFrame
 {
 	std::vector<KeyState> pressed;
 	TextInput textInput;
 	MouseInput mouseInput;
-	JoyInput joyInput;
 
 	static std::string Clipboard();
 };

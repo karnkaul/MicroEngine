@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include <optional>
 #include "InputHandler.h"
 #include "InputDataFrame.h"
@@ -25,7 +26,6 @@ public:
 		std::vector<KeyType> released;
 		TextInput textInput;
 		MouseInput mouseInput;
-		JoyInput joyInput;
 
 		static std::string Clipboard();
 
@@ -75,7 +75,6 @@ private:
 	std::vector<KeyType> m_currentSnapshot;
 	TextInput m_textInput;
 	MouseInput m_mouseInput;
-	JoyInput m_joyInput;
 	std::vector<InputContext> m_contexts;
 	std::optional<InputContext> m_oSudoContext;
 	mutable s32 m_nextToken = 0;

@@ -41,6 +41,8 @@ protected:
 	bool OnLoad() override;
 };
 
+extern class Resources* g_pResources;
+
 class Resources final : NoCopy
 {
 public:
@@ -61,8 +63,11 @@ public:
 public:
 	bool Init(std::initializer_list<std::string> defaultFonts);
 	void Clear();
+
+public:
 	std::string ResourcePath(const std::string& id) const;
 	bool IsFilePresent(const std::string& path) const;
+	HResource FindID(const std::string& id) const;
 
 public:
 	template <typename T>
@@ -70,9 +75,6 @@ public:
 
 	template <typename T>
 	T* Find(HResource handle) const;
-
-private:
-	HResource FindID(const std::string& id) const;
 };
 
 template <typename T>

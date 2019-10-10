@@ -54,6 +54,7 @@ Fixed Input::Frame::MouseWhellScroll() const
 
 Input::Input() 
 {
+	Assert(g_pInput == nullptr, "Global pointer already registered!");
 	g_pInput = this;
 }
 
@@ -99,31 +100,10 @@ void Input::TakeSnapshot()
 	m_previousSnapshot = m_currentSnapshot;
 	m_textInput = frameData.textInput;
 	m_mouseInput = frameData.mouseInput;
-	m_joyInput = frameData.joyInput;
 	m_currentSnapshot.clear();
 	for (const auto& key : frameData.pressed)
 	{
 		uniqueInsert(key.GetKeyType());
-	}
-	for (const auto& state : frameData.joyInput.m_states)
-	{
-		// POV
-		if (state.pov.x > Fixed::OneHalf)
-		{
-			uniqueInsert(KeyCode::Right);
-		}
-		if (state.pov.x < -Fixed::OneHalf)
-		{
-			uniqueInsert(KeyCode::Left);
-		}
-		if (state.pov.y > Fixed::OneHalf)
-		{
-			uniqueInsert(KeyCode::Up);
-		}
-		if (state.pov.y < -Fixed::OneHalf)
-		{
-			uniqueInsert(KeyCode::Down);
-		}
 	}
 }
 
@@ -154,7 +134,7 @@ void Input::FireCallbacks()
 		m_oSudoContext.reset();
 	}
 
-	Frame dataFrame{pressed, held, released, m_textInput, m_mouseInput, m_joyInput};
+	Frame dataFrame{pressed, held, released, m_textInput, m_mouseInput};
 	bool bHasData = dataFrame.HasData();
 	size_t prev = m_contexts.size();
 	Core::RemoveIf<InputContext>(m_contexts, [](const InputContext& context) { return context.wToken.expired(); });
