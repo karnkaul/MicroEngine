@@ -2,7 +2,7 @@
 Exe/**
 Include/**
 Lib/**
-out*/**
-Project*/**
+out/**
+ThirdParty/**
 
 CMakeSettings.json

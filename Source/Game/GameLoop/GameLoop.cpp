@@ -1,3 +1,4 @@
+#include <thread>
 #include "SFML/Graphics.hpp"
 #include "GameLoop.h"
 

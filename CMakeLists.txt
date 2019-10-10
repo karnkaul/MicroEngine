@@ -2,86 +2,91 @@ cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 
 include(FetchContent)
 
-# Build Configurations
+## Suppress ZERO-CHECK
+set(CMAKE_SUPPRESS_REGENERATION true)
+
+## Build Configurations
 set(CMAKE_CONFIGURATION_TYPES
 	"Debug"
 	"RelWithDebInfo"
 	CACHE STRING "" FORCE
 )
-set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "")
+set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "")
 
 project(MicroEngine)
-
-string(REPLACE "ZI" "Z7" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
-string(REPLACE "Zi" "Z7" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
-string(REPLACE "ZI" "Z7" CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
-string(REPLACE "Zi" "Z7" CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
-
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-	set(PLATFORM "Win64")
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-	set(PLATFORM "Linux")
-else()
-	message(FATAL_ERROR "Unsupported system [${CMAKE_SYSTEM_NAME}]!")
+## Enforce x64
+set(CMAKE_VS_PLATFORM_NAME "x64" CACHE STRING "" FORCE)
+if(NOT CMAKE_VS_PLATFORM_NAME STREQUAL "x64")
+	message(FATAL_ERROR "Only x64 builds are supported!")
 endif()
 
-set(LIB_PATH "${CMAKE_SOURCE_DIR}/Lib")
+## Globals
+set(TP_SRC_PATH "${CMAKE_SOURCE_DIR}/ThirdParty")
+set(LIB_PATH "${CMAKE_SOURCE_DIR}/Build/Lib")
 set(INC_PATH "${CMAKE_SOURCE_DIR}/Include")
-set(EXE_PATH "${CMAKE_SOURCE_DIR}/Exe")
-
+set(EXE_PATH "${CMAKE_SOURCE_DIR}/Build")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${LIB_PATH}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${LIB_PATH}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${EXE_PATH}")
 
-## Sources
-set(SOURCES
-	${GAME_SOURCES}
-	Source/Main.cpp
+## Flags
+set(W_MSBUILD 0)
+set(W_CLANG 0)
+set(W_VCXX 0)
+set(W_GCC 0)
+set(LX_CLANG 0)
+set(LX_GCC 0)
+if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+	set(PLATFORM "Win64")
+	if(CMAKE_GENERATOR MATCHES "^(Visual Studio)")
+		set(W_MSBUILD 1)
+	endif()
+	if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+		set(W_CLANG 1)
+	elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+		set(W_VCXX 1)
+	elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+		set(W_GCC 1)
+	else()
+		message("\tWARNING: Unsupported compiler [${CMAKE_CXX_COMPILER_ID}], expect build warnings/errors!")
+	endif()
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+	set(PLATFORM "Linux")
+	if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+		set(LX_CLANG 1)
+	elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+		set(LX_GCC 1)
+	else()
+		message("\tWARNING: Unsupported compiler [${CMAKE_CXX_COMPILER_ID}], expect build warnings/errors!")
+	endif()
+else()
+	message(FATAL_ERROR "Unsupported system [${CMAKE_SYSTEM_NAME}]!")
+endif()
+message(STATUS "Environment: [${PLATFORM}] [${CMAKE_GENERATOR}] [${CMAKE_CXX_COMPILER_ID}]")
+include(.CMake/Platform.cmake)
+
+## SFML
+set(SFML_VERSION 2.5.1)
+set(SFML_SOURCE_DIR "${TP_SRC_PATH}/SFML")
+download_extract_archive(
+	"SFML-${SFML_VERSION}-sources.zip"
+	"https://www.sfml-dev.org/files/SFML-${SFML_VERSION}-sources.zip"
+	"${TP_SRC_PATH}"
+	"SFML-${SFML_VERSION}"
+	"SFML"
 )
+if(NOT EXISTS "${SFML_SOURCE_DIR}")
+	message(FATAL_ERROR "Unknown error downloading SFML!")
+endif()
+
+pre_target()
+file(COPY "${SFML_SOURCE_DIR}/include/SFML" DESTINATION "${INC_PATH}")
+add_subdirectory(${SFML_SOURCE_DIR})
+
+## Sources
+set(SOURCES Source/Main.cpp)
 list(TRANSFORM SOURCES PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/")
 include("Source/Source.cmake")
-include("Source/Game/Asserts/Asserts.cmake")
-include("Source/Game/Delegate/Delegate.cmake")
-include("Source/Game/GameTypes/GameTypes.cmake")
-include("Source/Game/Logger/Logger.cmake")
-
-# SFML
-FetchContent_Declare(
-	sfml
-	GIT_REPOSITORY	https://github.com/SFML/SFML.git
-	GIT_TAG			2.5.1
-)
-FetchContent_GetProperties(sfml)
-if(NOT sfml_POPULATED)
-	message(STATUS "== Fetching SFML...")
-	FetchContent_Populate(sfml)
-	set(SFML_EXTLIBS_PATH "${sfml_SOURCE_DIR}/extlibs")
-	set(SFML_BUILD_NETWORK OFF CACHE BOOL "" FORCE)
-	if(PLATFORM STREQUAL "Win64")
-		# Force SFML static libraries
-		set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
-		if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-			file(GLOB MSVC_EXT_LIBS "${SFML_EXTLIBS_PATH}/libs-mingw/x64/*.a")
-		else()
-			if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-				# extlibs path is not auto-detected for clang-cl
-				list(APPEND CMAKE_LIBRARY_PATH "${SFML_EXTLIBS_PATH}/libs-msvc-universal/x64")
-				# CRT flags are not set for clang-cl
-				set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MDd /Z7")
-				set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} /MD /Z7")
-			endif()
-			file(GLOB MSVC_EXT_LIBS "${SFML_EXTLIBS_PATH}/libs-msvc-universal/x64/*.lib")
-		endif()
-		list(APPEND MSVC_EXT_LIBS "${SFML_EXTLIBS_PATH}/bin/x64/openal32.dll")
-		file(COPY ${MSVC_EXT_LIBS} DESTINATION "${LIB_PATH}")
-	elseif(PLATFORM STREQUAL "Linux")
-		# Set SFML static libraries as default
-		set(BUILD_SHARED_LIBS OFF CACHE BOOL "")
-	endif()
-	list(APPEND CMAKE_LIBRARY_PATH "${FORCE_EXTLIBS_PATH}")
-	file(COPY "${sfml_SOURCE_DIR}/include/SFML" DESTINATION "${INC_PATH}")
-	add_subdirectory(${sfml_SOURCE_DIR} ${sfml_BINARY_DIR})
-endif()
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${SOURCES})
 add_executable(${PROJECT_NAME} ${SOURCES})
@@ -93,14 +98,11 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 	sfml-graphics-s$<$<CONFIG:Debug>:-d>
 	sfml-window-s$<$<CONFIG:Debug>:-d>
 	sfml-system-s$<$<CONFIG:Debug>:-d>
-	
-	freetype
-	gdi32
-	winmm
-	opengl32
+	${SFML_DEPS}
 )
 add_dependencies(${PROJECT_NAME}
 	sfml-graphics
 	sfml-window
 	sfml-system
 )
+post_target()
