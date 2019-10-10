@@ -2,16 +2,16 @@
 #include <functional>
 #include <mutex>
 #include <utility>
-#include "Game/Delegate/Delegate.h"
-#include "Game/GameTypes/Fixed.h"
-#include "Game/GameTypes/Matrix3.h"
-#include "Game/GameTypes/Rect2.h"
-#include "Game/GameTypes/SimpleTime.h"
-#include "Game/GameTypes/Transform.h"
-#include "Game/GameTypes/UByte.h"
-#include "Game/GameTypes/Utils.h"
-#include "Game/GameTypes/Vector2.h"
-#include "Game/Factory/Factory.h"
+#include "Delegate/Delegate.h"
+#include "GameTypes/Fixed.h"
+#include "GameTypes/Matrix3.h"
+#include "GameTypes/Rect2.h"
+#include "GameTypes/SimpleTime.h"
+#include "GameTypes/Transform.h"
+#include "GameTypes/UByte.h"
+#include "GameTypes/Utils.h"
+#include "GameTypes/Vector2.h"
+#include "Factory/Factory.h"
 
 #define ENABLED(x) x
 
@@ -33,7 +33,7 @@
 #define FILESYSTEM_ASSETS 1
 #endif
 
-namespace LittleEngine
+namespace ME
 {
 using Lock = std::lock_guard<std::mutex>;
 using Task = std::function<void()>;
