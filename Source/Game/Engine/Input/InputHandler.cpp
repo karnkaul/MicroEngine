@@ -1,5 +1,4 @@
 #include "SFML/Window/Event.hpp"
-#include "Logger/Logger.h"
 #include "InputHandler.h"
 #include "../Viewport/Viewport.h"
 //#include "Engine/GFX.h"

@@ -1,7 +1,8 @@
+#include <bitset>
 #include <thread>
 #include "SFML/Graphics.hpp"
 #include "Engine/Input/Input.h"
-#include "Logger/Logger.h"
+#include "Engine/Resources/Resources.h"
 #include "Engine/Viewport/Viewport.h"
 #include "GameLoop.h"
 
@@ -13,20 +14,56 @@ constexpr u8 FPS_TARGET = 60;
 
 struct State
 {
+	enum Flag
+	{
+		INIT = 0,
+		CLOSED,
+		QUITTING
+	};
 	static const Time tickRate;
-	bool bClosed = false;
-	bool bQuitting = false;
+	std::bitset<3> flags;
 
 	bool Expired() const
 	{
-		return bClosed || bQuitting;
+		return flags[CLOSED] || flags[QUITTING];
 	}
 };
 
 const Time State::tickRate = Time::Seconds(1.0f / FPS_TARGET);
+Resources resources;
 State state;
+std::string workingDir;
 
 std::unique_ptr<sf::CircleShape> uCircle;
+
+void Init(s32 argc, char** argv)
+{
+#if ENABLED(ASSERTS)
+	std::string msg;
+	msg.reserve(16);
+	msg += "Invalid argc! ";
+	msg += std::to_string(argc);
+	AssertVar(argc > 0, msg.c_str());
+#endif
+	if (argc > 0)
+	{
+		std::string_view exePath = argv[0];
+#ifdef TARGET_WIN64
+		const char delim = '\\';
+#else
+		const char delim = '/';
+#endif
+		workingDir = exePath.substr(0, exePath.find_last_of(delim));
+		LOG_I("Working dir: %s", workingDir.data());
+	}
+	resources.s_resourcesPath = workingDir;
+	resources.s_resourcesPath += "/";
+	resources.s_resourcesPath += "Resources";
+	if (resources.Init({"Default-Mono.ttf", "Default-Serif.ttf"}))
+	{
+		state.flags[State::INIT] = true;
+	}
+}
 
 void Create(Viewport& outVP, u32 width, u32 height, const std::string& title)
 {
@@ -49,7 +86,7 @@ void PollEvents(Input& input, Viewport& vp)
 		break;
 
 	case ViewportEventType::Closed:
-		state.bClosed = true;
+		state.flags[State::CLOSED] = true;
 		break;
 	}
 }
@@ -92,11 +129,21 @@ void Sleep(Time frameTime)
 void Cleanup()
 {
 	uCircle = nullptr;
+	resources.Clear();
 }
 } // namespace
 
-s32 GameLoop::Run()
+s32 GameLoop::Run(s32 argc, char** argv)
 {
+	if (!state.flags[State::INIT])
+	{
+		Init(argc, argv);
+	}
+	if (!state.flags[State::INIT])
+	{
+		LOG_E("[GameLoop] Fatal error initialising engine...");
+		return 1;
+	}
 	state = State();
 	Input input;
 	Token t = input.Register([](const Input::Frame& frame) -> bool {
@@ -119,5 +166,15 @@ s32 GameLoop::Run()
 	}
 	Cleanup();
 	return 0;
+}
+
+void GameLoop::Stop()
+{
+	state.flags[State::QUITTING] = true;
+}
+
+const std::string_view GameLoop::PWD()
+{
+	return workingDir;
 }
 } // namespace ME

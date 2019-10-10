@@ -10,7 +10,7 @@ struct Foo
 
 using HPrim = s32;
 
-s32 main()
+s32 main(s32 argc, char** argv)
 {
 	ME::Factory<Foo, HPrim> factory;
 	HPrim handle = factory.New<Foo>();
@@ -28,5 +28,5 @@ s32 main()
 	assert(pFoo == nullptr);
 	std::cout << "Hello!" << std::endl;
 
-	return ME::GameLoop::Run();
+	return ME::GameLoop::Run(argc, argv);
 }

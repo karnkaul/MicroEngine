@@ -1,4 +1,3 @@
-#include "Logger/Logger.h"
 #include "Input.h"
 
 namespace ME

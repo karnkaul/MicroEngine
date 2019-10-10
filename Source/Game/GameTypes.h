@@ -15,23 +15,37 @@
 
 #define ENABLED(x) x
 
-#if defined(DEBUGGING)
-#define PROFILER 1
-#define CONSOLE 1
-#define RENDER_STATS 1
-#define TWEAKABLES 1
+#if _MSC_VER
+#define CXX_MS_CRT
+#elif __linux__ || __MINGW32__
+#define CXX_LIBC
 #else
-#define PROFILER 0
-#define CONSOLE 0
-#define RENDER_STATS 0
-#define TWEAKABLES 0
+#define CXX_UNDEFINED
 #endif
 
-#if defined(SHIPPING)
-#define FILESYSTEM_ASSETS 0
+#if _WIN64
+#define TARGET_WIN64
+#elif __linux__
+#define TARGET_LINUX
 #else
-#define FILESYSTEM_ASSETS 1
+#define TARGET_UNDEFINED
 #endif
+
+#if _MSC_VER
+#define STD_FILESYSTEM 1
+#else
+#define STD_FILESYSTEM 0
+#endif
+
+#if defined(DEBUGGING)
+#define DEBUG_LOGGING 1
+#else
+#define DEBUG_LOGGING 0
+#endif
+#define ASSERTS 1
+
+#include "Asserts/Asserts.h"
+#include "Logger/Logger.h"
 
 namespace ME
 {
