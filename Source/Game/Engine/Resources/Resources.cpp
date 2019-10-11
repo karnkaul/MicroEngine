@@ -48,7 +48,7 @@ bool Resources::Init(std::initializer_list<std::string> defaultFonts)
 {
 	for (const auto& fontID : defaultFonts)
 	{
-		if (Load<Font>(fontID) == INVALID)
+		if (Load<Font>(fontID) == INVALID_HANDLE)
 		{
 			return false;
 		}
@@ -82,6 +82,6 @@ Resources::HResource Resources::FindID(const std::string& id) const
 	{
 		return search->second;
 	}
-	return INVALID;
+	return INVALID_HANDLE;
 }
 } // namespace ME

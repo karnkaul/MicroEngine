@@ -3,6 +3,7 @@
 #include "SFML/Graphics.hpp"
 #include "Engine/Input/Input.h"
 #include "Engine/Resources/Resources.h"
+#include "Engine/Rendering/Renderer.h"
 #include "Engine/Viewport/Viewport.h"
 #include "GameLoop.h"
 
@@ -31,10 +32,13 @@ struct State
 
 const Time State::tickRate = Time::Seconds(1.0f / FPS_TARGET);
 Resources resources;
+Renderer renderer;
 State state;
 std::string workingDir;
 
 std::unique_ptr<sf::CircleShape> uCircle;
+HPrim p0 = INVALID_HANDLE;
+HPrim p1 = INVALID_HANDLE;
 
 void Init(s32 argc, char** argv)
 {
@@ -91,11 +95,12 @@ void PollEvents(Input& input, Viewport& vp)
 	}
 }
 
-void Tick(Input& input, Time /*dt*/)
+static bool bLayerChanged = false;
+static Time elapsed;
+void Tick(Input& input, Time dt)
 {
 	input.TakeSnapshot();
 	input.FireCallbacks();
-	// Fire input
 	// Update game state
 
 	if (!uCircle)
@@ -105,16 +110,51 @@ void Tick(Input& input, Time /*dt*/)
 		uCircle->setRadius(100.0f);
 		uCircle->setOrigin({100.0f, 100.0f});
 	}
+
+	if (p0 == -1)
+	{
+		p0 = renderer.New();
+		auto pPrim = renderer.Find(p0);
+		pPrim->Instantiate(Primitive::Type::Text);
+		TextData data("Hello!");
+		data.oCharSize = 50;
+		data.opFont = resources.Find<Font>(resources.Load<Font>("Default-Serif.ttf"));
+		pPrim->SetText(data)->SetPosition({0, 100});
+	}
+
+	if (p1 == -1)
+	{
+		p1 = renderer.New();
+		auto pPrim = renderer.Find(p1);
+		pPrim->Instantiate(Primitive::Type::Rectangle);
+		ShapeData data;
+		data.oSize = {300, 100};
+		data.oFill = Colour(100, 100, 0);
+		data.oOutline = Colour::Magenta;
+		pPrim->SetShape(data)->SetPosition({0, 100});
+	}
+
+	elapsed += dt;
+	if (elapsed.AsSeconds() > 1.0f && !bLayerChanged)
+	{
+		auto pPrim = renderer.Find(p1);
+		if (pPrim)
+		{
+			pPrim->m_layer -= 2;
+		}
+		bLayerChanged = true;
+	}
 }
 
-void Render(sf::RenderWindow& rw)
+void Render(Viewport& vp)
 {
+	renderer.Render(vp);
+
 	if (uCircle)
 	{
-		rw.draw(*uCircle);
+		vp.draw(*uCircle);
 	}
-	rw.display();
-	rw.clear();
+	// vp.display();
 }
 
 void Sleep(Time frameTime)
@@ -129,6 +169,9 @@ void Sleep(Time frameTime)
 void Cleanup()
 {
 	uCircle = nullptr;
+	p0 = INVALID_HANDLE;
+	p1 = INVALID_HANDLE;
+	renderer.Clear();
 	resources.Clear();
 }
 } // namespace

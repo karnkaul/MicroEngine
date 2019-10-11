@@ -8,10 +8,12 @@ namespace ME
 template <typename FType, typename FHandle = int>
 class Factory
 {
-protected:
-	FHandle m_nextHandle = FHandle(0);
+public:
 	std::unordered_map<FHandle, FType> m_instanced;
 
+protected:
+	FHandle m_nextHandle = FHandle(0);
+	
 public:
 	Factory();
 	virtual ~Factory();
@@ -28,9 +30,11 @@ public:
 template <typename FType, typename FHandle = int>
 class UFactory
 {
+public:
+	std::unordered_map<FHandle, std::unique_ptr<FType>> m_instanced;
+
 protected:
 	FHandle m_nextHandle = FHandle(1);
-	std::unordered_map<FHandle, std::unique_ptr<FType>> m_instanced;
 
 public:
 	UFactory();
@@ -59,8 +63,9 @@ template <typename T>
 FHandle Factory<FType, FHandle>::New()
 {
 	static_assert(std::is_base_of<FType, T>::value, "T must derive from FType!");
-	m_instanced.emplace(++m_nextHandle, T());
-	return m_nextHandle;
+	T t;
+	m_instanced.emplace(m_nextHandle, std::move(t));
+	return m_nextHandle++;
 }
 
 template <typename FType, typename FHandle>

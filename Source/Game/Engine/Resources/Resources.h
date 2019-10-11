@@ -1,8 +1,7 @@
 #pragma once
-#include "Factory/Factory.h"
 #include "SFML/Graphics/Font.hpp"
-#include "NoCopy.h"
 #include "GameTypes.h"
+#include "Factory/Factory.h"
 
 namespace ME
 {
@@ -47,7 +46,6 @@ class Resources final : NoCopy
 {
 public:
 	using HResource = s32;
-	static const HResource INVALID = -1;
 
 public:
 	static std::string s_resourcesPath;
@@ -82,7 +80,7 @@ Resources::HResource Resources::Load(const std::string& id)
 {
 	static_assert(std::is_base_of<Resource, T>::value, "T must derive from Resource!");
 	auto handle = FindID(id);
-	if (handle != INVALID)
+	if (handle != INVALID_HANDLE)
 	{
 		return handle;
 	}
@@ -110,13 +108,13 @@ Resources::HResource Resources::Load(const std::string& id)
 	{
 		LOG_W("[Resources] [%s] Resource not present on filesystem! [%s]", id.data(), path.data());
 	}
-	return INVALID;
+	return INVALID_HANDLE;
 }
 
 template <typename T>
 T* Resources::Find(HResource handle) const
 {
 	static_assert(std::is_base_of<Resource, T>::value, "T must derive from Resource!");
-	return (handle > INVALID) ? m_factory.template Find<T>(handle) : nullptr;
+	return (handle > INVALID_HANDLE) ? m_factory.template Find<T>(handle) : nullptr;
 }
 } // namespace ME

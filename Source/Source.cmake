@@ -13,6 +13,8 @@ list(APPEND SOURCES
 
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Colour.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Colour.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Renderer.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Renderer.cpp"
 
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Resources/Resources.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Resources/Resources.cpp"
