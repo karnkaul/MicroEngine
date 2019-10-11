@@ -1,5 +1,4 @@
 #include "Asserts/Asserts.h"
-#include "Logger/Logger.h"
 #include "Viewport.h"
 #include "ViewportData.h"
 #include "../SFTypes.h"

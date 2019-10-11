@@ -1,7 +1,7 @@
+#include <bitset>
 #include <thread>
 #include "SFML/Graphics.hpp"
-#include "Engine/Input/Input.h"
-#include "Logger/Logger.h"
+#include "Engine/GameServices.h"
 #include "Engine/Viewport/Viewport.h"
 #include "GameLoop.h"
 
@@ -13,20 +13,61 @@ constexpr u8 FPS_TARGET = 60;
 
 struct State
 {
+	enum Flag
+	{
+		INIT = 0,
+		CLOSED,
+		QUITTING
+	};
 	static const Time tickRate;
-	bool bClosed = false;
-	bool bQuitting = false;
+	std::bitset<3> flags;
 
 	bool Expired() const
 	{
-		return bClosed || bQuitting;
+		return flags[CLOSED] || flags[QUITTING];
 	}
 };
 
 const Time State::tickRate = Time::Seconds(1.0f / FPS_TARGET);
+std::unique_ptr<GameServices> uGS;
 State state;
+std::string workingDir;
 
-std::unique_ptr<sf::CircleShape> uCircle;
+HPrim hprim0 = INVALID_HANDLE;
+HPrim hprim1 = INVALID_HANDLE;
+
+void Init(s32 argc, char** argv)
+{
+#if ENABLED(DEBUG_LOGGING)
+	LE::g_MinLogSeverity = LE::LogSeverity::Debug;
+#endif
+#if ENABLED(ASSERTS)
+	std::string msg;
+	msg.reserve(16);
+	msg += "Invalid argc! ";
+	msg += std::to_string(argc);
+	AssertVar(argc > 0, msg.c_str());
+#endif
+	if (argc > 0)
+	{
+		std::string_view exePath = argv[0];
+#ifdef TARGET_WIN64
+		const char delim = '\\';
+#else
+		const char delim = '/';
+#endif
+		workingDir = exePath.substr(0, exePath.find_last_of(delim));
+		LOG_I("Working dir: %s", workingDir.data());
+	}
+	uGS = std::make_unique<GameServices>();
+	g_pResources->s_resourcesPath = workingDir;
+	g_pResources->s_resourcesPath += "/";
+	g_pResources->s_resourcesPath += "Resources";
+	if (g_pResources->Init({"Default-Mono.ttf", "Default-Serif.ttf"}))
+	{
+		state.flags[State::INIT] = true;
+	}
+}
 
 void Create(Viewport& outVP, u32 width, u32 height, const std::string& title)
 {
@@ -40,44 +81,110 @@ void Create(Viewport& outVP, u32 width, u32 height, const std::string& title)
 	outVP.setView(view);
 }
 
-void PollEvents(Input& input, Viewport& vp)
+void PollEvents(Viewport& vp)
 {
-	auto vpEvent = input.PollEvents(vp);
+	auto vpEvent = g_pInput->PollEvents(vp);
 	switch (vpEvent)
 	{
 	default:
 		break;
 
 	case ViewportEventType::Closed:
-		state.bClosed = true;
+		state.flags[State::CLOSED] = true;
 		break;
 	}
 }
 
-void Tick(Input& input, Time /*dt*/)
+void Tick(Time dt)
 {
-	input.TakeSnapshot();
-	input.FireCallbacks();
-	// Fire input
-	// Update game state
+	g_pInput->TakeSnapshot();
+	g_pInput->FireCallbacks();
 
-	if (!uCircle)
-	{
-		uCircle = std::make_unique<sf::CircleShape>();
-		uCircle->setFillColor(sf::Color::Yellow);
-		uCircle->setRadius(100.0f);
-		uCircle->setOrigin({100.0f, 100.0f});
-	}
-}
+	// TODO @karnkaul: Update game state
 
-void Render(sf::RenderWindow& rw)
-{
-	if (uCircle)
+	if (hprim0 == INVALID_HANDLE)
 	{
-		rw.draw(*uCircle);
+		// Get a handle to a new Primitive and set it to hprim0
+		hprim0 = g_pRenderer->New();
+		// Get a pointer to the primitive handled by hprim0
+		auto pPrim = g_pRenderer->Find(hprim0);
+		if (pPrim)
+		{
+			// Instantiate a text object
+			pPrim->Instantiate(Primitive::Type::Text);
+			// Get a handle to the Default-Serif.ttf font
+			auto hfont = g_pResources->Load<Font>("Default-Serif.ttf");
+			// Setup some text data
+			TextData data("Hello!");
+			data.oCharSize = 100;
+			data.opFont = g_pResources->Find<Font>(hfont);
+			// Set the text
+			pPrim->SetText(data);
+			// Set the position to +200 in the y direction
+			pPrim->m_transform.SetPosition({0, 200});
+		}
 	}
-	rw.display();
-	rw.clear();
+
+	if (hprim1 == INVALID_HANDLE)
+	{
+		// One liner
+		auto pPrim = g_pRenderer->Find(hprim1 = g_pRenderer->New());
+		// Skip cache-killing check (should always be true; else
+		// your code is broken anyway). Assert instead
+		Assert(pPrim, "Null pointer");
+		ShapeData data;
+		data.oSize = {500, 200};
+		data.oFill = Colour(100, 100, 0);
+		data.oOutline = Colour::Magenta;
+		// One-liner
+		pPrim->Instantiate(Primitive::Type::Rectangle)->SetShape(data);
+		auto pPrim0 = g_pRenderer->Find(hprim0);
+		if (pPrim0)
+		{
+			// Exploit matrix transformation to "lock" it to prim0
+			pPrim->m_transform.SetParent(pPrim0->m_transform);
+		}
+	}
+
+	// Only want these initialised once, hence "function static"
+	static bool bLayerChanged = false;
+	// Try changing this
+	static Time layerRemain = Time::Seconds(1.5f);
+	// Subtract elapsed time
+	layerRemain -= dt;
+	if (layerRemain <= Time::Zero && !bLayerChanged)
+	{
+		// Push the rectangle below the text after 1.5 seconds
+		auto pPrim = g_pRenderer->Find(hprim1);
+		if (pPrim)
+		{
+			--pPrim->m_layer;
+			auto pPrim0 = g_pRenderer->Find(hprim0);
+			if (pPrim0)
+			{
+				// Find a point halfway between centre and left edge
+				Vector2 world = g_pGFX->WorldProjection({Fixed(-0.5f), 0});
+				// Magic! Both move (because of parenting)
+				pPrim0->m_transform.SetPosition(world);
+				// Rotate only the child to point equal parts +x and +y 
+				// (all models start facing right (1, 0))
+				pPrim->m_transform.SetOrientation(Vector2::One);
+			}
+		}
+		// Stop decrementing layer! (Don't care about `remain` any more, that can
+		// underflow for days / months / years / ...; won't affect any code)
+		bLayerChanged = true;
+	}
+
+	static Time destroyRemain = Time::Seconds(3.5f);
+	static bool bDestroyed = false;
+	destroyRemain -= dt;
+	if (destroyRemain <= Time::Zero && !bDestroyed)
+	{
+		// Destroy this one after 3.5 seconds
+		g_pRenderer->Destroy(hprim1);
+		hprim1 = INVALID_HANDLE;
+	}
 }
 
 void Sleep(Time frameTime)
@@ -91,33 +198,56 @@ void Sleep(Time frameTime)
 
 void Cleanup()
 {
-	uCircle = nullptr;
+	hprim0 = INVALID_HANDLE;
+	hprim1 = INVALID_HANDLE;
+	g_pRenderer->Clear();
+	g_pResources->Clear();
+	uGS = nullptr;
 }
 } // namespace
 
-s32 GameLoop::Run()
+s32 GameLoop::Run(s32 argc, char** argv)
 {
+	if (!state.flags[State::INIT])
+	{
+		Init(argc, argv);
+	}
+	if (!state.flags[State::INIT])
+	{
+		LOG_E("[GameLoop] Fatal error initialising engine...");
+		return 1;
+	}
 	state = State();
-	Input input;
-	Token t = input.Register([](const Input::Frame& frame) -> bool {
+	Token t = g_pInput->Register([](const Input::Frame& frame) -> bool {
 		LOGIF_I(frame.IsPressed(KeyCode::A), "A pressed!");
 		return false;
 	});
 	Viewport viewport;
-	Create(viewport, 1280, 720, "Test");
+	ViewportSize size = g_pGFX->GetViewportSize();
+	Create(viewport, size.width, size.height, "Untitled Game");
 	Time frameStart = Time::Now();
 	Time frameTime;
 	while (viewport.isOpen() && !state.Expired())
 	{
 		Time dt = Time::Now() - frameStart;
 		frameStart = Time::Now();
-		PollEvents(input, viewport);
-		Tick(input, dt);
-		Render(viewport);
+		PollEvents(viewport);
+		Tick(dt);
+		g_pRenderer->Render(viewport);
 		frameTime = Time::Now() - frameStart;
 		Sleep(frameTime);
 	}
 	Cleanup();
 	return 0;
+}
+
+void GameLoop::Stop()
+{
+	state.flags[State::QUITTING] = true;
+}
+
+const std::string_view GameLoop::PWD()
+{
+	return workingDir;
 }
 } // namespace ME

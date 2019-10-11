@@ -13,6 +13,11 @@ list(APPEND SOURCES
 
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Colour.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Colour.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Renderer.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Renderer.cpp"
+
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Resources/Resources.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Resources/Resources.cpp"
 
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Viewport/Viewport.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Viewport/Viewport.cpp"
@@ -20,13 +25,19 @@ list(APPEND SOURCES
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Viewport/ViewportData.cpp"
 
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/SFTypes.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/GameServices.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/GameServices.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/GData.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/GData.cpp"
-
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/GFX.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/GFX.cpp"
+	
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Factory/Factory.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameLoop/GameLoop.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameLoop/GameLoop.cpp"
+	
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameTypes.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/NoCopy.h"
 )
 
 include("${CMAKE_CURRENT_LIST_DIR}/Game/Asserts/Asserts.cmake")

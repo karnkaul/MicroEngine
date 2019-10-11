@@ -1,10 +1,7 @@
-#include "Logger/Logger.h"
 #include "Input.h"
 
 namespace ME
 {
-Input* g_pInput = nullptr;
-
 std::string Input::Frame::Clipboard()
 {
 	return InputDataFrame::Clipboard();
@@ -53,16 +50,6 @@ Fixed Input::Frame::MouseWhellScroll() const
 	return mouseInput.scrollDelta;
 }
 
-Input::Input() 
-{
-	g_pInput = this;
-}
-
-Input::~Input()
-{
-	g_pInput = nullptr;
-}
-
 Token Input::Register(Delegate callback, bool bForce)
 {
 	Token token = CreateToken();
@@ -100,31 +87,10 @@ void Input::TakeSnapshot()
 	m_previousSnapshot = m_currentSnapshot;
 	m_textInput = frameData.textInput;
 	m_mouseInput = frameData.mouseInput;
-	m_joyInput = frameData.joyInput;
 	m_currentSnapshot.clear();
 	for (const auto& key : frameData.pressed)
 	{
 		uniqueInsert(key.GetKeyType());
-	}
-	for (const auto& state : frameData.joyInput.m_states)
-	{
-		// POV
-		if (state.pov.x > Fixed::OneHalf)
-		{
-			uniqueInsert(KeyCode::Right);
-		}
-		if (state.pov.x < -Fixed::OneHalf)
-		{
-			uniqueInsert(KeyCode::Left);
-		}
-		if (state.pov.y > Fixed::OneHalf)
-		{
-			uniqueInsert(KeyCode::Up);
-		}
-		if (state.pov.y < -Fixed::OneHalf)
-		{
-			uniqueInsert(KeyCode::Down);
-		}
 	}
 }
 
@@ -155,7 +121,7 @@ void Input::FireCallbacks()
 		m_oSudoContext.reset();
 	}
 
-	Frame dataFrame{pressed, held, released, m_textInput, m_mouseInput, m_joyInput};
+	Frame dataFrame{pressed, held, released, m_textInput, m_mouseInput};
 	bool bHasData = dataFrame.HasData();
 	size_t prev = m_contexts.size();
 	Core::RemoveIf<InputContext>(m_contexts, [](const InputContext& context) { return context.wToken.expired(); });

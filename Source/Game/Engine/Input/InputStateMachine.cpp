@@ -55,7 +55,6 @@ InputDataFrame InputStateMachine::Dataframe() const
 		}
 	}
 	frame.mouseInput = m_pointerInput;
-	frame.joyInput = m_joyInput;
 	return frame;
 }
 
@@ -123,7 +122,6 @@ void InputStateMachine::ResetKeyStates()
 	{
 		kvp.second.bPressed = false;
 	}
-	m_joyInput.m_states.clear();
 	m_pointerInput.scrollDelta = Fixed::Zero;
 }
 

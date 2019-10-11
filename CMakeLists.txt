@@ -18,6 +18,28 @@ if(NOT CMAKE_VS_PLATFORM_NAME STREQUAL "x64")
 	message(FATAL_ERROR "Only x64 builds are supported!")
 endif()
 
+## Init/Update Submodules
+find_package(Git QUIET)
+if(GIT_FOUND AND EXISTS "${CMAKE_SOURCE_DIR}/.git")
+	option(UPDATE_SUBMODULES "Init/Update submodules during generation" ON)
+	if(UPDATE_SUBMODULES)
+		message(STATUS "Updating git submodules...")
+		execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
+			WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+			RESULT_VARIABLE UPDATE_SUBMODULES_RESULT
+		)
+		if(NOT UPDATE_SUBMODULES_RESULT EQUAL "0")
+			message(FATAL_ERROR "git submodule update failed!")
+		endif()
+	endif()
+endif()
+## Submodule dependencies
+set(DEEP_SUBMODULE_FILE "${CMAKE_CURRENT_SOURCE_DIR}/Source/Game/Asserts/SysDialog/SysDialog.cmake")
+if(NOT EXISTS "${DEEP_SUBMODULE_FILE}")
+	message(FATAL_ERROR "Missing required files! Please ensure git submodules are up to date!\n[${DEEP_SUBMODULE_FILE}]")
+endif()
+
+
 ## Globals
 set(TP_SRC_PATH "${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty")
 set(LIB_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Build/Lib")
@@ -26,6 +48,9 @@ set(EXE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Build")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${LIB_PATH}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${LIB_PATH}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${EXE_PATH}")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${EXE_PATH}")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO "${EXE_PATH}")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${EXE_PATH}")
 
 ## Flags
 set(W_MSBUILD 0)

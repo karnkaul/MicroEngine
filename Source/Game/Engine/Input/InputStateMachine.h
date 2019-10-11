@@ -11,7 +11,6 @@ class InputStateMachine
 private:
 	TextInput m_textInput;
 	MouseInput m_pointerInput;
-	JoyInput m_joyInput;
 	std::unordered_map<s32, KeyState> m_keyStateMap;
 
 public:

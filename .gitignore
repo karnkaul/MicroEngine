@@ -1,7 +1,9 @@
-**/.vs/**
-Include/**
-Build/**
-out/**
-ThirdParty/**
+**/.vs/*
+Include/*
+!Build
+Build/*
+!Build/Resources
+out/*
+ThirdParty/*
 
 CMakeSettings.json

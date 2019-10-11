@@ -5,6 +5,9 @@ namespace ME
 {
 namespace GameLoop
 {
-s32 Run();
+s32 Run(s32 argc, char** argv);
+void Stop();
+
+const std::string_view PWD();
 }
 } // namespace ME
