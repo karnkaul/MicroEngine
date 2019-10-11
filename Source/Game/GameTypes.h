@@ -40,10 +40,11 @@
 
 #if defined(DEBUGGING)
 #define DEBUG_LOGGING 1
+#define ASSERTS 1
 #else
 #define DEBUG_LOGGING 0
+#define ASSERTS 0
 #endif
-#define ASSERTS 1
 
 #include "Asserts/Asserts.h"
 #include "Logger/Logger.h"

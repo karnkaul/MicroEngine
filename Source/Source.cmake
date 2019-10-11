@@ -25,8 +25,12 @@ list(APPEND SOURCES
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Viewport/ViewportData.cpp"
 
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/SFTypes.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/GameServices.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/GameServices.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/GData.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/GData.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/GFX.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/GFX.cpp"
 	
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Factory/Factory.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameLoop/GameLoop.h"

@@ -53,8 +53,12 @@ private:
 	Matrix3 m_matrix;
 	
 public:
-	void Instantiate(Type type);
+	Primitive();
+	~Primitive();
+	Primitive(Primitive&&);
 
+public:
+	Primitive* Instantiate(Type type);
 	Primitive* SetText(const TextData& data);
 	Primitive* SetShape(const ShapeData& data);
 	Primitive* SetPosition(Vector2 world);

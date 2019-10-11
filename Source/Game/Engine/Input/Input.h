@@ -12,8 +12,6 @@ namespace Debug
 class ConsoleInput;
 }
 
-extern class Input* g_pInput;
-
 class Input final : public InputHandler
 {
 public:
@@ -78,10 +76,6 @@ private:
 	std::vector<InputContext> m_contexts;
 	std::optional<InputContext> m_oSudoContext;
 	mutable s32 m_nextToken = 0;
-
-public:
-	Input();
-	~Input();
 
 public:
 	Token Register(Delegate callback, bool bForce = false);

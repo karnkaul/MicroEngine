@@ -40,8 +40,6 @@ protected:
 	bool OnLoad() override;
 };
 
-extern class Resources* g_pResources;
-
 class Resources final : NoCopy
 {
 public:

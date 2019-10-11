@@ -2,8 +2,6 @@
 
 namespace ME
 {
-Input* g_pInput = nullptr;
-
 std::string Input::Frame::Clipboard()
 {
 	return InputDataFrame::Clipboard();
@@ -50,17 +48,6 @@ bool Input::Frame::HasData() const
 Fixed Input::Frame::MouseWhellScroll() const
 {
 	return mouseInput.scrollDelta;
-}
-
-Input::Input() 
-{
-	Assert(g_pInput == nullptr, "Global pointer already registered!");
-	g_pInput = this;
-}
-
-Input::~Input()
-{
-	g_pInput = nullptr;
 }
 
 Token Input::Register(Delegate callback, bool bForce)

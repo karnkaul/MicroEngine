@@ -1,9 +1,7 @@
 #include <bitset>
 #include <thread>
 #include "SFML/Graphics.hpp"
-#include "Engine/Input/Input.h"
-#include "Engine/Resources/Resources.h"
-#include "Engine/Rendering/Renderer.h"
+#include "Engine/GameServices.h"
 #include "Engine/Viewport/Viewport.h"
 #include "GameLoop.h"
 
@@ -31,13 +29,12 @@ struct State
 };
 
 const Time State::tickRate = Time::Seconds(1.0f / FPS_TARGET);
-Resources resources;
-Renderer renderer;
+std::unique_ptr<GameServices> uGS;
 State state;
 std::string workingDir;
 
-HPrim p0 = INVALID_HANDLE;
-HPrim p1 = INVALID_HANDLE;
+HPrim hprim0 = INVALID_HANDLE;
+HPrim hprim1 = INVALID_HANDLE;
 
 void Init(s32 argc, char** argv)
 {
@@ -59,10 +56,11 @@ void Init(s32 argc, char** argv)
 		workingDir = exePath.substr(0, exePath.find_last_of(delim));
 		LOG_I("Working dir: %s", workingDir.data());
 	}
-	resources.s_resourcesPath = workingDir;
-	resources.s_resourcesPath += "/";
-	resources.s_resourcesPath += "Resources";
-	if (resources.Init({"Default-Mono.ttf", "Default-Serif.ttf"}))
+	uGS = std::make_unique<GameServices>();
+	g_pResources->s_resourcesPath = workingDir;
+	g_pResources->s_resourcesPath += "/";
+	g_pResources->s_resourcesPath += "Resources";
+	if (g_pResources->Init({"Default-Mono.ttf", "Default-Serif.ttf"}))
 	{
 		state.flags[State::INIT] = true;
 	}
@@ -80,9 +78,9 @@ void Create(Viewport& outVP, u32 width, u32 height, const std::string& title)
 	outVP.setView(view);
 }
 
-void PollEvents(Input& input, Viewport& vp)
+void PollEvents(Viewport& vp)
 {
-	auto vpEvent = input.PollEvents(vp);
+	auto vpEvent = g_pInput->PollEvents(vp);
 	switch (vpEvent)
 	{
 	default:
@@ -94,45 +92,67 @@ void PollEvents(Input& input, Viewport& vp)
 	}
 }
 
-static bool bLayerChanged = false;
-static Time elapsed;
-void Tick(Input& input, Time dt)
+void Tick(Time dt)
 {
-	input.TakeSnapshot();
-	input.FireCallbacks();
-	// Update game state
-
-	if (p0 == -1)
+	g_pInput->TakeSnapshot();
+	g_pInput->FireCallbacks();
+	
+	// TODO @karnkaul: Update game state
+	
+	if (hprim0 == INVALID_HANDLE)
 	{
-		p0 = renderer.New();
-		auto pPrim = renderer.Find(p0);
-		pPrim->Instantiate(Primitive::Type::Text);
-		TextData data("Hello!");
-		data.oCharSize = 50;
-		data.opFont = resources.Find<Font>(resources.Load<Font>("Default-Serif.ttf"));
-		pPrim->SetText(data)->SetPosition({0, 100});
+		// Get a handle to a new Primitive and set it to hprim0
+		hprim0 = g_pRenderer->New();
+		// Get a pointer to the primitive handled by hprim0
+		auto pPrim = g_pRenderer->Find(hprim0);
+		if (pPrim)
+		{
+			// Instantiate a text object
+			pPrim->Instantiate(Primitive::Type::Text);
+			// Get a handle to the Default-Serif.ttf font
+			auto hfont = g_pResources->Load<Font>("Default-Serif.ttf");
+			// Setup some text data
+			TextData data("Hello!");
+			data.oCharSize = 50;
+			data.opFont = g_pResources->Find<Font>(hfont);
+			// Set the text
+			pPrim->SetText(data);
+			// Set the position to +100 in the y direction
+			pPrim->SetPosition({0, 100});
+		}
 	}
 
-	if (p1 == -1)
+	if (hprim1 == INVALID_HANDLE)
 	{
-		p1 = renderer.New();
-		auto pPrim = renderer.Find(p1);
-		pPrim->Instantiate(Primitive::Type::Rectangle);
+		// One liner
+		auto pPrim = g_pRenderer->Find(hprim1 = g_pRenderer->New());
+		// Skip cache-killing check (should always be true; else
+		// your code is broken anyway). Assert instead
+		Assert(pPrim, "Null pointer");
 		ShapeData data;
 		data.oSize = {300, 100};
 		data.oFill = Colour(100, 100, 0);
 		data.oOutline = Colour::Magenta;
-		pPrim->SetShape(data)->SetPosition({0, 100});
+		// One-liner
+		pPrim->Instantiate(Primitive::Type::Rectangle)->SetShape(data)->SetPosition({0, 100});
 	}
 
-	elapsed += dt;
-	if (elapsed.AsSeconds() > 1.0f && !bLayerChanged)
+	// Only want these initialised once, hence "function static"
+	static bool bLayerChanged = false;
+	// Try changing this
+	static Time remain = Time::Seconds(1.0f);
+	// Subtract elapsed time
+	remain -= dt;
+	if (remain <= Time::Zero && !bLayerChanged)
 	{
-		auto pPrim = renderer.Find(p1);
+		// Push the rectangle below the text after 1 second
+		auto pPrim = g_pRenderer->Find(hprim1);
 		if (pPrim)
 		{
-			pPrim->m_layer -= 2;
+			--pPrim->m_layer;
 		}
+		// Stop decrementing layer! (Don't care about `remain` any more, that can 
+		// underflow for days / months / years / ...; won't affect any code)
 		bLayerChanged = true;
 	}
 }
@@ -148,10 +168,11 @@ void Sleep(Time frameTime)
 
 void Cleanup()
 {
-	p0 = INVALID_HANDLE;
-	p1 = INVALID_HANDLE;
-	renderer.Clear();
-	resources.Clear();
+	hprim0 = INVALID_HANDLE;
+	hprim1 = INVALID_HANDLE;
+	g_pRenderer->Clear();
+	g_pResources->Clear();
+	uGS = nullptr;
 }
 } // namespace
 
@@ -167,8 +188,7 @@ s32 GameLoop::Run(s32 argc, char** argv)
 		return 1;
 	}
 	state = State();
-	Input input;
-	Token t = input.Register([](const Input::Frame& frame) -> bool {
+	Token t = g_pInput->Register([](const Input::Frame& frame) -> bool {
 		LOGIF_I(frame.IsPressed(KeyCode::A), "A pressed!");
 		return false;
 	});
@@ -180,9 +200,9 @@ s32 GameLoop::Run(s32 argc, char** argv)
 	{
 		Time dt = Time::Now() - frameStart;
 		frameStart = Time::Now();
-		PollEvents(input, viewport);
-		Tick(input, dt);
-		renderer.Render(viewport);
+		PollEvents(viewport);
+		Tick(dt);
+		g_pRenderer->Render(viewport);
 		frameTime = Time::Now() - frameStart;
 		Sleep(frameTime);
 	}

@@ -32,17 +32,9 @@ bool Font::OnLoad()
 }
 
 std::string Resources::s_resourcesPath;
-Resources* g_pResources = nullptr;
 
-Resources::Resources()
-{
-	Assert(g_pResources == nullptr, "Global pointer already registered!");
-	g_pResources = this;
-}
-Resources::~Resources()
-{
-	g_pResources = nullptr;
-}
+Resources::Resources() = default;
+Resources::~Resources() = default;
 
 bool Resources::Init(std::initializer_list<std::string> defaultFonts)
 {

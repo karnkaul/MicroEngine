@@ -17,7 +17,11 @@ TextData::TextData(std::string text)
 	oText = text;
 }
 
-void Primitive::Instantiate(Type type)
+Primitive::Primitive() = default;
+Primitive::~Primitive() = default;
+Primitive::Primitive(Primitive&&) = default;
+
+Primitive* Primitive::Instantiate(Type type)
 {
 	switch (type)
 	{
@@ -43,6 +47,7 @@ void Primitive::Instantiate(Type type)
 	}
 	}
 	m_pT = dynamic_cast<sf::Transformable*>(m_uD.get());
+	return this;
 }
 
 Primitive* Primitive::SetText(const TextData& data)
