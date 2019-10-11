@@ -117,13 +117,13 @@ Primitive* Primitive::SetShape(const ShapeData& data)
 	return this;
 }
 
-Primitive* Primitive::SetPosition(Vector2 world)
+void Primitive::Update()
 {
 	if (m_pT)
 	{
-		m_pT->setPosition({world.x.ToF32(), -world.y.ToF32()});
+		m_pT->setPosition(Cast(WorldToSFML(m_transform.WorldPosition())));
+		m_pT->setRotation(WorldToSFML(Vector2::ToOrientation(m_transform.WorldOrientation())).ToF32());
 	}
-	return this;
 }
 
 void Primitive::Draw(Viewport& viewport)
@@ -155,6 +155,11 @@ Primitive* Renderer::Find(HPrim handle)
 	return m_factory.Find<Primitive>(handle);
 }
 
+bool Renderer::Destroy(HPrim handle)
+{
+	return m_factory.Destroy(handle);
+}
+
 void Renderer::Render(Viewport& viewport)
 {
 	std::vector<Primitive*> prims;
@@ -167,6 +172,7 @@ void Renderer::Render(Viewport& viewport)
 	viewport.clear();
 	for (auto pPrim : prims)
 	{
+		pPrim->Update();
 		pPrim->Draw(viewport);
 	}
 	viewport.display();

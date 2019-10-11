@@ -5,8 +5,6 @@
 
 namespace ME
 {
-extern class GFX* g_pGFX;
-
 class GFX final
 {
 private:
@@ -25,13 +23,7 @@ public:
 	Vector2 m_uiSpace;
 	Fixed m_worldHeight;
 	Fixed m_viewportHeight;
-#ifdef DEBUGGING
 	f64 m_overrideNativeAR = 0.0;
-#endif
-
-public:
-	GFX();
-	~GFX();
 
 public:
 	void Init();

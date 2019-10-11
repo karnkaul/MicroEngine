@@ -38,6 +38,9 @@ HPrim hprim1 = INVALID_HANDLE;
 
 void Init(s32 argc, char** argv)
 {
+#if ENABLED(DEBUG_LOGGING)
+	LE::g_MinLogSeverity = LE::LogSeverity::Debug;
+#endif
 #if ENABLED(ASSERTS)
 	std::string msg;
 	msg.reserve(16);
@@ -96,9 +99,9 @@ void Tick(Time dt)
 {
 	g_pInput->TakeSnapshot();
 	g_pInput->FireCallbacks();
-	
+
 	// TODO @karnkaul: Update game state
-	
+
 	if (hprim0 == INVALID_HANDLE)
 	{
 		// Get a handle to a new Primitive and set it to hprim0
@@ -113,12 +116,12 @@ void Tick(Time dt)
 			auto hfont = g_pResources->Load<Font>("Default-Serif.ttf");
 			// Setup some text data
 			TextData data("Hello!");
-			data.oCharSize = 50;
+			data.oCharSize = 100;
 			data.opFont = g_pResources->Find<Font>(hfont);
 			// Set the text
 			pPrim->SetText(data);
-			// Set the position to +100 in the y direction
-			pPrim->SetPosition({0, 100});
+			// Set the position to +200 in the y direction
+			pPrim->m_transform.SetPosition({0, 200});
 		}
 	}
 
@@ -130,30 +133,57 @@ void Tick(Time dt)
 		// your code is broken anyway). Assert instead
 		Assert(pPrim, "Null pointer");
 		ShapeData data;
-		data.oSize = {300, 100};
+		data.oSize = {500, 200};
 		data.oFill = Colour(100, 100, 0);
 		data.oOutline = Colour::Magenta;
 		// One-liner
-		pPrim->Instantiate(Primitive::Type::Rectangle)->SetShape(data)->SetPosition({0, 100});
+		pPrim->Instantiate(Primitive::Type::Rectangle)->SetShape(data);
+		auto pPrim0 = g_pRenderer->Find(hprim0);
+		if (pPrim0)
+		{
+			// Exploit matrix transformation to "lock" it to prim0
+			pPrim->m_transform.SetParent(pPrim0->m_transform);
+		}
 	}
 
 	// Only want these initialised once, hence "function static"
 	static bool bLayerChanged = false;
 	// Try changing this
-	static Time remain = Time::Seconds(1.0f);
+	static Time layerRemain = Time::Seconds(1.5f);
 	// Subtract elapsed time
-	remain -= dt;
-	if (remain <= Time::Zero && !bLayerChanged)
+	layerRemain -= dt;
+	if (layerRemain <= Time::Zero && !bLayerChanged)
 	{
-		// Push the rectangle below the text after 1 second
+		// Push the rectangle below the text after 1.5 seconds
 		auto pPrim = g_pRenderer->Find(hprim1);
 		if (pPrim)
 		{
 			--pPrim->m_layer;
+			auto pPrim0 = g_pRenderer->Find(hprim0);
+			if (pPrim0)
+			{
+				// Find a point halfway between centre and left edge
+				Vector2 world = g_pGFX->WorldProjection({Fixed(-0.5f), 0});
+				// Magic! Both move (because of parenting)
+				pPrim0->m_transform.SetPosition(world);
+				// Rotate only the child to point equal parts +x and +y 
+				// (all models start facing right (1, 0))
+				pPrim->m_transform.SetOrientation(Vector2::One);
+			}
 		}
-		// Stop decrementing layer! (Don't care about `remain` any more, that can 
+		// Stop decrementing layer! (Don't care about `remain` any more, that can
 		// underflow for days / months / years / ...; won't affect any code)
 		bLayerChanged = true;
+	}
+
+	static Time destroyRemain = Time::Seconds(3.5f);
+	static bool bDestroyed = false;
+	destroyRemain -= dt;
+	if (destroyRemain <= Time::Zero && !bDestroyed)
+	{
+		// Destroy this one after 3.5 seconds
+		g_pRenderer->Destroy(hprim1);
+		hprim1 = INVALID_HANDLE;
 	}
 }
 
@@ -193,7 +223,8 @@ s32 GameLoop::Run(s32 argc, char** argv)
 		return false;
 	});
 	Viewport viewport;
-	Create(viewport, 1280, 720, "Untitled Game");
+	ViewportSize size = g_pGFX->GetViewportSize();
+	Create(viewport, size.width, size.height, "Untitled Game");
 	Time frameStart = Time::Now();
 	Time frameTime;
 	while (viewport.isOpen() && !state.Expired())

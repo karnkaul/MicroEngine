@@ -4,28 +4,14 @@
 
 namespace ME
 {
-GFX* g_pGFX = nullptr;
-
-GFX::GFX()
-{
-	g_pGFX = this;
-}
-
-GFX::~GFX()
-{
-	g_pGFX = nullptr;
-}
-
 void GFX::Init()
 {
 	m_maxViewportSize = Viewport::MaxSize();
 	m_nativeAspectRatio = static_cast<f64>(m_maxViewportSize.width) / static_cast<f64>(m_maxViewportSize.height);
-#ifdef DEBUGGING
 	if (m_overrideNativeAR > 0.0)
 	{
 		m_nativeAspectRatio = m_overrideNativeAR;
 	}
-#endif
 	m_uiAspectRatio = m_uiSpace.x.ToF64() / m_uiSpace.y.ToF64();
 	m_overlaySpace = m_uiSpace;
 	u32 viewportWidth = static_cast<u32>(m_viewportHeight.ToF64() * m_nativeAspectRatio);
