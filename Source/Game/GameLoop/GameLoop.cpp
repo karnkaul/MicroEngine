@@ -36,7 +36,6 @@ Renderer renderer;
 State state;
 std::string workingDir;
 
-std::unique_ptr<sf::CircleShape> uCircle;
 HPrim p0 = INVALID_HANDLE;
 HPrim p1 = INVALID_HANDLE;
 
@@ -103,14 +102,6 @@ void Tick(Input& input, Time dt)
 	input.FireCallbacks();
 	// Update game state
 
-	if (!uCircle)
-	{
-		uCircle = std::make_unique<sf::CircleShape>();
-		uCircle->setFillColor(sf::Color::Yellow);
-		uCircle->setRadius(100.0f);
-		uCircle->setOrigin({100.0f, 100.0f});
-	}
-
 	if (p0 == -1)
 	{
 		p0 = renderer.New();
@@ -146,17 +137,6 @@ void Tick(Input& input, Time dt)
 	}
 }
 
-void Render(Viewport& vp)
-{
-	renderer.Render(vp);
-
-	if (uCircle)
-	{
-		vp.draw(*uCircle);
-	}
-	// vp.display();
-}
-
 void Sleep(Time frameTime)
 {
 	Time residue = state.tickRate - frameTime;
@@ -168,7 +148,6 @@ void Sleep(Time frameTime)
 
 void Cleanup()
 {
-	uCircle = nullptr;
 	p0 = INVALID_HANDLE;
 	p1 = INVALID_HANDLE;
 	renderer.Clear();
@@ -194,7 +173,7 @@ s32 GameLoop::Run(s32 argc, char** argv)
 		return false;
 	});
 	Viewport viewport;
-	Create(viewport, 1280, 720, "Test");
+	Create(viewport, 1280, 720, "Untitled Game");
 	Time frameStart = Time::Now();
 	Time frameTime;
 	while (viewport.isOpen() && !state.Expired())
@@ -203,7 +182,7 @@ s32 GameLoop::Run(s32 argc, char** argv)
 		frameStart = Time::Now();
 		PollEvents(input, viewport);
 		Tick(input, dt);
-		Render(viewport);
+		renderer.Render(viewport);
 		frameTime = Time::Now() - frameStart;
 		Sleep(frameTime);
 	}
