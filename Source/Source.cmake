@@ -13,6 +13,9 @@ list(APPEND SOURCES
 
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Colour.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Colour.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Primitive.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Primitive.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/PrimitiveData.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Renderer.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Renderer.cpp"
 

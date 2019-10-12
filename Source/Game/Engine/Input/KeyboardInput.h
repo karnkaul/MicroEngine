@@ -33,4 +33,4 @@ public:
 	void Clear();
 	std::string LiveString() const;
 };
-} // namespace LittleEngine
+} // namespace ME

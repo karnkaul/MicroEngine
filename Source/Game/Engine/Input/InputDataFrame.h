@@ -47,4 +47,4 @@ struct InputDataFrame
 
 	static std::string Clipboard();
 };
-} // namespace LittleEngine
+} // namespace ME

@@ -18,7 +18,7 @@ public:
 	static const Colour Transparent;
 
 	static Colour Lerp(Colour min, Colour max, Fixed alpha);
-	
+
 	UByte r;
 	UByte g;
 	UByte b;

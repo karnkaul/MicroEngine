@@ -36,4 +36,4 @@ std::string InputDataFrame::Clipboard()
 {
 	return sf::Clipboard::getString();
 }
-} // namespace LittleEngine
+} // namespace ME

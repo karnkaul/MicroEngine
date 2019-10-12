@@ -25,4 +25,4 @@ public:
 	void Destroy();
 	void OverrideData(ViewportRecreateData data);
 };
-} // namespace LittleEngine
+} // namespace ME

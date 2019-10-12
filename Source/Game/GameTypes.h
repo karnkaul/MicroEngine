@@ -52,6 +52,7 @@
 namespace ME
 {
 constexpr s32 INVALID_HANDLE = -1;
+using LayerID = s32;
 
 using Lock = std::lock_guard<std::mutex>;
 using Task = std::function<void()>;
@@ -84,4 +85,4 @@ Token MakeToken(T value)
 {
 	return std::make_shared<s32>(ToS32(value));
 }
-} // namespace LittleEngine
+} // namespace ME

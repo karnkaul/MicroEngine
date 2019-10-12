@@ -69,4 +69,4 @@ void Viewport::OverrideData(ViewportRecreateData data)
 		m_data.viewportSize = *data.oViewportSize;
 	}
 }
-} // namespace LittleEngine
+} // namespace ME

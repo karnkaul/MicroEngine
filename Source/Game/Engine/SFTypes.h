@@ -116,4 +116,4 @@ inline Fixed SFMLToWorld(Fixed vpOrientation)
 {
 	return -vpOrientation;
 }
-} // namespace LittleEngine
+} // namespace ME

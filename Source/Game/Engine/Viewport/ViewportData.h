@@ -39,4 +39,4 @@ struct ViewportRecreateData
 	std::optional<ViewportStyle> oStyle;
 	std::optional<std::string> oTitle;
 };
-} // namespace LittleEngine
+} // namespace ME

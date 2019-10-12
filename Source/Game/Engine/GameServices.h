@@ -23,4 +23,4 @@ public:
 	GameServices();
 	~GameServices();
 };
-}
+} // namespace ME

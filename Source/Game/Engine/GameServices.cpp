@@ -25,11 +25,11 @@ GameServices::GameServices()
 	m_gfx.Init();
 }
 
-GameServices::~GameServices() 
+GameServices::~GameServices()
 {
 	g_pGFX = nullptr;
 	g_pInput = nullptr;
 	g_pResources = nullptr;
 	g_pRenderer = nullptr;
 }
-}
+} // namespace ME

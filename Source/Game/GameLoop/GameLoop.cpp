@@ -102,8 +102,10 @@ void Tick(Time dt)
 
 	// TODO @karnkaul: Update game state
 
-	if (hprim0 == INVALID_HANDLE)
+	static bool bPrim0Created = false;
+	if (hprim0 == INVALID_HANDLE && !bPrim0Created)
 	{
+		bPrim0Created = true;
 		// Get a handle to a new Primitive and set it to hprim0
 		hprim0 = g_pRenderer->New();
 		// Get a pointer to the primitive handled by hprim0
@@ -125,8 +127,10 @@ void Tick(Time dt)
 		}
 	}
 
-	if (hprim1 == INVALID_HANDLE)
+	static bool bPrim1Created = false;
+	if (hprim1 == INVALID_HANDLE && !bPrim1Created)
 	{
+		bPrim1Created = true;
 		// One liner
 		auto pPrim = g_pRenderer->Find(hprim1 = g_pRenderer->New());
 		// Skip cache-killing check (should always be true; else
@@ -166,7 +170,7 @@ void Tick(Time dt)
 				Vector2 world = g_pGFX->WorldProjection({Fixed(-0.5f), 0});
 				// Magic! Both move (because of parenting)
 				pPrim0->m_transform.SetPosition(world);
-				// Rotate only the child to point equal parts +x and +y 
+				// Rotate only the child to point equal parts +x and +y
 				// (all models start facing right (1, 0))
 				pPrim->m_transform.SetOrientation(Vector2::One);
 			}

@@ -161,4 +161,4 @@ std::string KeyboardInput::LiveString() const
 {
 	return m_liveLine.liveString;
 }
-} // namespace LittleEngine
+} // namespace ME

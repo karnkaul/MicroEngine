@@ -22,7 +22,7 @@ public:
 private:
 	KeyState& GetOrCreateKeyState(KeyType key);
 	void ModifyKeyState(KeyType key, bool bPressed);
-	
+
 	void OnKeyDown(const sf::Event::KeyEvent& key);
 	void OnKeyUp(const sf::Event::KeyEvent& key);
 	void OnMouseDown(const sf::Event::MouseButtonEvent& button);
@@ -34,7 +34,7 @@ private:
 	void ResetKeyStates();
 	void ClearTextInput();
 	void OnTextInput(u32 unicode);
-	
+
 	friend class InputHandler;
 };
-} // namespace LittleEngine
+} // namespace ME

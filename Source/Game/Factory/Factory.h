@@ -13,7 +13,7 @@ public:
 
 protected:
 	FHandle m_nextHandle = FHandle(0);
-	
+
 public:
 	Factory();
 	virtual ~Factory();

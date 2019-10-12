@@ -145,4 +145,4 @@ void InputStateMachine::OnTextInput(u32 unicode)
 		}
 	}
 }
-} // namespace LittleEngine
+} // namespace ME

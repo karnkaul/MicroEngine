@@ -89,7 +89,7 @@ ViewportEventType InputHandler::PollEvents(Viewport& sfWindow)
 
 		case sf::Event::MouseMoved:
 		{
-			//m_inputSM.OnMouseMove(g_pGFX->ViewportToWorld(sfEvent.mouseMove.x, sfEvent.mouseMove.y));
+			// m_inputSM.OnMouseMove(g_pGFX->ViewportToWorld(sfEvent.mouseMove.x, sfEvent.mouseMove.y));
 			break;
 		}
 
@@ -107,4 +107,4 @@ InputDataFrame InputHandler::Dataframe() const
 {
 	return m_inputSM.Dataframe();
 }
-} // namespace LittleEngine
+} // namespace ME

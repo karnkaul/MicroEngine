@@ -27,4 +27,4 @@ ViewportData::ViewportData(ViewportSize viewportSize, std::string title, Viewpor
 	: viewportSize(std::move(viewportSize)), title(std::move(title)), style(style)
 {
 }
-} // namespace LittleEngine
+} // namespace ME

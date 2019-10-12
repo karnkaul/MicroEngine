@@ -184,4 +184,4 @@ Vector2 GFX::WorldToViewport(Vector2 world) const
 	Vector2 viewPos = tPos + vpSize * Fixed::OneHalf;
 	return viewPos;
 }
-} // namespace LittleEngine
+} // namespace ME

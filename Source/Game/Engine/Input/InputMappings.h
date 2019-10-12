@@ -17,4 +17,4 @@ enum KeyType : s32
 	MOUSE_BTN_3,
 	MOUSE_BTN_4,
 };
-} // namespace LittleEngine
+} // namespace ME

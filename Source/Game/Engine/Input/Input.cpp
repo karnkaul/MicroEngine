@@ -154,4 +154,4 @@ Token Input::CreateToken() const
 {
 	return MakeToken(++m_nextToken);
 }
-} // namespace LittleEngine
+} // namespace ME
