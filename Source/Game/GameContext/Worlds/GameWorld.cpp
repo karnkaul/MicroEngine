@@ -1,3 +1,4 @@
+#include "Engine/GameServices.h"
 #include "GameWorld.h"
 
 namespace ME
@@ -6,20 +7,37 @@ GameWorld::GameWorld() = default;
 GameWorld::GameWorld(GameWorld&&) = default;
 GameWorld::~GameWorld() = default;
 
-std::string_view GameWorld::ID() const
+bool GameWorld::DestroyObject(HObj handle)
 {
-	return m_id;
+	if (handle > INVALID_HANDLE)
+	{
+		return m_objectFactory.Destroy(handle);
+	}
+	return false;
 }
 
 void GameWorld::OnCreated() {}
-void GameWorld::Start() {}
-void GameWorld::Stop() {}
+void GameWorld::OnStarting() {}
 void GameWorld::Tick(Time /*dt*/) {}
+void GameWorld::OnStopping() {}
 
 void GameWorld::Create(std::string name)
 {
-	m_id = std::move(name);
+	m_name = std::move(name);
+	Type(); // Call updates Type to `this`
 	OnCreated();
-	LOG_I("[GameContext] [%s] GameWorld created", m_id.data());
+	LOG_I("[GameContext] [%s] GameWorld created", m_name.data());
+}
+
+void GameWorld::Start()
+{
+	OnStarting();
+}
+
+void GameWorld::Stop()
+{
+	m_inputTokens.clear();
+	OnStopping();
+	m_objectFactory.Clear();
 }
 } // namespace ME

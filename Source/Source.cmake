@@ -1,8 +1,12 @@
 list(APPEND SOURCES
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/GameContext.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/GameContext.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/GameObjectBase.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/GameObjectBase.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/GameWorld.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/GameWorld.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/GameObject.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/GameObject.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/DemoWorld.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/DemoWorld.cpp"
 
@@ -26,6 +30,8 @@ list(APPEND SOURCES
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Renderer.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Renderer.cpp"
 
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Resources/Resource.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Resources/Resource.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Resources/Resources.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Resources/Resources.cpp"
 

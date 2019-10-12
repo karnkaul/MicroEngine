@@ -16,6 +16,7 @@ protected:
 
 public:
 	Factory();
+	Factory(Factory&&);
 	virtual ~Factory();
 
 public:
@@ -38,6 +39,7 @@ protected:
 
 public:
 	UFactory();
+	UFactory(UFactory&&);
 	virtual ~UFactory();
 
 public:
@@ -51,6 +53,9 @@ public:
 
 template <typename FType, typename FHandle>
 Factory<FType, FHandle>::Factory() = default;
+
+template <typename FType, typename FHandle>
+Factory<FType, FHandle>::Factory(Factory&&) = default;
 
 template <typename FType, typename FHandle>
 Factory<FType, FHandle>::~Factory()
@@ -101,6 +106,9 @@ void Factory<FType, FHandle>::Clear()
 
 template <typename FType, typename FHandle>
 UFactory<FType, FHandle>::UFactory() = default;
+
+template <typename FType, typename FHandle>
+UFactory<FType, FHandle>::UFactory(UFactory&&) = default;
 
 template <typename FType, typename FHandle>
 UFactory<FType, FHandle>::~UFactory()

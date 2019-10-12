@@ -130,10 +130,6 @@ s32 GameLoop::Run(s32 argc, char** argv)
 		return 1;
 	}
 	state = State();
-	Token t = g_pInput->Register([](const Input::Frame& frame) -> bool {
-		LOGIF_I(frame.IsPressed(KeyCode::A), "A pressed!");
-		return false;
-	});
 	Viewport viewport;
 	ViewportSize size = g_pGFX->GetViewportSize();
 	Create(viewport, size.width, size.height, "Untitled Game");
