@@ -3,6 +3,7 @@
 namespace ME
 {
 GameContext::GameContext() = default;
+GameContext::GameContext(GameContext&&) = default;
 GameContext::~GameContext() = default;
 
 bool GameContext::LoadWorld(const std::string& id)
@@ -35,7 +36,7 @@ bool GameContext::StartWorld(const std::string& id)
 	}
 	else
 	{
-		m_nextWorldID = m_worlds.at(0)->m_id;
+		m_nextWorldID = m_worlds.at(0)->m_name;
 		LOG_W("[GameContext] [%s] Gameworld not found! Starting random GameWorld... [%s]", m_nextWorldID.data());
 	}
 	return true;

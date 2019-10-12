@@ -4,4 +4,5 @@ namespace ME
 {
 using HRes = s32;
 using HPrim = s32;
+using HObj = s32;
 } // namespace ME

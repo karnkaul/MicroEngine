@@ -3,16 +3,19 @@
 #include <unordered_map>
 #include "GameTypes.h"
 #include "Worlds/GameWorld.h"
+#include "Objects/GameObject.h"
 
 namespace ME
 {
-class GameContext : NoCopy
+class GameContext
 {
 private:
 	std::unordered_map<std::string, std::unique_ptr<GameWorld>> m_worlds;
+	UFactory<GameObject> test;
 
 public:
 	GameContext();
+	GameContext(GameContext&&);
 	~GameContext();
 
 private:

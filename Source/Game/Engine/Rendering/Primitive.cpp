@@ -22,8 +22,6 @@ Primitive* Primitive::Instantiate(Type type)
 	std::string logText = "[Prim_";
 	logText += std::to_string(m_handle);
 	logText += "] ";
-	logText += Typename(*this);
-	logText += " Instantiated ";
 	switch (type)
 	{
 	case Type::Rectangle:
@@ -41,7 +39,7 @@ Primitive* Primitive::Instantiate(Type type)
 	case Type::Text:
 	{
 		m_uD = std::make_unique<sf::Text>();
-		logText += "Shape";
+		logText += "Text";
 		break;
 	}
 	case Type::Sprite:
@@ -52,7 +50,7 @@ Primitive* Primitive::Instantiate(Type type)
 	}
 	}
 	m_pT = dynamic_cast<sf::Transformable*>(m_uD.get());
-	LOG_D("%s", logText.data());
+	LOG_D("%s instantiated", logText.data());
 	return this;
 }
 

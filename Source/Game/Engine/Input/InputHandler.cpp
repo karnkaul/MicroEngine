@@ -1,7 +1,7 @@
 #include "SFML/Window/Event.hpp"
 #include "InputHandler.h"
-#include "../Viewport/Viewport.h"
-//#include "Engine/GFX.h"
+#include "Engine/Viewport/Viewport.h"
+#include "Engine/GameServices.h"
 
 namespace ME
 {
@@ -89,7 +89,7 @@ ViewportEventType InputHandler::PollEvents(Viewport& sfWindow)
 
 		case sf::Event::MouseMoved:
 		{
-			// m_inputSM.OnMouseMove(g_pGFX->ViewportToWorld(sfEvent.mouseMove.x, sfEvent.mouseMove.y));
+			m_inputSM.OnMouseMove(g_pGFX->ViewportToWorld(sfEvent.mouseMove.x, sfEvent.mouseMove.y));
 			break;
 		}
 
