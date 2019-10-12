@@ -1,6 +1,7 @@
 #pragma once
 #include <functional>
 #include <mutex>
+#include <typeinfo>
 #include <utility>
 #include "Delegate/Delegate.h"
 #include "GameTypes/Fixed.h"
@@ -84,5 +85,33 @@ template <typename T>
 Token MakeToken(T value)
 {
 	return std::make_shared<s32>(ToS32(value));
+}
+
+template <typename T>
+std::string_view Typename(const T& t)
+{
+	static const std::string_view PREFIX = "class ME::";
+	static const size_t PREFIX_LEN = PREFIX.length();
+	std::string_view name = typeid(t).name();
+	auto idx = name.find(PREFIX);
+	if (idx != std::string::npos)
+	{
+		name = name.substr(PREFIX_LEN, name.length() - PREFIX_LEN);
+	}
+	return name;
+}
+
+template <typename T>
+std::string_view Typename()
+{
+	static const std::string_view PREFIX = "class ME::";
+	static const size_t PREFIX_LEN = PREFIX.length();
+	std::string_view name = typeid(T).name();
+	auto idx = name.find(PREFIX);
+	if (idx != std::string::npos)
+	{
+		name = name.substr(PREFIX_LEN, name.length() - PREFIX_LEN);
+	}
+	return name;
 }
 } // namespace ME

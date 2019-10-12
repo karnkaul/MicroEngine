@@ -13,7 +13,7 @@ Primitive::~Primitive()
 {
 	if (m_uD)
 	{
-		LOG_D("[Prim_%d] destroyed", m_handle);
+		LOG_D("[Prim_%d] %s destroyed", m_handle, Typename(*this).data());
 	}
 }
 
@@ -21,7 +21,9 @@ Primitive* Primitive::Instantiate(Type type)
 {
 	std::string logText = "[Prim_";
 	logText += std::to_string(m_handle);
-	logText += "] Instantiated ";
+	logText += "] ";
+	logText += Typename(*this);
+	logText += " Instantiated ";
 	switch (type)
 	{
 	case Type::Rectangle:

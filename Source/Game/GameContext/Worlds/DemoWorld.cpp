@@ -12,6 +12,7 @@ void DemoWorld::OnCreated()
 
 void DemoWorld::Start() 
 {
+	auto junk = g_pResources->Load<Font>("Blah");
 	m_hPrim0 = g_pRenderer->New();
 	// Get a pointer to the primitive handled by m_hprim0
 	auto pPrim = g_pRenderer->Find(m_hPrim0);

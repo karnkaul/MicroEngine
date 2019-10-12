@@ -11,7 +11,7 @@ class Resource : NoCopy
 protected:
 	std::string m_id;
 	std::string m_path;
-	std::string m_type = "Unknown";
+	std::string_view m_type = "Unknown";
 	bool m_bOK = false;
 
 public:
@@ -90,19 +90,19 @@ HRes Resources::Load(const std::string& id)
 			if (pT->Load(id, std::move(path)))
 			{
 				m_idToHandle.emplace(id, handle);
-				LOG_I("[Resources] [%s] %s (Resource) loaded", pT->m_id.data(), pT->m_type.data(), pT->m_path.data());
+				LOG_I("[Resources] [%s] %s loaded", pT->m_id.data(), pT->m_type.data());
 				return handle;
 			}
 			else
 			{
-				LOG_W("[Resources] [%s] Error loading %s (Resource)! [%s]", pT->m_id.data(), pT->m_type.data(), pT->m_path.data());
+				LOG_W("[Resources] [%s] Error loading %s! [%s]", pT->m_id.data(), pT->m_type.data(), pT->m_path.data());
 				m_factory.Destroy(handle);
 			}
 		}
 	}
 	else
 	{
-		LOG_W("[Resources] [%s] Resource not present on filesystem! [%s]", id.data(), path.data());
+		LOG_W("[Resources] [%s] %s not present on filesystem! [%s]", id.data(), Typename<T>().data(), path.data());
 	}
 	return INVALID_HANDLE;
 }
