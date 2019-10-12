@@ -13,13 +13,13 @@ Primitive::~Primitive()
 {
 	if (m_uD)
 	{
-		LOG_D("[Primitive %d] destroyed", m_handle);
+		LOG_D("[Prim_%d] destroyed", m_handle);
 	}
 }
 
 Primitive* Primitive::Instantiate(Type type)
 {
-	std::string logText = "[Primitive ";
+	std::string logText = "[Prim_";
 	logText += std::to_string(m_handle);
 	logText += "] Instantiated ";
 	switch (type)

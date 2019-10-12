@@ -67,7 +67,7 @@ bool Resources::IsFilePresent(const std::string& path) const
 	return std::ifstream(path.c_str()).good();
 }
 
-Resources::HResource Resources::FindID(const std::string& id) const
+HRes Resources::FindID(const std::string& id) const
 {
 	auto search = m_idToHandle.find(id);
 	if (search != m_idToHandle.end())

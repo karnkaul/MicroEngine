@@ -1,4 +1,11 @@
 list(APPEND SOURCES
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/GameContext.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/GameContext.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/GameWorld.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/GameWorld.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/DemoWorld.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/DemoWorld.cpp"
+
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Input/InputDataFrame.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Input/InputDataFrame.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Input/InputHandler.h"
@@ -27,6 +34,7 @@ list(APPEND SOURCES
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Viewport/ViewportData.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Viewport/ViewportData.cpp"
 
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Handles.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/SFTypes.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/GameServices.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/GameServices.cpp"

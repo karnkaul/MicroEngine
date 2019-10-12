@@ -2,6 +2,7 @@
 #include "SFML/Graphics/Font.hpp"
 #include "GameTypes.h"
 #include "Factory/Factory.h"
+#include "Engine/Handles.h"
 
 namespace ME
 {
@@ -43,14 +44,11 @@ protected:
 class Resources final : NoCopy
 {
 public:
-	using HResource = s32;
-
-public:
 	static std::string s_resourcesPath;
 
 private:
 	UFactory<Resource> m_factory;
-	std::unordered_map<std::string, HResource> m_idToHandle;
+	std::unordered_map<std::string, HRes> m_idToHandle;
 
 public:
 	Resources();
@@ -63,18 +61,18 @@ public:
 public:
 	std::string ResourcePath(const std::string& id) const;
 	bool IsFilePresent(const std::string& path) const;
-	HResource FindID(const std::string& id) const;
+	HRes FindID(const std::string& id) const;
 
 public:
 	template <typename T>
-	HResource Load(const std::string& id);
+	HRes Load(const std::string& id);
 
 	template <typename T>
-	T* Find(HResource handle) const;
+	T* Find(HRes handle) const;
 };
 
 template <typename T>
-Resources::HResource Resources::Load(const std::string& id)
+HRes Resources::Load(const std::string& id)
 {
 	static_assert(std::is_base_of<Resource, T>::value, "T must derive from Resource!");
 	auto handle = FindID(id);
@@ -110,7 +108,7 @@ Resources::HResource Resources::Load(const std::string& id)
 }
 
 template <typename T>
-T* Resources::Find(HResource handle) const
+T* Resources::Find(HRes handle) const
 {
 	static_assert(std::is_base_of<Resource, T>::value, "T must derive from Resource!");
 	return (handle > INVALID_HANDLE) ? m_factory.template Find<T>(handle) : nullptr;
