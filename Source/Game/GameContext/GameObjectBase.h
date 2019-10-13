@@ -18,6 +18,7 @@ protected:
 public:
 	GameObjectBase();
 	GameObjectBase(GameObjectBase&&);
+	GameObjectBase& operator=(GameObjectBase&&);
 	virtual ~GameObjectBase();
 
 public:

@@ -8,6 +8,7 @@ namespace ME
 {
 Primitive::Primitive() = default;
 Primitive::Primitive(Primitive&&) = default;
+Primitive& Primitive::operator=(Primitive&&) = default;
 
 Primitive::~Primitive()
 {
@@ -70,6 +71,14 @@ Primitive* Primitive::SetText(const TextData& data)
 		if (data.oText)
 		{
 			pText->setString(*data.oText);
+		}
+		if (data.oFill)
+		{
+			pText->setFillColor(Cast(*data.oFill));
+		}
+		if (data.oOutline)
+		{
+			pText->setOutlineColor(Cast(*data.oOutline));
 		}
 		auto rect = pText->getLocalBounds();
 		sf::Vector2f c = {rect.width * 0.5f, rect.height * 0.5f};

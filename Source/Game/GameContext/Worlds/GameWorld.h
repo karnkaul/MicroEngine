@@ -15,6 +15,7 @@ private:
 public:
 	GameWorld();
 	GameWorld(GameWorld&&);
+	GameWorld& operator=(GameWorld&&);
 	virtual ~GameWorld();
 
 public:

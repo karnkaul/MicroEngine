@@ -16,6 +16,11 @@ Primitive& GameObject::GetPrim()
 	return *m_pPrim;
 }
 
+void GameObject::Destroy()
+{
+	m_bDestroyed = true;
+}
+
 void GameObject::RegisterInput(std::function<bool(const Input::Frame& frame)> callback) 
 {
 	Assert(g_pInput, "Input is null!");

@@ -36,7 +36,7 @@ bool GameContext::StartWorld(const std::string& id)
 	}
 	else
 	{
-		m_nextWorldID = m_worlds.at(0)->m_name;
+		m_nextWorldID = m_worlds.begin()->second->m_name;
 		LOG_W("[GameContext] [%s] Gameworld not found! Starting random GameWorld... [%s]", m_nextWorldID.data());
 	}
 	return true;

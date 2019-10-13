@@ -32,6 +32,7 @@ private:
 public:
 	Primitive();
 	Primitive(Primitive&&);
+	Primitive& operator=(Primitive&&);
 	~Primitive();
 	
 public:

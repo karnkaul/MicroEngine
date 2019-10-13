@@ -5,6 +5,7 @@ namespace ME
 {
 GameObjectBase::GameObjectBase() = default;
 GameObjectBase::GameObjectBase(GameObjectBase&&) = default;
+GameObjectBase& GameObjectBase::operator=(GameObjectBase&&) = default;
 GameObjectBase::~GameObjectBase() 
 {
 	LOG_D("[%s] %s destroyed", m_name.data(), Type().data());

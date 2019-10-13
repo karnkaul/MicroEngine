@@ -10,6 +10,8 @@ struct TextData
 	std::optional<std::string> oText;
 	std::optional<u32> oCharSize;
 	std::optional<class Font*> opFont;
+	std::optional<Colour> oFill;
+	std::optional<Colour> oOutline;
 
 	TextData();
 	TextData(const char* szText);

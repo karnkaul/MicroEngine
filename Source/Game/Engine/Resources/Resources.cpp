@@ -3,6 +3,8 @@
 
 namespace ME
 {
+std::vector<Font*> g_defaultFonts;
+
 std::string Resources::s_resourcesPath;
 
 Resources::Resources() = default;
@@ -12,9 +14,17 @@ bool Resources::Init(std::initializer_list<std::string> defaultFonts)
 {
 	for (const auto& fontID : defaultFonts)
 	{
-		if (Load<Font>(fontID) == INVALID_HANDLE)
+		auto handle = Load<Font>(fontID);
+		if (handle == INVALID_HANDLE)
 		{
 			return false;
+		}
+		else
+		{
+			if (auto pFont = Find<Font>(handle))
+			{
+				g_defaultFonts.push_back(pFont);
+			}
 		}
 	}
 	return true;
@@ -22,6 +32,7 @@ bool Resources::Init(std::initializer_list<std::string> defaultFonts)
 
 void Resources::Clear()
 {
+	g_defaultFonts.clear();
 	m_idToHandle.clear();
 	m_factory.Clear();
 }
