@@ -5,6 +5,7 @@ namespace ME
 {
 GameWorld::GameWorld() = default;
 GameWorld::GameWorld(GameWorld&&) = default;
+GameWorld& GameWorld::operator=(GameWorld&&) = default;
 GameWorld::~GameWorld() = default;
 
 bool GameWorld::DestroyObject(HObj handle)
@@ -31,6 +32,7 @@ void GameWorld::Create(std::string name)
 
 void GameWorld::Start()
 {
+	LOG_I("[%s] %s Started", m_name.data(), m_type.data());
 	OnStarting();
 }
 
@@ -39,5 +41,6 @@ void GameWorld::Stop()
 	m_inputTokens.clear();
 	OnStopping();
 	m_objectFactory.Clear();
+	LOG_I("[%s] %s Stopped", m_name.data(), m_type.data());
 }
 } // namespace ME

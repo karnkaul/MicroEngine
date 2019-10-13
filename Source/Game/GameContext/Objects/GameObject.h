@@ -10,6 +10,9 @@ protected:
 	HPrim m_hPrim = INVALID_HANDLE;
 	Primitive* m_pPrim = nullptr;
 
+private:
+	bool m_bDestroyed = false;
+
 public:
 	bool m_bEnabled = true;
 
@@ -20,6 +23,7 @@ public:
 
 public:
 	Primitive& GetPrim();
+	void Destroy();
 
 protected:
 	void RegisterInput(std::function<bool(const Input::Frame& frame)> callback);

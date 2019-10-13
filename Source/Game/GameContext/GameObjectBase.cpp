@@ -5,7 +5,8 @@ namespace ME
 {
 GameObjectBase::GameObjectBase() = default;
 GameObjectBase::GameObjectBase(GameObjectBase&&) = default;
-GameObjectBase::~GameObjectBase() 
+GameObjectBase& GameObjectBase::operator=(GameObjectBase&&) = default;
+GameObjectBase::~GameObjectBase()
 {
 	LOG_D("[%s] %s destroyed", m_name.data(), Type().data());
 }
@@ -20,9 +21,9 @@ std::string_view GameObjectBase::Type() const
 	return m_type.empty() ? (m_type = ME::Typename(*this)) : m_type;
 }
 
-void GameObjectBase::RegisterInput(std::function<bool(const Input::Frame& frame)> callback)
+void GameObjectBase::RegisterInput(std::function<bool(const Input::Frame& frame)> callback, bool bForceEveryFrame)
 {
 	Assert(g_pInput, "Input is null!");
-	m_inputTokens.push_back(g_pInput->Register(callback));
+	m_inputTokens.push_back(g_pInput->Register(callback, bForceEveryFrame));
 }
 } // namespace ME

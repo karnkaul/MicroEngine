@@ -28,7 +28,7 @@ public:
 
 public:
 	void Start();
-	void Tick(Time dt);
+	bool Tick(Time dt);
 	void Stop();
 };
 } // namespace ME

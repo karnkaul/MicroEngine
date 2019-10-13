@@ -36,14 +36,15 @@ bool GameContext::StartWorld(const std::string& id)
 	}
 	else
 	{
-		m_nextWorldID = m_worlds.at(0)->m_name;
+		m_nextWorldID = m_worlds.begin()->second->m_name;
 		LOG_W("[GameContext] [%s] Gameworld not found! Starting random GameWorld... [%s]", m_nextWorldID.data());
 	}
 	return true;
 }
 
-void GameContext::Tick(Time dt)
+bool GameContext::Tick(Time dt)
 {
+	bool bDoFrame = true;
 	if (!m_nextWorldID.empty())
 	{
 		auto search = m_worlds.find(m_nextWorldID);
@@ -55,13 +56,15 @@ void GameContext::Tick(Time dt)
 			}
 			m_pActive = search->second.get();
 			m_pActive->Start();
+			bDoFrame = false;
 		}
 		m_nextWorldID.clear();
 	}
-	if (m_pActive)
+	if (m_pActive && bDoFrame)
 	{
 		m_pActive->Tick(dt);
 	}
+	return bDoFrame;
 }
 
 void GameContext::Stop()

@@ -1,21 +1,35 @@
 #include "Engine/GameServices.h"
-#include "DemoWorld.h"
+#include "Tutorial2.h"
 
 namespace ME
 {
-void DemoWorld::OnCreated()
+void Tutorial2::OnCreated()
 {
 	Assert(g_pResources, "Resources is null!");
 	// Get a handle to the Default-Serif.ttf font; load heavy stuff when created
 	m_hSerifFont = g_pResources->Load<Font>("Default-Serif.ttf");
 }
 
-void DemoWorld::OnStarting()
+void Tutorial2::OnStarting()
 {
-	RegisterInput([](const Input::Frame& frame) -> bool {
-		LOGIF_I(frame.IsPressed(KeyCode::A), "A pressed!");
-		return false;
-	});
+	RegisterInput(
+		[this](const Input::Frame& frame) -> bool {
+			if (frame.IsReleased(KeyCode::Space))
+			{
+				const std::string nextWorldID = "Tutorial3";
+				if (!g_pContext->LoadWorld(nextWorldID))
+				{
+					LOG_W("[%s] %s GameWorld does not exist!", m_name.data(), nextWorldID.data());
+				}
+			}
+			// Go back to Tutorial0 on Escape
+			if (frame.IsReleased(KeyCode::Escape))
+			{
+				g_pContext->LoadWorld("Tutorial1");
+			}
+			return false;
+		},
+		true);
 
 	m_hObj0 = NewObject<GameObject>("Hello-Text");
 	auto pObj = FindObject<GameObject>(m_hObj0);
@@ -57,9 +71,10 @@ void DemoWorld::OnStarting()
 	static const Time PRIM_TTL = Time::Seconds(3.5f);
 	m_obj1LayerTTL = LAYER_TTL;
 	m_obj1TTL = PRIM_TTL;
+	m_bObj1LayerChanged = m_bObj1Destroyed = false;
 }
 
-void DemoWorld::Tick(Time dt)
+void Tutorial2::Tick(Time dt)
 {
 	m_obj1LayerTTL -= dt;
 	if (m_obj1LayerTTL <= Time::Zero && !m_bObj1LayerChanged)
@@ -94,10 +109,11 @@ void DemoWorld::Tick(Time dt)
 		// Destroy this one after 3.5 seconds
 		DestroyObject(m_hObj1);
 		m_hObj1 = INVALID_HANDLE;
+		m_bObj1Destroyed = true;
 	}
 }
 
-void DemoWorld::OnStopping()
+void Tutorial2::OnStopping()
 {
 	// Reset the handles, just in case
 	m_hObj0 = INVALID_HANDLE;

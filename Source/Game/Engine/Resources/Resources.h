@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <unordered_map>
+#include <vector>
 #include "GameTypes.h"
 #include "Factory/Factory.h"
 #include "Engine/Handles.h"
@@ -8,6 +9,8 @@
 
 namespace ME
 {
+extern std::vector<Font*> g_defaultFonts;
+
 class Resources final : NoCopy
 {
 public:

@@ -1,14 +1,24 @@
 list(APPEND SOURCES
+	"${CMAKE_CURRENT_LIST_DIR}/Source.cmake"
+
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/GameContext.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/GameContext.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/GameObjectBase.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/GameObjectBase.cpp"
-	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/GameWorld.h"
-	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/GameWorld.cpp"
+
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/GameObject.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/GameObject.cpp"
-	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/DemoWorld.h"
-	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/DemoWorld.cpp"
+	
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/GameWorld.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/GameWorld.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/GameWorld.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/GameWorld.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Tutorial0.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Tutorial0.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Tutorial1.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Tutorial1.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Tutorial2.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Tutorial2.cpp"
 
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Input/InputDataFrame.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Input/InputDataFrame.cpp"

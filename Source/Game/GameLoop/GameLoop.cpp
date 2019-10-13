@@ -92,12 +92,12 @@ void PollEvents(Viewport& vp)
 	}
 }
 
-void Tick(Time dt)
+bool Tick(Time dt)
 {
 	g_pInput->TakeSnapshot();
 	g_pInput->FireCallbacks();
 
-	uGS->Tick(dt);
+	return uGS->Tick(dt);
 }
 
 void Sleep(Time frameTime)
@@ -141,8 +141,10 @@ s32 GameLoop::Run(s32 argc, char** argv)
 		Time dt = Time::Now() - frameStart;
 		frameStart = Time::Now();
 		PollEvents(viewport);
-		Tick(dt);
-		g_pRenderer->Render(viewport);
+		if (Tick(dt))
+		{
+			g_pRenderer->Render(viewport);
+		}
 		frameTime = Time::Now() - frameStart;
 		Sleep(frameTime);
 	}
