@@ -12,109 +12,86 @@ void Tutorial1::OnCreated()
 
 void Tutorial1::OnStarting()
 {
-	RegisterInput([this](const Input::Frame& frame) -> bool {
-		if (frame.IsReleased(KeyCode::Space))
-		{
-			const std::string nextWorldID = "Tutorial2";
-			if (!g_pContext->LoadWorld(nextWorldID))
+	RegisterInput(
+		[this](const Input::Frame& frame) -> bool {
+			if (frame.IsReleased(KeyCode::Space))
 			{
-				LOG_W("[%s] %s GameWorld does not exist!", m_name.data(), nextWorldID.data());
+				const std::string nextWorldID = "Tutorial2";
+				if (!g_pContext->LoadWorld(nextWorldID))
+				{
+					LOG_W("[%s] %s GameWorld does not exist!", m_name.data(), nextWorldID.data());
+				}
 			}
-		}
-		// Go back to Tutorial0 on Escape
-		if (frame.IsReleased(KeyCode::Escape))
-		{
-			g_pContext->LoadWorld("Tutorial0");
-		}
-		return false;
-	});
+			// Go back to Tutorial0 on Escape
+			if (frame.IsReleased(KeyCode::Escape))
+			{
+				g_pContext->LoadWorld("Tutorial0");
+			}
+			if (frame.IsReleased(KeyCode::Tab))
+			{
+				// Toggle the follow lock
+				m_bPointerFollow = !m_bPointerFollow;
+			}
+			// Store the mouse's world position so it can be used later
+			m_pointerPos = frame.mouseInput.worldPosition;
+			return false;
+		},
+		true); // Pass true to force a callback every frame (unless overriden by a later registrant)
 
-	m_hObj0 = NewObject<GameObject>("Hello-Text");
-	auto pObj = FindObject<GameObject>(m_hObj0);
-	if (pObj)
+	m_hMainText = NewObject<GameObject>("MainText");
+	auto pMainText = FindObject<GameObject>(m_hMainText);
+	if (pMainText)
 	{
-		auto& prim0 = pObj->GetPrim();
+		auto& prim0 = pMainText->GetPrim();
 		prim0.Instantiate(Primitive::Type::Text);
 		// Setup some text data
-		TextData data("Hello!");
-		data.oCharSize = 100;
+		TextData data("Press Tab to toggle pointer lock");
+		data.oCharSize = 50;
+		data.oFill = Colour(230, 125, 96); // {R, G, B, A} each E [0, 255]
 		data.opFont = g_pResources->Find<Font>(m_hSerifFont);
 		// Set the text
 		prim0.SetText(data);
-		// Set the position to +200 in the y direction
+		// Let's move its position to +200 Y
 		prim0.m_transform.SetPosition({0, 200});
 	}
 
-	m_hObj1 = NewObject<GameObject>("Yellow-Rect");
-	pObj = FindObject<GameObject>(m_hObj1);
-	if (pObj)
+	m_hPointerCircle = NewObject<GameObject>("PointerCircle");
+	auto pPointer = FindObject<GameObject>(m_hPointerCircle);
+	if (pPointer)
 	{
 		ShapeData data;
-		data.oSize = {500, 200};
+		data.oSize = {10, 10};
 		data.oFill = Colour(100, 100, 0);
 		data.oOutline = Colour::Magenta;
-		auto& pPrim1 = pObj->GetPrim();
-		pPrim1.Instantiate(Primitive::Type::Rectangle)->SetShape(data);
-		// Find previous object
-		pObj = FindObject<GameObject>(m_hObj0);
-		if (pObj)
-		{
-			// Exploit matrix transformation to "lock" it to prim0
-			pPrim1.m_transform.SetParent(pObj->GetPrim().m_transform);
-		}
+		data.oBorder = 2;
+		auto& pPointerPrim = pPointer->GetPrim();
+		pPointerPrim.Instantiate(Primitive::Type::Circle)->SetShape(data);
 	}
-
-	// Reset all clocks etc
-	static const Time LAYER_TTL = Time::Seconds(1.5f);
-	static const Time PRIM_TTL = Time::Seconds(3.5f);
-	m_obj1LayerTTL = LAYER_TTL;
-	m_obj1TTL = PRIM_TTL;
-	m_bObj1LayerChanged = m_bObj1Destroyed = false;
 }
 
-void Tutorial1::Tick(Time dt)
+// We don't need (the compiler to store space for) dt right now, so comment it out to avoid compiler warnings
+void Tutorial1::Tick(Time /*dt*/)
 {
-	m_obj1LayerTTL -= dt;
-	if (m_obj1LayerTTL <= Time::Zero && !m_bObj1LayerChanged)
+	if (m_bPointerFollow)
 	{
-		// Push the rectangle below the text after 1.5 seconds
-		auto pObj1 = FindObject<GameObject>(m_hObj1);
-		if (pObj1)
+		// Since this is called every frame, we just set the primitive's world position
+		// to the mouse's when this frame began Ticking
+		auto pPointer = FindObject<GameObject>(m_hPointerCircle);
+		if (pPointer)
 		{
-			auto& prim1 = pObj1->GetPrim();
-			--prim1.m_layer;
-			auto pObj = FindObject<GameObject>(m_hObj0);
-			if (pObj)
-			{
-				auto& prim0 = pObj->GetPrim();
-				// Find a point halfway between centre and left edge
-				Vector2 world = g_pGFX->WorldProjection({Fixed(-0.5f), 0});
-				// Magic! Both move (because of parenting)
-				prim0.m_transform.SetPosition(world);
-				// Rotate only the child to point equal parts +x and +y
-				// (all models start facing right (1, 0))
-				prim1.m_transform.SetOrientation(Vector2::One);
-			}
+			pPointer->GetPrim().m_transform.SetPosition(m_pointerPos);
 		}
-		// Stop decrementing layer! (Don't care about `remain` any more, that can
-		// underflow for days / months / years / ...; won't affect any code)
-		m_bObj1LayerChanged = true;
-	}
-
-	m_obj1TTL -= dt;
-	if (m_obj1TTL <= Time::Zero && !m_bObj1Destroyed)
-	{
-		// Destroy this one after 3.5 seconds
-		DestroyObject(m_hObj1);
-		m_hObj1 = INVALID_HANDLE;
-		m_bObj1Destroyed = true;
 	}
 }
 
 void Tutorial1::OnStopping()
 {
 	// Reset the handles, just in case
-	m_hObj0 = INVALID_HANDLE;
-	m_hObj1 = INVALID_HANDLE;
+	m_hMainText = m_hPointerCircle = INVALID_HANDLE;
+
+	// Note m_bPointerFollow is not reset here (or in OnStarting()),
+	// so it will retain its previous state if this world is reloaded
+
+	// No need to reset m_hSerifFont: it won't be destroyed (it is not owned by this World, but by Resources)
 }
 } // namespace ME

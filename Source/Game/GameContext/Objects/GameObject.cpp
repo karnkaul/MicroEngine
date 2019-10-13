@@ -5,7 +5,7 @@ namespace ME
 {
 GameObject::GameObject() = default;
 GameObject::GameObject(GameObject&&) = default;
-GameObject::~GameObject() 
+GameObject::~GameObject()
 {
 	g_pRenderer->Destroy(m_hPrim);
 }
@@ -21,7 +21,7 @@ void GameObject::Destroy()
 	m_bDestroyed = true;
 }
 
-void GameObject::RegisterInput(std::function<bool(const Input::Frame& frame)> callback) 
+void GameObject::RegisterInput(std::function<bool(const Input::Frame& frame)> callback)
 {
 	Assert(g_pInput, "Input is null!");
 	m_inputTokens.push_back(g_pInput->Register(callback));

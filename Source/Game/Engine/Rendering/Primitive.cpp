@@ -80,6 +80,10 @@ Primitive* Primitive::SetText(const TextData& data)
 		{
 			pText->setOutlineColor(Cast(*data.oOutline));
 		}
+		if (data.oBorder)
+		{
+			pText->setOutlineThickness(Cast(*data.oBorder));
+		}
 		auto rect = pText->getLocalBounds();
 		sf::Vector2f c = {rect.width * 0.5f, rect.height * 0.5f};
 		pText->setOrigin(c);
@@ -125,6 +129,17 @@ Primitive* Primitive::SetShape(const ShapeData& data)
 		if (pRect)
 		{
 			pRect->setOutlineColor(Cast(*data.oOutline));
+		}
+	}
+	if (data.oBorder)
+	{
+		if (pCircle)
+		{
+			pCircle->setOutlineThickness(Cast(*data.oBorder));
+		}
+		if (pRect)
+		{
+			pRect->setOutlineThickness(Cast(*data.oBorder));
 		}
 	}
 	return this;

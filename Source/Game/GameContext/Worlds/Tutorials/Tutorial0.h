@@ -6,7 +6,7 @@ namespace ME
 class Tutorial0 : public GameWorld
 {
 private:
-	// HObj is a Handle to a (Game)Object, it will "point" to an instance and can be used 
+	// HObj is a Handle to a (Game)Object, it will "point" to an instance and can be used
 	// to retrieve the instance from the owner (this GameWorld object).
 	// Initialising it to INVALID is good practice for debugging.
 	HObj m_hMainText = INVALID_HANDLE;

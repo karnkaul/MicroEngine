@@ -12,6 +12,7 @@ struct TextData
 	std::optional<class Font*> opFont;
 	std::optional<Colour> oFill;
 	std::optional<Colour> oOutline;
+	std::optional<Fixed> oBorder;
 
 	TextData();
 	TextData(const char* szText);
@@ -23,6 +24,7 @@ struct ShapeData
 	std::optional<Vector2> oSize;
 	std::optional<Colour> oFill;
 	std::optional<Colour> oOutline;
+	std::optional<Fixed> oBorder;
 };
 
 inline TextData::TextData() = default;

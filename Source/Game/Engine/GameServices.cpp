@@ -1,6 +1,7 @@
 #include "GameServices.h"
-#include "GameContext/Worlds/Tutorials/Tutorial1.h"
 #include "GameContext/Worlds/Tutorials/Tutorial0.h"
+#include "GameContext/Worlds/Tutorials/Tutorial1.h"
+#include "GameContext/Worlds/Tutorials/Tutorial2.h"
 
 namespace ME
 {
@@ -43,15 +44,16 @@ void GameServices::Start()
 {
 	m_context.ConstructWorld<Tutorial0>("Tutorial0");
 	m_context.ConstructWorld<Tutorial1>("Tutorial1");
+	m_context.ConstructWorld<Tutorial2>("Tutorial2");
 	m_context.StartWorld("Tutorial0");
 }
 
-void GameServices::Tick(Time dt)
+bool GameServices::Tick(Time dt)
 {
-	m_context.Tick(dt);
+	return m_context.Tick(dt);
 }
 
-void GameServices::Stop() 
+void GameServices::Stop()
 {
 	m_context.Stop();
 }

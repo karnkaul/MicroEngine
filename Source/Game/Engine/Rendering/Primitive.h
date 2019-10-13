@@ -34,7 +34,7 @@ public:
 	Primitive(Primitive&&);
 	Primitive& operator=(Primitive&&);
 	~Primitive();
-	
+
 public:
 	Primitive* Instantiate(Type type);
 	Primitive* SetText(const TextData& data);

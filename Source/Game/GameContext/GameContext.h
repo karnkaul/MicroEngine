@@ -31,7 +31,7 @@ private:
 
 private:
 	bool StartWorld(const std::string& id);
-	void Tick(Time dt);
+	bool Tick(Time dt);
 	void Stop();
 
 	friend class GameServices;

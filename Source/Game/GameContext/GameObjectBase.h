@@ -26,7 +26,7 @@ public:
 	std::string_view Type() const;
 
 protected:
-	void RegisterInput(std::function<bool(const Input::Frame& frame)> callback);
+	void RegisterInput(std::function<bool(const Input::Frame& frame)> callback, bool bForceEveryFrame = false);
 
 	friend class GameContext;
 };

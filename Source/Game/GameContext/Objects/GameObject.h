@@ -15,7 +15,7 @@ private:
 
 public:
 	bool m_bEnabled = true;
-	
+
 public:
 	GameObject();
 	GameObject(GameObject&&);
