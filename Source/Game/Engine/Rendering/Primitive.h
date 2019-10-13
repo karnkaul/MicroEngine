@@ -24,6 +24,7 @@ public:
 	Vector2 m_position;
 	Vector2 m_orientation = Vector2::Right;
 	LayerID m_layer = 0;
+	bool m_bEnabled = true;
 
 private:
 	std::unique_ptr<sf::Drawable> m_uD;

@@ -2,6 +2,7 @@
 #include "GameContext/Worlds/Tutorials/Tutorial0.h"
 #include "GameContext/Worlds/Tutorials/Tutorial1.h"
 #include "GameContext/Worlds/Tutorials/Tutorial2.h"
+#include "GameContext/Worlds/Tutorials/Tutorial3.h"
 
 namespace ME
 {
@@ -45,6 +46,7 @@ void GameServices::Start()
 	m_context.ConstructWorld<Tutorial0>("Tutorial0");
 	m_context.ConstructWorld<Tutorial1>("Tutorial1");
 	m_context.ConstructWorld<Tutorial2>("Tutorial2");
+	m_context.ConstructWorld<Tutorial3>("Tutorial3");
 	m_context.StartWorld("Tutorial0");
 }
 

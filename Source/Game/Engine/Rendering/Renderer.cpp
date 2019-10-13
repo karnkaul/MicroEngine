@@ -40,7 +40,11 @@ void Renderer::Render(Viewport& viewport)
 	prims.reserve(m_factory.m_instanced.size());
 	for (auto& kvp : m_factory.m_instanced)
 	{
-		prims.push_back(&kvp.second);
+		auto& prim = kvp.second;
+		if (prim.m_bEnabled)
+		{
+			prims.push_back(&prim);
+		}
 	}
 	std::sort(prims.begin(), prims.end(), [](Primitive* pLHS, Primitive* pRHS) { return pLHS->m_layer < pRHS->m_layer; });
 	viewport.clear();

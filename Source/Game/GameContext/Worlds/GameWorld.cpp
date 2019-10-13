@@ -24,7 +24,11 @@ void GameWorld::Tick(Time dt)
 {
 	for (auto& kvp : m_objectFactory.m_instanced)
 	{
-		kvp.second->Tick(dt);
+		auto& obj = kvp.second;
+		if (obj->IsEnabled())
+		{
+			obj->Tick(dt);
+		}
 	}
 }
 

@@ -99,7 +99,7 @@ Primitive* Primitive::SetShape(const ShapeData& data)
 	{
 		if (pCircle)
 		{
-			pCircle->setRadius((data.oSize->x + data.oSize->y).ToF32());
+			pCircle->setRadius((Fixed::OneHalf * (data.oSize->x + data.oSize->y)).ToF32());
 			pCircle->setOrigin({data.oSize->x.ToF32(), data.oSize->y.ToF32()});
 		}
 		if (pRect)
@@ -156,7 +156,7 @@ void Primitive::Update()
 
 void Primitive::Draw(Viewport& viewport)
 {
-	if (m_uD)
+	if (m_uD && m_bEnabled)
 	{
 		viewport.draw(*m_uD);
 	}

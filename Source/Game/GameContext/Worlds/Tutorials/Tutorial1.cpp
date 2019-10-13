@@ -44,14 +44,14 @@ void Tutorial1::OnStarting()
 	{
 		pMainText->Instantiate(Primitive::Type::Text);
 		// Setup some custom text data
-		TextData data("Press Tab to toggle pointer lock");
+		TextData data("Tab : Toggle Pointer Lock\nSpace : Load Next Tutorial\nEscape : Go Back");
 		data.oCharSize = 50;
-		data.oFill = Colour(230, 125, 96); // {R, G, B, A} each E [0, 255]
+		data.oFill = Colour(230, 120, 90); // {R, G, B, A} each E [0, 255]
 		data.opFont = g_pResources->Find<Font>(m_hSerifFont);
 		// Set the text
 		pMainText->SetText(data);
 		// Let's move its position to +200 Y
-		pMainText->m_transform.SetPosition({0, 200});
+		pMainText->m_transform.SetPosition(Vector2(0, 200));
 	}
 
 	m_hPointerCircle = NewObject<GameObject>("PointerCircle");
@@ -59,8 +59,8 @@ void Tutorial1::OnStarting()
 	if (pPointer)
 	{
 		ShapeData data;
-		data.oSize = {10, 10};
-		data.oFill = Colour(100, 100, 0);
+		data.oSize = Vector2(30, 30);
+		data.oFill = Colour(240, 220, 20);
 		data.oOutline = Colour::Magenta;
 		data.oBorder = 2;
 		pPointer->Instantiate(Primitive::Type::Circle).SetShape(data);

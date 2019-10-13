@@ -70,9 +70,23 @@ GameObject& GameObject::SetShape(const ShapeData& data)
 	return *this;
 }
 
+void GameObject::SetEnabled(bool bEnabled)
+{
+	if (m_pPrim)
+	{
+		m_pPrim->m_bEnabled = bEnabled;
+	}
+	m_flags[ToIdx(Flags::Enabled)] = bEnabled;
+}
+
 void GameObject::Destroy()
 {
-	m_bDestroyed = true;
+	m_flags[ToIdx(Flags::Destroyed)] = true;
+}
+
+bool GameObject::IsEnabled() const
+{
+	return m_flags[ToIdx(Flags::Enabled)];
 }
 
 void GameObject::RegisterInput(std::function<bool(const Input::Frame& frame)> callback)
@@ -97,6 +111,7 @@ void GameObject::Create(std::string id)
 	m_name = std::move(id);
 	m_pPrim = g_pRenderer->Find(m_hPrim = g_pRenderer->New());
 	Assert(m_pPrim && m_hPrim != INVALID_HANDLE, "Could not allocate Primitive for GameObject!");
+	SetEnabled(true);
 	OnCreate();
 	LOG_D("[%s] %s created", m_name.data(), Type().data());
 }
