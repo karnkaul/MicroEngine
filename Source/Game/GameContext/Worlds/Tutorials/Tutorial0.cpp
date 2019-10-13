@@ -14,20 +14,10 @@ void Tutorial0::OnStarting()
 	// and then the pointer will dangle. That's one reason we use handles.
 	if (pHelloText)
 	{
-		// Get a reference to the underlying primitive; by default all primitives
-		// are locateds at the world's origin (centre-screen) and facing right (+X).
-		auto& helloPrim = pHelloText->GetPrim();
 		// Instantiate a text object: a Primitive can construct different kinds of "sub-primitives"
-		helloPrim.Instantiate(Primitive::Type::Text);
-		// Set up some text data
-		TextData data("... Press Space to Continue ...");
-		// Assert in case there are no fonts (shouldn't be possible; game code won't run without any default fonts)
-		Assert(!g_defaultFonts.empty(), "Default fonts is empty!");
-		data.opFont = g_defaultFonts.front();
-		data.oCharSize = 60;
-		data.oFill = Colour::Yellow;
-		// Apply the data
-		helloPrim.SetText(data);
+		pHelloText->Instantiate(Primitive::Type::Text);
+		// Set some text
+		pHelloText->SetText("... Press Space to Continue ...");
 	}
 
 	// This is how we register callbacks for user input: via a function

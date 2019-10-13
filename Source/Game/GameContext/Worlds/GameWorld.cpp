@@ -19,7 +19,15 @@ bool GameWorld::DestroyObject(HObj handle)
 
 void GameWorld::OnCreated() {}
 void GameWorld::OnStarting() {}
-void GameWorld::Tick(Time /*dt*/) {}
+
+void GameWorld::Tick(Time dt) 
+{
+	for (auto& kvp : m_objectFactory.m_instanced)
+	{
+		kvp.second->Tick(dt);
+	}
+}
+
 void GameWorld::OnStopping() {}
 
 void GameWorld::Create(std::string name)

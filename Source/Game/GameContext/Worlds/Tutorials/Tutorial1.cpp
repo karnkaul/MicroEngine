@@ -42,17 +42,16 @@ void Tutorial1::OnStarting()
 	auto pMainText = FindObject<GameObject>(m_hMainText);
 	if (pMainText)
 	{
-		auto& prim0 = pMainText->GetPrim();
-		prim0.Instantiate(Primitive::Type::Text);
-		// Setup some text data
+		pMainText->Instantiate(Primitive::Type::Text);
+		// Setup some custom text data
 		TextData data("Press Tab to toggle pointer lock");
 		data.oCharSize = 50;
 		data.oFill = Colour(230, 125, 96); // {R, G, B, A} each E [0, 255]
 		data.opFont = g_pResources->Find<Font>(m_hSerifFont);
 		// Set the text
-		prim0.SetText(data);
+		pMainText->SetText(data);
 		// Let's move its position to +200 Y
-		prim0.m_transform.SetPosition({0, 200});
+		pMainText->m_transform.SetPosition({0, 200});
 	}
 
 	m_hPointerCircle = NewObject<GameObject>("PointerCircle");
@@ -64,13 +63,12 @@ void Tutorial1::OnStarting()
 		data.oFill = Colour(100, 100, 0);
 		data.oOutline = Colour::Magenta;
 		data.oBorder = 2;
-		auto& pPointerPrim = pPointer->GetPrim();
-		pPointerPrim.Instantiate(Primitive::Type::Circle)->SetShape(data);
+		pPointer->Instantiate(Primitive::Type::Circle).SetShape(data);
 	}
 }
 
 // We don't need (the compiler to store space for) dt right now, so comment it out to avoid compiler warnings
-void Tutorial1::Tick(Time /*dt*/)
+void Tutorial1::Tick(Time dt)
 {
 	if (m_bPointerFollow)
 	{
@@ -79,9 +77,11 @@ void Tutorial1::Tick(Time /*dt*/)
 		auto pPointer = FindObject<GameObject>(m_hPointerCircle);
 		if (pPointer)
 		{
-			pPointer->GetPrim().m_transform.SetPosition(m_pointerPos);
+			pPointer->m_transform.SetPosition(m_pointerPos);
 		}
 	}
+	// Remember to call the base class implementation (if it is not trivial)
+	GameWorld::Tick(dt);
 }
 
 void Tutorial1::OnStopping()

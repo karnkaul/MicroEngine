@@ -149,8 +149,8 @@ void Primitive::Update()
 {
 	if (m_pT)
 	{
-		m_pT->setPosition(Cast(WorldToSFML(m_transform.WorldPosition())));
-		m_pT->setRotation(WorldToSFML(Vector2::ToOrientation(m_transform.WorldOrientation())).ToF32());
+		m_pT->setPosition(Cast(WorldToSFML(m_position)));
+		m_pT->setRotation(WorldToSFML(Vector2::ToOrientation(m_orientation)).ToF32());
 	}
 }
 

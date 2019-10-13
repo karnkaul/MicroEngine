@@ -6,15 +6,22 @@ namespace ME
 {
 class GameObject : public GameObjectBase
 {
+public:
+	static const Colour DEFAULT_TEXT_COLOUR;
+	static const u32 DEFAULT_TEXT_SIZE;
+
+public:
+	Transform m_transform;
+	LayerID m_layer;
+	bool m_bEnabled = true;
+
 protected:
 	HPrim m_hPrim = INVALID_HANDLE;
 	Primitive* m_pPrim = nullptr;
 
 private:
+	TextData m_textData;
 	bool m_bDestroyed = false;
-
-public:
-	bool m_bEnabled = true;
 
 public:
 	GameObject();
@@ -23,6 +30,9 @@ public:
 
 public:
 	Primitive& GetPrim();
+	GameObject& Instantiate(Primitive::Type type);
+	GameObject& SetText(const TextData& data);
+	GameObject& SetShape(const ShapeData& data);
 	void Destroy();
 
 protected:

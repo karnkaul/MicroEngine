@@ -32,37 +32,33 @@ void Tutorial2::OnStarting()
 		true);
 
 	m_hObj0 = NewObject<GameObject>("Hello-Text");
-	auto pObj = FindObject<GameObject>(m_hObj0);
-	if (pObj)
+	auto pObj0 = FindObject<GameObject>(m_hObj0);
+	if (pObj0)
 	{
-		auto& prim0 = pObj->GetPrim();
-		prim0.Instantiate(Primitive::Type::Text);
+		pObj0->Instantiate(Primitive::Type::Text);
 		// Setup some text data
 		TextData data("Hello!");
 		data.oCharSize = 100;
 		data.opFont = g_pResources->Find<Font>(m_hSerifFont);
 		// Set the text
-		prim0.SetText(data);
+		pObj0->SetText(data);
 		// Set the position to +200 in the y direction
-		prim0.m_transform.SetPosition({0, 200});
+		pObj0->m_transform.SetPosition({0, 200});
 	}
 
 	m_hObj1 = NewObject<GameObject>("Yellow-Rect");
-	pObj = FindObject<GameObject>(m_hObj1);
-	if (pObj)
+	auto pObj1 = FindObject<GameObject>(m_hObj1);
+	if (pObj1)
 	{
 		ShapeData data;
 		data.oSize = {500, 200};
 		data.oFill = Colour(100, 100, 0);
 		data.oOutline = Colour::Magenta;
-		auto& pPrim1 = pObj->GetPrim();
-		pPrim1.Instantiate(Primitive::Type::Rectangle)->SetShape(data);
-		// Find previous object
-		pObj = FindObject<GameObject>(m_hObj0);
-		if (pObj)
+		pObj1->Instantiate(Primitive::Type::Rectangle).SetShape(data);
+		if (pObj0)
 		{
 			// Exploit matrix transformation to "lock" it to prim0
-			pPrim1.m_transform.SetParent(pObj->GetPrim().m_transform);
+			pObj1->m_transform.SetParent(pObj0->m_transform);
 		}
 	}
 
@@ -83,19 +79,17 @@ void Tutorial2::Tick(Time dt)
 		auto pObj1 = FindObject<GameObject>(m_hObj1);
 		if (pObj1)
 		{
-			auto& prim1 = pObj1->GetPrim();
-			--prim1.m_layer;
-			auto pObj = FindObject<GameObject>(m_hObj0);
-			if (pObj)
+			--pObj1->m_layer;
+			auto pObj0 = FindObject<GameObject>(m_hObj0);
+			if (pObj0)
 			{
-				auto& prim0 = pObj->GetPrim();
 				// Find a point halfway between centre and left edge
 				Vector2 world = g_pGFX->WorldProjection({Fixed(-0.5f), 0});
 				// Magic! Both move (because of parenting)
-				prim0.m_transform.SetPosition(world);
+				pObj0->m_transform.SetPosition(world);
 				// Rotate only the child to point equal parts +x and +y
 				// (all models start facing right (1, 0))
-				prim1.m_transform.SetOrientation(Vector2::One);
+				pObj1->m_transform.SetOrientation(Vector2::One);
 			}
 		}
 		// Stop decrementing layer! (Don't care about `remain` any more, that can
@@ -111,6 +105,8 @@ void Tutorial2::Tick(Time dt)
 		m_hObj1 = INVALID_HANDLE;
 		m_bObj1Destroyed = true;
 	}
+	// Remember to call the base class implementation (if it is not trivial)
+	GameWorld::Tick(dt);
 }
 
 void Tutorial2::OnStopping()

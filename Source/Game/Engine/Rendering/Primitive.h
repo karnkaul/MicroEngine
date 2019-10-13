@@ -21,7 +21,8 @@ public:
 	};
 
 public:
-	Transform m_transform;
+	Vector2 m_position;
+	Vector2 m_orientation = Vector2::Right;
 	LayerID m_layer = 0;
 
 private:
