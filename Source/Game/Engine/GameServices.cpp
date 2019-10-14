@@ -41,7 +41,7 @@ GameServices::~GameServices()
 	g_pRenderer = nullptr;
 }
 
-void GameServices::Start()
+void GameServices::StartGame()
 {
 	m_context.ConstructWorld<Tutorial0>("Tutorial0");
 	m_context.ConstructWorld<Tutorial1>("Tutorial1");
@@ -50,9 +50,14 @@ void GameServices::Start()
 	m_context.StartWorld("Tutorial0");
 }
 
-bool GameServices::Tick(Time dt)
+void GameServices::StartFrame()
 {
-	return m_context.Tick(dt);
+	m_context.StartFrame();
+}
+
+void GameServices::Tick(Time dt)
+{
+	m_context.Tick(dt);
 }
 
 void GameServices::Stop()

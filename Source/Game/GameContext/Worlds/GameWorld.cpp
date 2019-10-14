@@ -3,6 +3,14 @@
 
 namespace ME
 {
+GameWorld* GameWorld::s_pActive = nullptr;
+
+GameWorld& GameWorld::Active()
+{
+	Assert(s_pActive, "Active GameWorld is null!");
+	return *s_pActive;
+}
+
 GameWorld::GameWorld() = default;
 GameWorld::GameWorld(GameWorld&&) = default;
 GameWorld& GameWorld::operator=(GameWorld&&) = default;
@@ -46,6 +54,7 @@ void GameWorld::Create(std::string name)
 void GameWorld::Start()
 {
 	LOG_I("[%s] %s Started", m_name.data(), m_type.data());
+	s_pActive = this;
 	OnStarting();
 }
 
@@ -54,6 +63,7 @@ void GameWorld::Stop()
 	m_inputTokens.clear();
 	OnStopping();
 	m_objectFactory.Clear();
+	s_pActive = nullptr;
 	LOG_I("[%s] %s Stopped", m_name.data(), m_type.data());
 }
 } // namespace ME
