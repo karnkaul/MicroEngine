@@ -60,6 +60,11 @@ void Tutorial1::OnStarting()
 		data.oOutline = Colour::Magenta;
 		data.oBorder = 2;
 		pPointer->Instantiate(Primitive::Type::Circle).SetShape(data);
+		if (pMainText)
+		{
+			// Move the pointer a layer above the text's, so it's drawn on top of it
+			pPointer->m_layer = pMainText->m_layer + 1;
+		}
 	}
 }
 
