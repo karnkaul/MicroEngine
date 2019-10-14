@@ -1,118 +1,100 @@
+#include <array>
 #include "Engine/GameServices.h"
 #include "Tutorial2.h"
 
 namespace ME
 {
-void Tutorial2::OnCreated()
-{
-	Assert(g_pResources, "Resources is null!");
-	// Get a handle to the Default-Serif.ttf font; load heavy stuff when created
-	m_hSerifFont = g_pResources->Load<Font>("Default-Serif.ttf");
-}
-
 void Tutorial2::OnStarting()
 {
-	RegisterInput(
-		[this](const Input::Frame& frame) -> bool {
-			if (frame.IsReleased(KeyCode::Space))
-			{
-				const std::string nextWorldID = "Tutorial3";
-				if (!g_pContext->LoadWorld(nextWorldID))
-				{
-					LOG_W("[%s] %s GameWorld does not exist!", m_name.data(), nextWorldID.data());
-				}
-			}
-			// Go back to Tutorial0 on Escape
-			if (frame.IsReleased(KeyCode::Escape))
-			{
-				g_pContext->LoadWorld("Tutorial1");
-			}
-			return false;
-		},
-		true);
-
-	m_hObj0 = NewObject<GameObject>("Hello-Text");
-	auto pObj0 = FindObject<GameObject>(m_hObj0);
-	if (pObj0)
-	{
-		pObj0->Instantiate(Primitive::Type::Text);
-		// Setup some text data
-		TextData data("Hello!");
-		data.oCharSize = 100;
-		data.opFont = g_pResources->Find<Font>(m_hSerifFont);
-		// Set the text
-		pObj0->SetText(data);
-		// Set the position to +200 in the y direction
-		pObj0->m_transform.SetPosition({0, 200});
-	}
-
-	m_hObj1 = NewObject<GameObject>("Yellow-Rect");
-	auto pObj1 = FindObject<GameObject>(m_hObj1);
-	if (pObj1)
-	{
-		ShapeData data;
-		data.oSize = {500, 200};
-		data.oFill = Colour(100, 100, 0);
-		data.oOutline = Colour::Magenta;
-		pObj1->Instantiate(Primitive::Type::Rectangle).SetShape(data);
-		if (pObj0)
+	RegisterInput([this](const Input::Frame& frame) -> bool {
+		if (frame.IsReleased(KeyCode::Space))
 		{
-			// Exploit matrix transformation to "lock" it to prim0
-			pObj1->m_transform.SetParent(pObj0->m_transform);
+			g_pContext->LoadWorld("Tutorial3");
 		}
+		// Go back to Tutorial0 on Escape
+		else if (frame.IsReleased(KeyCode::Escape))
+		{
+			g_pContext->LoadWorld("Tutorial1");
+		}
+		else if (frame.IsReleased(KeyCode::Tab) && m_hRectangle != INVALID_HANDLE)
+		{
+			// If we'd stored pRect, it would dangle after it got destroyed!
+			auto pRect = FindObject<GameObject>(m_hRectangle);
+			// This is a fresh pointer, it will reflect the current state of the object
+			if (pRect)
+			{
+				pRect->SetEnabled(!pRect->IsEnabled());
+			}
+		}
+		return false;
+	});
+
+	m_hMainText = NewObject<GameObject>("MainText");
+	auto pMainText = FindObject<GameObject>(m_hMainText);
+	if (pMainText)
+	{
+		pMainText->Instantiate(Primitive::Type::Text);
+		TextData data("Press Tab to toggle the Rectangle");
+		data.oCharSize = 50;
+		data.oFill = Colour::Cyan;
+		pMainText->SetText(data);
+		// Set this text at halfway between the centre and the bottom.
+		// We can get that point by using a space projection: takes in a normalised
+		// value between  [-1, 1] (0 being in the centre) for each axis and returns
+		// the scaled/projected Vector2 in that world space.
+		auto pos = g_pGFX->WorldProjection(Vector2(0, -Fixed::OneHalf));
+		pMainText->m_transform.SetPosition(pos);
 	}
 
-	// Reset all clocks etc
-	static const Time LAYER_TTL = Time::Seconds(1.5f);
-	static const Time PRIM_TTL = Time::Seconds(3.5f);
-	m_obj1LayerTTL = LAYER_TTL;
-	m_obj1TTL = PRIM_TTL;
-	m_bObj1LayerChanged = m_bObj1Destroyed = false;
+	m_hRectangle = NewObject<GameObject>("Rectangle");
+	auto pRect = FindObject<GameObject>(m_hRectangle);
+	if (pRect)
+	{
+		pRect->Instantiate(Primitive::Type::Rectangle);
+		ShapeData data;
+		data.oSize = Vector2(200, 100); // x = width, y = height or x + y = diameter
+		data.oFill = Colour(210, 110, 250);
+		pRect->SetShape(data);
+	}
+
+	// Set (or reset) the rectangle's time to live to a random value between min and max
+	s32 randomMilliseconds = Maths::Random::Range(m_RECT_TTL_MIN, m_RECT_TTL_MAX_S);
+	m_rectTTL = Time::Milliseconds(randomMilliseconds);
+	m_rectElapsed = Time::Zero;
 }
 
 void Tutorial2::Tick(Time dt)
 {
-	m_obj1LayerTTL -= dt;
-	if (m_obj1LayerTTL <= Time::Zero && !m_bObj1LayerChanged)
+	// Decrement elapsed time (deltaTime) from rect's ttl
+	m_rectTTL -= dt;
+	// Add dt to how long the rect has been alive
+	m_rectElapsed += dt;
+	if (m_rectTTL <= Time::Zero && m_hRectangle != INVALID_HANDLE)
 	{
-		// Push the rectangle below the text after 1.5 seconds
-		auto pObj1 = FindObject<GameObject>(m_hObj1);
-		if (pObj1)
-		{
-			--pObj1->m_layer;
-			auto pObj0 = FindObject<GameObject>(m_hObj0);
-			if (pObj0)
-			{
-				// Find a point halfway between centre and left edge
-				Vector2 world = g_pGFX->WorldProjection({Fixed(-0.5f), 0});
-				// Magic! Both move (because of parenting)
-				pObj0->m_transform.SetPosition(world);
-				// Rotate only the child to point equal parts +x and +y
-				// (all models start facing right (1, 0))
-				pObj1->m_transform.SetOrientation(Vector2::One);
-			}
-		}
-		// Stop decrementing layer! (Don't care about `remain` any more, that can
-		// underflow for days / months / years / ...; won't affect any code)
-		m_bObj1LayerChanged = true;
-	}
+		// Time is up! Destroy the rect
+		DestroyObject(m_hRectangle);	// This call will set the passed handle to INVALID on success
 
-	m_obj1TTL -= dt;
-	if (m_obj1TTL <= Time::Zero && !m_bObj1Destroyed)
-	{
-		// Destroy this one after 3.5 seconds
-		DestroyObject(m_hObj1);
-		m_hObj1 = INVALID_HANDLE;
-		m_bObj1Destroyed = true;
+		// Change the main text
+		auto pMainText = FindObject<GameObject>(m_hMainText);
+		if (pMainText)
+		{
+			// It's just easier to use sprintf than mangle about with std::fixed,
+			// to fully control the output format
+			std::array<char, 8> buf;
+			SPRINTF(buf.data(), buf.size(), "%.1f", m_rectElapsed.AsSeconds());
+			// Although this whole string could be constructed in one line,
+			// appending disparate chunks like this is much more efficient
+			std::string text = "Rect is ded... (in ";
+			text += buf.data();
+			text += " seconds)";
+			pMainText->SetText(text);
+		}
 	}
-	// Remember to call the base class implementation (if it is not trivial)
 	GameWorld::Tick(dt);
 }
 
 void Tutorial2::OnStopping()
 {
-	// Reset the handles, just in case
-	m_hObj0 = INVALID_HANDLE;
-	m_hObj1 = INVALID_HANDLE;
+	m_hMainText = m_hRectangle = INVALID_HANDLE;
 }
 } // namespace ME

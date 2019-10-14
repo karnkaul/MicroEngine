@@ -8,11 +8,12 @@ GameWorld::GameWorld(GameWorld&&) = default;
 GameWorld& GameWorld::operator=(GameWorld&&) = default;
 GameWorld::~GameWorld() = default;
 
-bool GameWorld::DestroyObject(HObj handle)
+bool GameWorld::DestroyObject(HObj& outHandle)
 {
-	if (handle > INVALID_HANDLE)
+	if (outHandle > INVALID_HANDLE && m_objectFactory.Destroy(outHandle))
 	{
-		return m_objectFactory.Destroy(handle);
+		outHandle = INVALID_HANDLE;
+		return true;
 	}
 	return false;
 }
@@ -20,11 +21,15 @@ bool GameWorld::DestroyObject(HObj handle)
 void GameWorld::OnCreated() {}
 void GameWorld::OnStarting() {}
 
-void GameWorld::Tick(Time dt) 
+void GameWorld::Tick(Time dt)
 {
 	for (auto& kvp : m_objectFactory.m_instanced)
 	{
-		kvp.second->Tick(dt);
+		auto& obj = kvp.second;
+		if (obj->IsEnabled())
+		{
+			obj->Tick(dt);
+		}
 	}
 }
 

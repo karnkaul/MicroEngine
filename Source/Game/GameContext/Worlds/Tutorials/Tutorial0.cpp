@@ -28,11 +28,7 @@ void Tutorial0::OnStarting()
 		if (frame.IsReleased(KeyCode::Space))
 		{
 			// GameContext service owns all worlds and exposes an API to load a different one
-			if (!g_pContext->LoadWorld("Tutorial1"))
-			{
-				// Log a warning to the console about something unexpected (not an error because it doesn't break anything)
-				LOG_W("[%s] %s Tutorial1 GameWorld does not exist!", m_name.data(), m_type.data());
-			}
+			g_pContext->LoadWorld("Tutorial1");
 		}
 		// Let's quit the app if Escape is released!
 		else if (frame.IsReleased(KeyCode::Escape))
