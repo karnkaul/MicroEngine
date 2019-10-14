@@ -9,18 +9,14 @@ void Tutorial2::OnStarting()
 	RegisterInput([this](const Input::Frame& frame) -> bool {
 		if (frame.IsReleased(KeyCode::Space))
 		{
-			const std::string nextWorldID = "Tutorial3";
-			if (!g_pContext->LoadWorld(nextWorldID))
-			{
-				LOG_W("[%s] %s GameWorld does not exist!", m_name.data(), nextWorldID.data());
-			}
+			g_pContext->LoadWorld("Tutorial3");
 		}
 		// Go back to Tutorial0 on Escape
-		if (frame.IsReleased(KeyCode::Escape))
+		else if (frame.IsReleased(KeyCode::Escape))
 		{
 			g_pContext->LoadWorld("Tutorial1");
 		}
-		if (frame.IsReleased(KeyCode::Tab) && m_hRectangle != INVALID_HANDLE)
+		else if (frame.IsReleased(KeyCode::Tab) && m_hRectangle != INVALID_HANDLE)
 		{
 			// If we'd stored pRect, it would dangle after it got destroyed!
 			auto pRect = FindObject<GameObject>(m_hRectangle);
@@ -50,9 +46,18 @@ void Tutorial2::OnStarting()
 		pMainText->m_transform.SetPosition(pos);
 	}
 
-	CreateRect();
+	m_hRectangle = NewObject<GameObject>("Rectangle");
+	auto pRect = FindObject<GameObject>(m_hRectangle);
+	if (pRect)
+	{
+		pRect->Instantiate(Primitive::Type::Rectangle);
+		ShapeData data;
+		data.oSize = Vector2(200, 100); // x = width, y = height or x + y = diameter
+		data.oFill = Colour(210, 110, 250);
+		pRect->SetShape(data);
+	}
 
-	// Set (or reset) the rectangle's time to live to the constant
+	// Set (or reset) the rectangle's time to live to a random value between min and max
 	s32 randomMilliseconds = Maths::Random::Range(m_RECT_TTL_MIN, m_RECT_TTL_MAX_S);
 	m_rectTTL = Time::Milliseconds(randomMilliseconds);
 	m_rectElapsed = Time::Zero;
@@ -63,14 +68,13 @@ void Tutorial2::Tick(Time dt)
 	// Decrement elapsed time (deltaTime) from rect's ttl
 	m_rectTTL -= dt;
 	// Add dt to how long the rect has been alive
-	m_rectElapsed += dt;	
+	m_rectElapsed += dt;
 	if (m_rectTTL <= Time::Zero && m_hRectangle != INVALID_HANDLE)
 	{
 		// Time is up! Destroy the rect
-		DestroyObject(m_hRectangle);
-		m_hRectangle = INVALID_HANDLE;
+		DestroyObject(m_hRectangle);	// This call will set the passed handle to INVALID on success
 
-		// Set the main text
+		// Change the main text
 		auto pMainText = FindObject<GameObject>(m_hMainText);
 		if (pMainText)
 		{
@@ -92,19 +96,5 @@ void Tutorial2::Tick(Time dt)
 void Tutorial2::OnStopping()
 {
 	m_hMainText = m_hRectangle = INVALID_HANDLE;
-}
-
-void Tutorial2::CreateRect()
-{
-	m_hRectangle = NewObject<GameObject>("Rectangle");
-	auto pRect = FindObject<GameObject>(m_hRectangle);
-	if (pRect)
-	{
-		pRect->Instantiate(Primitive::Type::Rectangle);
-		ShapeData data;
-		data.oSize = Vector2(200, 100); // x = width, y = height or x + y = diameter
-		data.oFill = Colour(210, 110, 250);
-		pRect->SetShape(data);
-	}
 }
 } // namespace ME

@@ -16,18 +16,14 @@ void Tutorial1::OnStarting()
 		[this](const Input::Frame& frame) -> bool {
 			if (frame.IsReleased(KeyCode::Space))
 			{
-				const std::string nextWorldID = "Tutorial2";
-				if (!g_pContext->LoadWorld(nextWorldID))
-				{
-					LOG_W("[%s] %s GameWorld does not exist!", m_name.data(), nextWorldID.data());
-				}
+				g_pContext->LoadWorld("Tutorial2");
 			}
 			// Go back to Tutorial0 on Escape
-			if (frame.IsReleased(KeyCode::Escape))
+			else if (frame.IsReleased(KeyCode::Escape))
 			{
 				g_pContext->LoadWorld("Tutorial0");
 			}
-			if (frame.IsReleased(KeyCode::Tab))
+			else if (frame.IsReleased(KeyCode::Tab))
 			{
 				// Toggle the follow lock
 				m_bPointerFollow = !m_bPointerFollow;

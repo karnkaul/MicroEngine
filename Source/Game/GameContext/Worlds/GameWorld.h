@@ -23,7 +23,7 @@ public:
 	HObj NewObject(std::string name);
 	template <typename T>
 	GameObject* FindObject(HObj handle);
-	bool DestroyObject(HObj handle);
+	bool DestroyObject(HObj& outHandle);
 
 protected:
 	virtual void OnCreated();

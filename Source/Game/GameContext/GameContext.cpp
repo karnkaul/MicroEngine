@@ -19,6 +19,7 @@ bool GameContext::LoadWorld(const std::string& id)
 		m_nextWorldID = id;
 		return true;
 	}
+	LOG_W("[GameContext] %s GameWorld does not exist", id.data());
 	return false;
 }
 

@@ -19,9 +19,5 @@ protected:
 	void OnStarting() override;
 	void Tick(Time dt) override;
 	void OnStopping() override;
-
-private:
-	// A custom function to construct m_hRectangle
-	void CreateRect();
 };
-}
+} // namespace ME

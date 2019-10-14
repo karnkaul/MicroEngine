@@ -21,7 +21,7 @@ public:
 public:
 	Transform m_transform;
 	LayerID m_layer = 0;
-	
+
 protected:
 	std::bitset<2> m_flags;
 

@@ -13,17 +13,13 @@ void Tutorial3::OnCreated()
 void Tutorial3::OnStarting()
 {
 	RegisterInput(
-		[this](const Input::Frame& frame) -> bool {
+		[](const Input::Frame& frame) -> bool {
 			if (frame.IsReleased(KeyCode::Space))
 			{
-				const std::string nextWorldID = "Tutorial4";
-				if (!g_pContext->LoadWorld(nextWorldID))
-				{
-					LOG_W("[%s] %s GameWorld does not exist!", m_name.data(), nextWorldID.data());
-				}
+				g_pContext->LoadWorld("Tutorial4");
 			}
 			// Go back to Tutorial0 on Escape
-			if (frame.IsReleased(KeyCode::Escape))
+			else if (frame.IsReleased(KeyCode::Escape))
 			{
 				g_pContext->LoadWorld("Tutorial2");
 			}
