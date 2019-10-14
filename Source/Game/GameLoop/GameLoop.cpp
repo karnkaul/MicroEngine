@@ -92,12 +92,12 @@ void PollEvents(Viewport& vp)
 	}
 }
 
-bool Tick(Time dt)
+void Tick(Time dt)
 {
 	g_pInput->TakeSnapshot();
 	g_pInput->FireCallbacks();
 
-	return uGS->Tick(dt);
+	uGS->Tick(dt);
 }
 
 void Sleep(Time frameTime)
@@ -133,18 +133,17 @@ s32 GameLoop::Run(s32 argc, char** argv)
 	Viewport viewport;
 	ViewportSize size = g_pGFX->GetViewportSize();
 	Create(viewport, size.width, size.height, "Untitled Game");
-	uGS->Start();
+	uGS->StartGame();
 	Time frameStart = Time::Now();
 	Time frameTime;
 	while (viewport.isOpen() && !state.Expired())
 	{
 		Time dt = Time::Now() - frameStart;
 		frameStart = Time::Now();
+		uGS->StartFrame();
 		PollEvents(viewport);
-		if (Tick(dt))
-		{
-			g_pRenderer->Render(viewport);
-		}
+		Tick(dt);
+		g_pRenderer->Render(viewport);
 		frameTime = Time::Now() - frameStart;
 		Sleep(frameTime);
 	}

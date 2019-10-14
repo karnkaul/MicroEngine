@@ -27,8 +27,9 @@ public:
 	~GameServices();
 
 public:
-	void Start();
-	bool Tick(Time dt);
+	void StartGame();
+	void StartFrame();
+	void Tick(Time dt);
 	void Stop();
 };
 } // namespace ME

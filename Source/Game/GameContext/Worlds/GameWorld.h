@@ -10,7 +10,13 @@ namespace ME
 class GameWorld : public GameObjectBase
 {
 private:
+	static GameWorld* s_pActive;
+
+private:
 	UFactory<GameObject> m_objectFactory;
+	
+public:
+	static GameWorld& Active();
 
 public:
 	GameWorld();

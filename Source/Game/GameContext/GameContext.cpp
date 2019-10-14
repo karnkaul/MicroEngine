@@ -43,9 +43,8 @@ bool GameContext::StartWorld(const std::string& id)
 	return true;
 }
 
-bool GameContext::Tick(Time dt)
+void GameContext::StartFrame()
 {
-	bool bDoFrame = true;
 	if (!m_nextWorldID.empty())
 	{
 		auto search = m_worlds.find(m_nextWorldID);
@@ -57,15 +56,17 @@ bool GameContext::Tick(Time dt)
 			}
 			m_pActive = search->second.get();
 			m_pActive->Start();
-			bDoFrame = false;
 		}
 		m_nextWorldID.clear();
 	}
-	if (m_pActive && bDoFrame)
+}
+
+void GameContext::Tick(Time dt)
+{
+	if (m_pActive)
 	{
 		m_pActive->Tick(dt);
 	}
-	return bDoFrame;
 }
 
 void GameContext::Stop()
