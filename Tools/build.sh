@@ -1,12 +1,14 @@
 #!/bin/bash
 
 ## == MicroEngine build automation script ==
-# Requirements:
+# Builds multiple MicroEngine CMake directories sequentially
+#
+## Requirements:
 #	- os.h
 #	- CMake 3.15+
 #	- (Win64 ninja builds: vcvars64.bat loaded into shell environment)
 #
-# Usage:
+## Usage:
 # 	1. Invoke script from anywhere (Tab will autocomplete relative paths when in `MicroEngine` root)
 # 	2. Pass relative paths (from `MicroEngine` root) to CMake build directories (separated by spaces)
 # 	3. Pass -j{threads} for Makefiles, if desired

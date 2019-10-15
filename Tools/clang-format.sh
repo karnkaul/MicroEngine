@@ -1,8 +1,15 @@
 #!/bin/bash
 
-# This script runs clang-format on all Source files (except `ThirdParty`)
-# Requirements:
+## == MicroEngine clang formatter ==
+# Runs clang-format on all Source files (except `ThirdParty`)
+#
+## Requirements:
+#	- os.h
 #	- clang-format
+#
+## Usage:
+# 	1. Run the script to list the files it will format
+# 	2. Pass '-r' to run clang-format
 
 ROOT=..
 SOURCE_DIR=Source
