@@ -2,7 +2,7 @@
 
 # This script runs clang-format on all Source files (except `ThirdParty`)
 # Requirements:
-#  - clang-format
+#	- clang-format
 
 ROOT=..
 SOURCE_DIR=Source
