@@ -1,3 +1,4 @@
+#include <memory>
 #include "SFML/Graphics.hpp"
 #include "Engine/Viewport/Viewport.h"
 #include "GameLoop.h"

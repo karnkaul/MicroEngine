@@ -1,5 +1,4 @@
 #pragma once
-#include <memory>
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "ViewportData.h"
 #include "GameTypes.h"
