@@ -1,6 +1,6 @@
 #include "Engine/GameServices.h"
 #include "Tutorial3.h"
-#include "../../Objects/Tutorials/Bubble.h"		// Check out this class first
+#include "../../Objects/Tutorials/Bubble.h" // Check out this class first
 
 namespace ME
 {
@@ -16,50 +16,47 @@ void Tutorial3::OnStarting()
 		m_bubbleLayer = pMainText->m_layer - 1;
 	}
 
-	RegisterInput(
-		[this](const Input::Frame& frame) -> bool {
-			if (frame.IsReleased(KeyCode::Space))
+	RegisterInput([this](const Input::Frame& frame) -> bool {
+		if (frame.IsReleased(KeyCode::Space))
+		{
+			g_pContext->LoadWorld("Temp");
+		}
+		else if (frame.IsReleased(KeyCode::Escape))
+		{
+			g_pContext->LoadPreviousWorld();
+		}
+		else if (frame.IsReleased(KeyCode::Tab))
+		{
+			std::string name = "Bubble_";
+			name += std::to_string(m_bubbles.size());
+			auto handle = NewObject<Bubble>(std::move(name));
+			if (auto pBubble = FindObject<Bubble>(handle))
 			{
-				g_pContext->LoadWorld("Temp");
+				// Set a random time to live
+				s32 ttlSecs = Maths::Random::Range(MIN_TTL_SECS, MAX_TTL_SECS);
+				pBubble->m_ttl = Time::Seconds(static_cast<f32>(ttlSecs));
+				// Scale the size and speed proportional to its ttl
+				Fixed nSize = Fixed(ttlSecs) / Fixed(MAX_TTL_SECS);
+				pBubble->m_diameter += (nSize * 20);
+				pBubble->m_ySpeed -= (nSize * Fixed::OneHalf);
+				// Set a random x in the world
+				Fixed nX = Maths::Random::Range(-Fixed::One, Fixed::One);
+				// Y near the bottom
+				Fixed nY = -Fixed(0.8f);
+				pBubble->m_transform.SetPosition(g_pGFX->WorldProjection({nX, nY}));
+				pBubble->m_layer = m_bubbleLayer;
 			}
-			// Go back to Tutorial0 on Escape
-			else if (frame.IsReleased(KeyCode::Escape))
-			{
-				g_pContext->LoadPreviousWorld();
-			}
-			else if (frame.IsReleased(KeyCode::Tab))
-			{
-				std::string name = "Bubble_";
-				name += std::to_string(m_bubbles.size());
-				auto handle = NewObject<Bubble>(std::move(name));
-				if (auto pBubble = FindObject<Bubble>(handle))
-				{
-					// Set a random time to live
-					s32 ttlSecs = Maths::Random::Range(MIN_TTL_SECS, MAX_TTL_SECS);
-					pBubble->m_ttl = Time::Seconds(static_cast<f32>(ttlSecs));
-					// Scale the size and speed proportional to its ttl
-					Fixed nSize = Fixed(ttlSecs) / Fixed(MAX_TTL_SECS);
-					pBubble->m_diameter += (nSize * 20);
-					pBubble->m_ySpeed -= (nSize * Fixed::OneHalf);
-					// Set a random x in the world
-					Fixed nX = Maths::Random::Range(-Fixed::One, Fixed::One);
-					// Y near the bottom
-					Fixed nY = -Fixed(0.8f);
-					pBubble->m_transform.SetPosition(g_pGFX->WorldProjection({nX, nY}));
-					pBubble->m_layer = m_bubbleLayer;
-				}
-				m_bubbles.push_back(handle);
-			}
-			else if (frame.IsReleased(KeyCode::D))
-			{
-				// This function takes in a vector of handles, destroys all
-				// `GameObject`s they point to and sets them to INVALID_HANDLE
-				DestroyAll(m_bubbles);
-				m_bubbles.clear();
-			}
-			return false;
-		},
-		true);
+			m_bubbles.push_back(handle);
+		}
+		else if (frame.IsReleased(KeyCode::D))
+		{
+			// This function takes in a vector of handles, destroys all
+			// `GameObject`s they point to and sets them to INVALID_HANDLE
+			DestroyAll(m_bubbles);
+			m_bubbles.clear();
+		}
+		return false;
+	});
 }
 
 void Tutorial3::Tick(Time dt)
