@@ -12,6 +12,7 @@ void Tutorial3::OnStarting()
 	{
 		pMainText->Instantiate(Primitive::Type::Text);
 		pMainText->SetText("Press [Tab] to spawn new bubbles\n[D] to destroy all").m_transform.SetPosition({0, 200});
+		m_bubbleLayer = pMainText->m_layer + 1;
 	}
 
 	RegisterInput(
@@ -47,6 +48,7 @@ void Tutorial3::OnStarting()
 						Fixed nY = -Fixed(0.8f);
 						Vector2 worldPos = g_pGFX->WorldProjection({nX, nY});
 						pBubble->m_transform.SetPosition(worldPos);
+						pBubble->m_layer = m_bubbleLayer;
 					}
 					m_bubbles.push_back(handle);
 				}

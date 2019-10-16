@@ -10,6 +10,7 @@ private:
 	// A bunch of custom GameObjects!
 	std::vector<HObj> m_bubbles;
 	HObj m_hMainText;
+	LayerID m_bubbleLayer = 0;
 	const s32 MIN_TTL_SECS = 2;
 	const s32 MAX_TTL_SECS = 7;
 
