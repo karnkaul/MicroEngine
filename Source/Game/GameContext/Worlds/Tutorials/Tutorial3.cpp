@@ -1,117 +1,87 @@
 #include "Engine/GameServices.h"
 #include "Tutorial3.h"
+#include "../../Objects/Tutorials/Bubble.h"
 
 namespace ME
 {
-void Tutorial3::OnCreated()
-{
-	Assert(g_pResources, "Resources is null!");
-	// Get a handle to the Default-Serif.ttf font; load heavy stuff when created
-	m_hSerifFont = g_pResources->Load<Font>("Default-Serif.ttf");
-}
-
 void Tutorial3::OnStarting()
 {
+	m_hMainText = NewObject<GameObject>("MainText");
+	auto pMainText = FindObject<GameObject>(m_hMainText);
+	if (pMainText)
+	{
+		pMainText->Instantiate(Primitive::Type::Text);
+		pMainText->SetText("Press [Tab] to spawn new bubbles\n[D] to destroy all").m_transform.SetPosition({0, 200});
+	}
+
 	RegisterInput(
-		[](const Input::Frame& frame) -> bool {
+		[this](const Input::Frame& frame) -> bool {
 			if (frame.IsReleased(KeyCode::Space))
 			{
-				g_pContext->LoadWorld("Tutorial4");
+				g_pContext->LoadWorld("Temp");
 			}
 			// Go back to Tutorial0 on Escape
 			else if (frame.IsReleased(KeyCode::Escape))
 			{
 				g_pContext->LoadWorld("Tutorial2");
 			}
+			else if (frame.IsReleased(KeyCode::Tab))
+			{
+				std::string name = "Bubble_";
+				name += std::to_string(m_bubbles.size());
+				auto handle = NewObject<Bubble>(std::move(name));
+				if (handle != INVALID_HANDLE)
+				{
+					auto pBubble = FindObject<Bubble>(handle);
+					if (pBubble)
+					{
+						// Set a random time to live
+						s32 ttlSecs = Maths::Random::Range(MIN_TTL_SECS, MAX_TTL_SECS);
+						pBubble->m_ttl = Time::Seconds(ttlSecs);
+						// Scale the size and speed proportional to its ttl
+						Fixed nSize = Fixed(ttlSecs) / Fixed(MAX_TTL_SECS);
+						pBubble->m_diameter += (nSize * 20);
+						pBubble->m_ySpeed -= (nSize * Fixed::OneHalf);
+						// Set a random position in the world
+						Fixed nX = Maths::Random::Range(-Fixed::One, Fixed::One);
+						Fixed nY = -Fixed(0.8f);
+						Vector2 worldPos = g_pGFX->WorldProjection({nX, nY});
+						pBubble->m_transform.SetPosition(worldPos);
+					}
+					m_bubbles.push_back(handle);
+				}
+			}
+			else if (frame.IsReleased(KeyCode::D))
+			{
+				DestroyAll(m_bubbles);
+				m_bubbles.clear();
+			}
 			return false;
 		},
 		true);
-
-	m_hObj0 = NewObject<GameObject>("Hello-Text");
-	auto pObj0 = FindObject<GameObject>(m_hObj0);
-	if (pObj0)
-	{
-		pObj0->Instantiate(Primitive::Type::Text);
-		// Setup some text data
-		TextData data("Hello!");
-		data.oCharSize = 100;
-		data.opFont = g_pResources->Find<Font>(m_hSerifFont);
-		// Set the text
-		pObj0->SetText(data);
-		// Set the position to +200 in the y direction
-		pObj0->m_transform.SetPosition({0, 200});
-	}
-
-	m_hObj1 = NewObject<GameObject>("Yellow-Rect");
-	auto pObj1 = FindObject<GameObject>(m_hObj1);
-	if (pObj1)
-	{
-		ShapeData data;
-		data.oSize = {500, 200};
-		data.oFill = Colour(100, 100, 0);
-		data.oOutline = Colour::Magenta;
-		pObj1->Instantiate(Primitive::Type::Rectangle).SetShape(data);
-		if (pObj0)
-		{
-			// Exploit matrix transformation to "lock" it to prim0
-			pObj1->m_transform.SetParent(pObj0->m_transform);
-			// Move this object on top (rendered last)
-			++pObj1->m_layer;
-		}
-	}
-
-	// Reset all clocks etc
-	static const Time LAYER_TTL = Time::Seconds(1.5f);
-	static const Time PRIM_TTL = Time::Seconds(3.5f);
-	m_obj1LayerTTL = LAYER_TTL;
-	m_obj1TTL = PRIM_TTL;
-	m_bObj1LayerChanged = m_bObj1Destroyed = false;
 }
 
 void Tutorial3::Tick(Time dt)
 {
-	m_obj1LayerTTL -= dt;
-	if (m_obj1LayerTTL <= Time::Zero && !m_bObj1LayerChanged)
+	// Remove stale bubbles; use the type that the container holds for the template, and pass
+	// the container and a predicate for each element in the container, that when returns true,
+	// will remove the element from it.
+	Core::RemoveIf<HObj>(m_bubbles, [this](HObj hBubble) { return FindObject<Bubble>(hBubble) == nullptr; });
+	for (auto hBubble : m_bubbles)
 	{
-		// Push the rectangle below the text after 1.5 seconds
-		auto pObj1 = FindObject<GameObject>(m_hObj1);
-		if (pObj1)
+		if (auto pBubble = FindObject<Bubble>(hBubble))
 		{
-			// Now move it to the bottom
-			pObj1->m_layer -= 2;
-			auto pObj0 = FindObject<GameObject>(m_hObj0);
-			if (pObj0)
-			{
-				// Find a point halfway between centre and left edge
-				Vector2 world = g_pGFX->WorldProjection({Fixed(-0.5f), 0});
-				// Magic! Both move (because of parenting)
-				pObj0->m_transform.SetPosition(world);
-				// Rotate only the child to point equal parts +x and +y
-				// (all models start facing right (1, 0))
-				pObj1->m_transform.SetOrientation(Vector2::One);
-			}
+			// Fade the colour a bit
+			pBubble->m_colour.a -= 1;
 		}
-		// Stop decrementing layer! (Don't care about `remain` any more, that can
-		// underflow for days / months / years / ...; won't affect any code)
-		m_bObj1LayerChanged = true;
 	}
-
-	m_obj1TTL -= dt;
-	if (m_obj1TTL <= Time::Zero && !m_bObj1Destroyed)
-	{
-		// Destroy this one after 3.5 seconds
-		DestroyObject(m_hObj1);
-		m_hObj1 = INVALID_HANDLE;
-		m_bObj1Destroyed = true;
-	}
-	// Remember to call the base class implementation (if it is not trivial)
 	GameWorld::Tick(dt);
 }
 
 void Tutorial3::OnStopping()
 {
-	// Reset the handles, just in case
-	m_hObj0 = INVALID_HANDLE;
-	m_hObj1 = INVALID_HANDLE;
+	// Clear all handles
+	m_bubbles.clear();
+	m_hMainText = INVALID_HANDLE;
 }
 } // namespace ME

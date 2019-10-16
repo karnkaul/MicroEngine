@@ -43,7 +43,7 @@ for DIR in "${@}"; do
 done
 
 for DIR in "${DIRS[@]}"; do
-	if [[ $IS_WIN64 == "TRUE" && -f $DIR/build.ninja ]]; then
+	if [[ $IS_WIN64 == "TRUE" && -f $DIR/build.ninja && "$IS_VCVARS_SET" != "TRUE" ]]; then
 		echo -e "Warning: \tAttempting MSVC build, will fail without vcvars64.bat loaded in PATH!\n"
 	fi
 	$CMAKE --build $DIR $SUFFIX

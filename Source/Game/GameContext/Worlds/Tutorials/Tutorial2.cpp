@@ -34,7 +34,7 @@ void Tutorial2::OnStarting()
 	if (pMainText)
 	{
 		pMainText->Instantiate(Primitive::Type::Text);
-		TextData data("Press Tab to toggle the Rectangle");
+		TextData data("Press [Tab] to toggle the Rectangle");
 		data.oCharSize = 50;
 		data.oFill = Colour::Cyan;
 		pMainText->SetText(data);
@@ -72,7 +72,7 @@ void Tutorial2::Tick(Time dt)
 	if (m_rectTTL <= Time::Zero && m_hRectangle != INVALID_HANDLE)
 	{
 		// Time is up! Destroy the rect
-		DestroyObject(m_hRectangle);	// This call will set the passed handle to INVALID on success
+		DestroyObject(m_hRectangle); // This call will set the passed handle to INVALID on success
 
 		// Change the main text
 		auto pMainText = FindObject<GameObject>(m_hMainText);

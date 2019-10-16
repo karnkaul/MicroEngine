@@ -73,7 +73,7 @@ void Create(Viewport& outVP, u32 width, u32 height, const std::string& title)
 	data.viewportSize.height = height;
 	data.title = title;
 	outVP.SetData(std::move(data));
-	outVP.Create();
+	outVP.Create(8);
 	sf::View view(sf::Vector2f(0, 0), sf::Vector2f(static_cast<f32>(width), static_cast<f32>(height)));
 	outVP.setView(view);
 }

@@ -14,7 +14,7 @@ private:
 
 private:
 	UFactory<GameObject> m_objectFactory;
-	
+
 public:
 	static GameWorld& Active();
 
@@ -28,8 +28,9 @@ public:
 	template <typename T>
 	HObj NewObject(std::string name);
 	template <typename T>
-	GameObject* FindObject(HObj handle);
+	T* FindObject(HObj handle);
 	bool DestroyObject(HObj& outHandle);
+	void DestroyAll(std::vector<HObj>& outHandles);
 
 protected:
 	virtual void OnCreated();
@@ -62,7 +63,7 @@ HObj GameWorld::NewObject(std::string name)
 }
 
 template <typename T>
-GameObject* GameWorld::FindObject(HObj handle)
+T* GameWorld::FindObject(HObj handle)
 {
 	return m_objectFactory.template Find<T>(handle);
 }
