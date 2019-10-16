@@ -50,6 +50,9 @@ Fixed Input::Frame::MouseWhellScroll() const
 	return mouseInput.scrollDelta;
 }
 
+Input::Input() = default;
+Input::~Input() = default;
+
 Token Input::Register(Delegate callback, bool bForce)
 {
 	Token token = CreateToken();

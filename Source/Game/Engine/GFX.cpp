@@ -4,6 +4,9 @@
 
 namespace ME
 {
+GFX::GFX() = default;
+GFX::~GFX() = default;
+
 void GFX::Init()
 {
 	m_maxViewportSize = Viewport::MaxSize();

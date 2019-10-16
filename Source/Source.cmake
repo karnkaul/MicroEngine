@@ -9,6 +9,9 @@ list(APPEND SOURCES
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/GameObject.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/GameObject.cpp"
 	
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tutorials/Bubble.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tutorials/Bubble.cpp"
+
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/GameWorld.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/GameWorld.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/GameWorld.h"
@@ -21,6 +24,8 @@ list(APPEND SOURCES
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Tutorial2.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Tutorial3.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Tutorial3.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Temp.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Temp.cpp"
 
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Input/InputDataFrame.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Input/InputDataFrame.cpp"
@@ -62,6 +67,8 @@ list(APPEND SOURCES
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/GFX.cpp"
 	
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Factory/Factory.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameLoop/App.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameLoop/App.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameLoop/GameLoop.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameLoop/GameLoop.cpp"
 	

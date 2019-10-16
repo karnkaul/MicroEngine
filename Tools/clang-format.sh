@@ -27,13 +27,14 @@ if [[ ! -d $SOURCE_DIR ]]; then
 fi
 
 FILES=$(find $SOURCE_DIR -name "*.h" -o -name "*.cpp")
-
+echo -e "${FILES}\n"
+COUNT=$(echo -e "${FILES}" | wc -l)
 if [[ $RUN == "TRUE" ]]; then
 	$CLANG_FORMAT -i $FILES
-	echo -e "  == Ran clang-format on:\n"
+	echo -e "  == Ran clang-format on $COUNT h/cpp files"
 else
-	echo -e "  -- Execute script again with -r to run clang-format on:\n"
+	echo -e "  -- Execute script again with -r to run clang-format on $COUNT h/cpp files"
 fi
-echo -e "${FILES}"
+echo -e "  -- $($CLANG_FORMAT --version)"
 
 exit

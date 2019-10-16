@@ -21,9 +21,11 @@ public:
 private:
 	GameWorld* m_pActive = nullptr;
 	std::string m_nextWorldID;
+	std::string m_prevWorldID;
 
 public:
 	bool LoadWorld(const std::string& id);
+	bool LoadPreviousWorld();
 
 private:
 	template <typename T>
@@ -35,6 +37,7 @@ private:
 	void Tick(Time dt);
 	void Stop();
 
+	friend class App;
 	friend class GameServices;
 };
 

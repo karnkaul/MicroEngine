@@ -40,7 +40,7 @@ void Tutorial1::OnStarting()
 	{
 		pMainText->Instantiate(Primitive::Type::Text);
 		// Setup some custom text data
-		TextData data("Tab : Toggle Pointer Lock\nSpace : Load Next Tutorial\nEscape : Go Back");
+		TextData data("[Tab] : Toggle Pointer Lock\n[Space] : Load Next Tutorial\n[Escape] : Go Back");
 		data.oCharSize = 50;
 		data.oFill = Colour(230, 120, 90); // {R, G, B, A} each E [0, 255]
 		data.opFont = g_pResources->Find<Font>(m_hSerifFont);

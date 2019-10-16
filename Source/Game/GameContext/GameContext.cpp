@@ -23,6 +23,15 @@ bool GameContext::LoadWorld(const std::string& id)
 	return false;
 }
 
+bool GameContext::LoadPreviousWorld()
+{
+	if (!m_prevWorldID.empty())
+	{
+		m_nextWorldID = std::move(m_prevWorldID);
+	}
+	return false;
+}
+
 bool GameContext::StartWorld(const std::string& id)
 {
 	if (m_worlds.empty())
@@ -48,15 +57,14 @@ void GameContext::StartFrame()
 	if (!m_nextWorldID.empty())
 	{
 		auto search = m_worlds.find(m_nextWorldID);
-		if (search != m_worlds.end())
+		Assert(search != m_worlds.end(), "Invalid WorldID!");
+		if (m_pActive)
 		{
-			if (m_pActive)
-			{
-				m_pActive->Stop();
-			}
-			m_pActive = search->second.get();
-			m_pActive->Start();
+			m_pActive->Stop();
+			m_prevWorldID = m_pActive->m_name;
 		}
+		m_pActive = search->second.get();
+		m_pActive->Start();
 		m_nextWorldID.clear();
 	}
 }

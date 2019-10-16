@@ -6,5 +6,7 @@ Build/*
 !Build/Resources
 out/*
 ThirdParty/*
+!Tools/clang-format.sh
+Tools/clang-format*
 
 CMakeSettings.json

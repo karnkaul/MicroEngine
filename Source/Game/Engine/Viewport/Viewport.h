@@ -21,7 +21,7 @@ public:
 	~Viewport() override;
 
 	void SetData(ViewportData data);
-	void Create(u32 framerateLimit = 300);
+	void Create(u8 AAlevel, u32 framerateLimit = 300);
 	void Destroy();
 	void OverrideData(ViewportRecreateData data);
 };

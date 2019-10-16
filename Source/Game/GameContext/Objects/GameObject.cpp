@@ -89,6 +89,11 @@ bool GameObject::IsEnabled() const
 	return m_flags[ToIdx(Flags::Enabled)];
 }
 
+bool GameObject::IsDestroyed() const
+{
+	return m_flags[ToIdx(Flags::Destroyed)];
+}
+
 void GameObject::RegisterInput(std::function<bool(const Input::Frame& frame)> callback)
 {
 	Assert(g_pInput, "Input is null!");

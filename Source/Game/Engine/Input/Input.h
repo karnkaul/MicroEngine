@@ -12,7 +12,7 @@ namespace Debug
 class ConsoleInput;
 }
 
-class Input final : public InputHandler
+class Input final : public InputHandler, NoCopy
 {
 public:
 	struct Frame
@@ -76,6 +76,10 @@ private:
 	std::vector<InputContext> m_contexts;
 	std::optional<InputContext> m_oSudoContext;
 	mutable s32 m_nextToken = 0;
+
+public:
+	Input();
+	~Input();
 
 public:
 	Token Register(Delegate callback, bool bForce = false);

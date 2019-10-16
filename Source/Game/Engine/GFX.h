@@ -26,6 +26,10 @@ public:
 	f64 m_overrideNativeAR = 0.0;
 
 public:
+	GFX();
+	~GFX();
+
+public:
 	void Init();
 
 	const std::map<u32, ViewportSize>& ValidViewportSizes() const;

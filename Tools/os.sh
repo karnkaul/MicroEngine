@@ -3,6 +3,8 @@
 # This script sets some env vars based on OS, shell, etc.
 # Note: script is meant to be sourced, not called.
 
+export PATH=$(pwd):$PATH
+
 if [[ "$OSTYPE" == "darwin"* ]]; then
 	IS_MACOSX=TRUE
 elif [[ "$OSTYPE" == "linux-gnu" ]]; then

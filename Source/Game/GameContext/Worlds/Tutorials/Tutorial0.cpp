@@ -17,7 +17,7 @@ void Tutorial0::OnStarting()
 		// Instantiate a text object: a Primitive can construct different kinds of "sub-primitives"
 		pHelloText->Instantiate(Primitive::Type::Text);
 		// Set some text
-		pHelloText->SetText("... Press Space to Continue ...");
+		pHelloText->SetText("... Press [Space] to Continue ...");
 	}
 
 	// This is how we register callbacks for user input: via a function

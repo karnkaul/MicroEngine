@@ -47,6 +47,7 @@ public:
 	void Destroy();
 
 	bool IsEnabled() const;
+	bool IsDestroyed() const;
 
 protected:
 	void RegisterInput(std::function<bool(const Input::Frame& frame)> callback);
