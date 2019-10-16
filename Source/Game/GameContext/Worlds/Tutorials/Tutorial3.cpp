@@ -37,7 +37,7 @@ void Tutorial3::OnStarting()
 					{
 						// Set a random time to live
 						s32 ttlSecs = Maths::Random::Range(MIN_TTL_SECS, MAX_TTL_SECS);
-						pBubble->m_ttl = Time::Seconds(ttlSecs);
+						pBubble->m_ttl = Time::Seconds(static_cast<f32>(ttlSecs));
 						// Scale the size and speed proportional to its ttl
 						Fixed nSize = Fixed(ttlSecs) / Fixed(MAX_TTL_SECS);
 						pBubble->m_diameter += (nSize * 20);

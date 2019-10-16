@@ -67,6 +67,8 @@ list(APPEND SOURCES
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/GFX.cpp"
 	
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Factory/Factory.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameLoop/App.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameLoop/App.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameLoop/GameLoop.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameLoop/GameLoop.cpp"
 	

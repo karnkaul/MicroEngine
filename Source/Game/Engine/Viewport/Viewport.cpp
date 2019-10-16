@@ -36,9 +36,11 @@ void Viewport::Create(u8 AAlevel, u32 framerateLimit)
 		vp = sf::Vector2u(max.width, max.height);
 	}
 
+	sf::View view(sf::Vector2f(0, 0), sf::Vector2f(static_cast<f32>(vp.x), static_cast<f32>(vp.y)));
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = AAlevel;
 	create(sf::VideoMode(vp.x, vp.y), m_data.title, Cast(m_data.style), settings);
+	setView(view);
 	setVerticalSyncEnabled(true);
 	setFramerateLimit(framerateLimit);
 

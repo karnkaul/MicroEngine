@@ -28,8 +28,5 @@ public:
 
 public:
 	void StartGame();
-	void StartFrame();
-	void Tick(Time dt);
-	void Stop();
 };
 } // namespace ME

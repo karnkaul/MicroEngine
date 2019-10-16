@@ -37,6 +37,7 @@ private:
 	void Tick(Time dt);
 	void Stop();
 
+	friend class App;
 	friend class GameServices;
 };
 

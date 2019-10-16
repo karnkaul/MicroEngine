@@ -47,19 +47,4 @@ void GameServices::StartGame()
 	m_context.ConstructWorld<Temp>("Temp");
 	m_context.StartWorld("Tutorial0");
 }
-
-void GameServices::StartFrame()
-{
-	m_context.StartFrame();
-}
-
-void GameServices::Tick(Time dt)
-{
-	m_context.Tick(dt);
-}
-
-void GameServices::Stop()
-{
-	m_context.Stop();
-}
 } // namespace ME
