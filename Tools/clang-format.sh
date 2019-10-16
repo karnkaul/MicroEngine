@@ -35,5 +35,6 @@ if [[ $RUN == "TRUE" ]]; then
 else
 	echo -e "  -- Execute script again with -r to run clang-format on $COUNT h/cpp files"
 fi
+echo -e "  -- $($CLANG_FORMAT --version)"
 
 exit
