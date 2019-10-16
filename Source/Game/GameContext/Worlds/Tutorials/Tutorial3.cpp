@@ -1,18 +1,19 @@
 #include "Engine/GameServices.h"
 #include "Tutorial3.h"
-#include "../../Objects/Tutorials/Bubble.h"
+#include "../../Objects/Tutorials/Bubble.h"		// Check out this class first
 
 namespace ME
 {
 void Tutorial3::OnStarting()
 {
 	m_hMainText = NewObject<GameObject>("MainText");
-	auto pMainText = FindObject<GameObject>(m_hMainText);
-	if (pMainText)
+	// variables can be initialised in if statements; their scope is limited to the if block
+	if (auto pMainText = FindObject<GameObject>(m_hMainText))
 	{
 		pMainText->Instantiate(Primitive::Type::Text);
 		pMainText->SetText("Press [Tab] to spawn new bubbles\n[D] to destroy all").m_transform.SetPosition({0, 200});
-		m_bubbleLayer = pMainText->m_layer + 1;
+		// Ensure bubbles appear below text
+		m_bubbleLayer = pMainText->m_layer - 1;
 	}
 
 	RegisterInput(
@@ -24,37 +25,35 @@ void Tutorial3::OnStarting()
 			// Go back to Tutorial0 on Escape
 			else if (frame.IsReleased(KeyCode::Escape))
 			{
-				g_pContext->LoadWorld("Tutorial2");
+				g_pContext->LoadPreviousWorld();
 			}
 			else if (frame.IsReleased(KeyCode::Tab))
 			{
 				std::string name = "Bubble_";
 				name += std::to_string(m_bubbles.size());
 				auto handle = NewObject<Bubble>(std::move(name));
-				if (handle != INVALID_HANDLE)
+				if (auto pBubble = FindObject<Bubble>(handle))
 				{
-					auto pBubble = FindObject<Bubble>(handle);
-					if (pBubble)
-					{
-						// Set a random time to live
-						s32 ttlSecs = Maths::Random::Range(MIN_TTL_SECS, MAX_TTL_SECS);
-						pBubble->m_ttl = Time::Seconds(static_cast<f32>(ttlSecs));
-						// Scale the size and speed proportional to its ttl
-						Fixed nSize = Fixed(ttlSecs) / Fixed(MAX_TTL_SECS);
-						pBubble->m_diameter += (nSize * 20);
-						pBubble->m_ySpeed -= (nSize * Fixed::OneHalf);
-						// Set a random position in the world
-						Fixed nX = Maths::Random::Range(-Fixed::One, Fixed::One);
-						Fixed nY = -Fixed(0.8f);
-						Vector2 worldPos = g_pGFX->WorldProjection({nX, nY});
-						pBubble->m_transform.SetPosition(worldPos);
-						pBubble->m_layer = m_bubbleLayer;
-					}
-					m_bubbles.push_back(handle);
+					// Set a random time to live
+					s32 ttlSecs = Maths::Random::Range(MIN_TTL_SECS, MAX_TTL_SECS);
+					pBubble->m_ttl = Time::Seconds(static_cast<f32>(ttlSecs));
+					// Scale the size and speed proportional to its ttl
+					Fixed nSize = Fixed(ttlSecs) / Fixed(MAX_TTL_SECS);
+					pBubble->m_diameter += (nSize * 20);
+					pBubble->m_ySpeed -= (nSize * Fixed::OneHalf);
+					// Set a random x in the world
+					Fixed nX = Maths::Random::Range(-Fixed::One, Fixed::One);
+					// Y near the bottom
+					Fixed nY = -Fixed(0.8f);
+					pBubble->m_transform.SetPosition(g_pGFX->WorldProjection({nX, nY}));
+					pBubble->m_layer = m_bubbleLayer;
 				}
+				m_bubbles.push_back(handle);
 			}
 			else if (frame.IsReleased(KeyCode::D))
 			{
+				// This function takes in a vector of handles, destroys all
+				// `GameObject`s they point to and sets them to INVALID_HANDLE
 				DestroyAll(m_bubbles);
 				m_bubbles.clear();
 			}
@@ -68,12 +67,13 @@ void Tutorial3::Tick(Time dt)
 	// Remove stale bubbles; use the type that the container holds for the template, and pass
 	// the container and a predicate for each element in the container, that when returns true,
 	// will remove the element from it.
+	// `FindObject<T>()` is a member function, so the lambda requires `this` to be captured
 	Core::RemoveIf<HObj>(m_bubbles, [this](HObj hBubble) { return FindObject<Bubble>(hBubble) == nullptr; });
 	for (auto hBubble : m_bubbles)
 	{
 		if (auto pBubble = FindObject<Bubble>(hBubble))
 		{
-			// Fade the colour a bit
+			// Fade the colour's alpha a bit
 			pBubble->m_colour.a -= 1;
 		}
 	}

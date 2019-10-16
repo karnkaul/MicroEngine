@@ -23,6 +23,7 @@ void Tutorial0::OnStarting()
 	// This is how we register callbacks for user input: via a function
 	// that takes in this parameter and returns a bool indicating whether it
 	// should block this input pass (previous registrants will not receive a callback).
+	// `m_name` and `m_type` are member variables, so the lambda needs to explicitly capture `this`
 	RegisterInput([this](const Input::Frame& frame) -> bool {
 		// Check if Space was released this frame (pressed => held => released)
 		if (frame.IsReleased(KeyCode::Space))
