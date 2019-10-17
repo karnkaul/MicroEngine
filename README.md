@@ -1,6 +1,9 @@
 ## Untitled Game
 ***Powered by `MicroEngine`***
 
+![Builds](https://github.com/karnkaul/MicroEngine/workflows/CI/badge.svg)
+![Builds (`dev`)](https://github.com/karnkaul/MicroEngine/workflows/CI_dev/badge.svg)
+
 ### Building
 1. Run CMake on the root directory and generate a project ("out" is ignored in source control)
 	1. This will download SFML once

@@ -1,6 +1,6 @@
-name: CI
+name: CI_dev
 
-on: 
+on:
   push:
     branches: 
       - dev
