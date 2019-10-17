@@ -81,7 +81,7 @@ void Tutorial1::Tick(Time dt)
 			pPointer->m_transform.SetPosition(m_pointerPos);
 		}
 	}
-	// Remember to call the base class implementation (if it is not trivial). *When* it should be called 
+	// Remember to call the base class implementation (if it is not trivial). *When* it should be called
 	// depends on the overriding function; here we want `GameWorld` to do its thing after we're done.
 	GameWorld::Tick(dt);
 }

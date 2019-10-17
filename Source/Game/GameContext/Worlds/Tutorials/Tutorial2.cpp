@@ -11,7 +11,6 @@ void Tutorial2::OnStarting()
 		{
 			g_pContext->LoadWorld("Tutorial3");
 		}
-		// Go back to Tutorial0 on Escape
 		else if (frame.IsReleased(KeyCode::Escape))
 		{
 			g_pContext->LoadWorld("Tutorial1");

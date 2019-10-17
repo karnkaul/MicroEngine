@@ -35,7 +35,7 @@ void Bubble::Tick(Time dt)
 	data.oFill = m_colour;
 	data.oOutline = m_outline;
 	SetShape(data);
-	
+
 	// Finally let the base class update the actual primitive's transform
 	GameObject::Tick(dt);
 }
