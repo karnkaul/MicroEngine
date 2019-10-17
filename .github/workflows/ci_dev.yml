@@ -11,7 +11,7 @@ on:
       - '*/dev'
 
 jobs:
-  build_debug:
+  build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -19,5 +19,7 @@ jobs:
       run: |
         chmod -R a+x .github/CI
         [ -f .github/CI/pre-build.sh ] && .github/CI/pre-build.sh
+    - name: == Build Release ==
+      run: .github/CI/build-config.sh Release
     - name: == Build Debug ==
       run: .github/CI/build-config.sh Debug
