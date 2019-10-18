@@ -3,7 +3,7 @@
 
 namespace ME
 {
-App::App(u8 fpsTarget, s32 argc, char** argv) : m_tickRate(Time::Seconds(1.0f / fpsTarget))
+App::App(u8 minFPS, u8 maxFPS, s32 argc, char** argv) : m_TICK_RATE(Time::Seconds(1.0f / maxFPS)), m_MAX_DT(Time::Seconds(1.0f / minFPS))
 {
 #if ENABLED(DEBUG_LOGGING)
 	LE::g_MinLogSeverity = LE::LogSeverity::Debug;
@@ -95,7 +95,7 @@ void App::Render()
 
 void App::Sleep(Time frameTime)
 {
-	Time residue = m_tickRate - frameTime;
+	Time residue = m_TICK_RATE - frameTime;
 	if (residue > Time::Zero)
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(residue.AsMilliseconds()));

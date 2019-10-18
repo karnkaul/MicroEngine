@@ -1,4 +1,5 @@
 #include "GameContext.h"
+#include "Engine/GameServices.h"
 
 namespace ME
 {
@@ -34,6 +35,31 @@ bool GameContext::LoadPreviousWorld()
 
 bool GameContext::StartWorld(const std::string& id)
 {
+#if defined(DEBUGGING)
+	Assert(g_pRenderer, "Renderer is null!");
+	TextData data;
+	data.oFill = Colour::White;
+	data.oCharSize = 14;
+	Assert(!g_defaultFonts.empty(), "No default fonts!");
+	data.opFont = g_defaultFonts.front();
+	Vector2 pos = g_pGFX->WorldProjection({1, 1}) - Vector2(80, 30);
+	m_hFPS = g_pRenderer->New();
+	if (auto pFPS = g_pRenderer->Find(m_hFPS))
+	{
+		pFPS->Instantiate(Primitive::Type::Text);
+		data.oText = "0";
+		pFPS->SetText(data)->m_position = pos;
+		pFPS->m_layer = 1000;
+	}
+	m_hFPSText = g_pRenderer->New();
+	if (auto pText = g_pRenderer->Find(m_hFPSText))
+	{
+		pText->Instantiate(Primitive::Type::Text);
+		data.oText = "FPS";
+		pText->SetText(data)->m_position = pos + Vector2(25, 0);
+		pText->m_layer = 1000;
+	}
+#endif
 	if (m_worlds.empty())
 	{
 		LOG_E("[GameContext] No Gameworlds constructed!");
@@ -75,6 +101,21 @@ void GameContext::Tick(Time dt)
 	{
 		m_pActive->Tick(dt);
 	}
+#if defined(DEBUGGING)
+	static u8 frameCount = 0;
+	static Time fpsElapsed;
+	fpsElapsed += dt;
+	++frameCount;
+	if (fpsElapsed >= Time::Seconds(1.0f))
+	{
+		if (auto pFPS = g_pRenderer->Find(m_hFPS))
+		{
+			pFPS->SetText(std::to_string(frameCount));
+		}
+		frameCount = 0;
+		fpsElapsed = Time::Zero;
+	}
+#endif
 }
 
 void GameContext::Stop()

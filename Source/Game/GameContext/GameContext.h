@@ -22,6 +22,10 @@ private:
 	GameWorld* m_pActive = nullptr;
 	std::string m_nextWorldID;
 	std::string m_prevWorldID;
+#if defined(DEBUGGING)
+	HPrim m_hFPSText = INVALID_HANDLE;
+	HPrim m_hFPS = INVALID_HANDLE;
+#endif
 
 public:
 	bool LoadWorld(const std::string& id);
