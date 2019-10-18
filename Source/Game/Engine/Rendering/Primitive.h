@@ -24,6 +24,7 @@ public:
 	Vector2 m_position;
 	Vector2 m_orientation = Vector2::Right;
 	LayerID m_layer = 0;
+	Type m_type;
 	bool m_bEnabled = true;
 
 private:
@@ -42,9 +43,13 @@ public:
 	Primitive* SetText(const TextData& data);
 	Primitive* SetShape(const ShapeData& data);
 
+	Rect2 Bounds() const;
+
 public:
 	template <typename T>
 	T* CastDrawable();
+	template <typename T>
+	const T* CastDrawable() const;
 
 private:
 	void Update();
@@ -55,6 +60,13 @@ private:
 
 template <typename T>
 T* Primitive::CastDrawable()
+{
+	static_assert(std::is_base_of<sf::Drawable, T>::value, "T must derive from sf::Drawable!");
+	return dynamic_cast<T*>(m_uD.get());
+}
+
+template <typename T>
+const T* Primitive::CastDrawable() const
 {
 	static_assert(std::is_base_of<sf::Drawable, T>::value, "T must derive from sf::Drawable!");
 	return dynamic_cast<T*>(m_uD.get());

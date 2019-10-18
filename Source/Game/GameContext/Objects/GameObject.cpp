@@ -94,10 +94,9 @@ bool GameObject::IsDestroyed() const
 	return m_flags[ToIdx(Flags::Destroyed)];
 }
 
-void GameObject::RegisterInput(std::function<bool(const Input::Frame& frame)> callback)
+Rect2 GameObject::Bounds() const
 {
-	Assert(g_pInput, "Input is null!");
-	m_inputTokens.push_back(g_pInput->Register(callback));
+	return m_pPrim->Bounds();
 }
 
 void GameObject::OnCreate() {}

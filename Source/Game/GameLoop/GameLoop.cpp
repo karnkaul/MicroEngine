@@ -8,7 +8,7 @@ namespace ME
 {
 namespace
 {
-constexpr u8 FPS_TARGET = 60;
+constexpr u8 FPS_TARGET = 90;
 std::unique_ptr<App> uApp;
 } // namespace
 

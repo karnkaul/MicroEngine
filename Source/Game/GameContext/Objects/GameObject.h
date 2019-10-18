@@ -48,9 +48,7 @@ public:
 
 	bool IsEnabled() const;
 	bool IsDestroyed() const;
-
-protected:
-	void RegisterInput(std::function<bool(const Input::Frame& frame)> callback);
+	Rect2 Bounds() const;
 
 protected:
 	virtual void OnCreate();

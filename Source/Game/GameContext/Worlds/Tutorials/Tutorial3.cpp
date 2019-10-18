@@ -4,6 +4,13 @@
 
 namespace ME
 {
+/**
+ * Note: the approach used here, of constructing and destroying new objects arbitrarily, is not
+ * meant to be used in real game code - such small allocations fragment the memory over time 
+ * (especially on runtimes with simple allocators). There are many ways to solve this problem, 
+ * one of the easiest and most popular ones being that of an object pool: create the max number you
+ * will need, enable/disable them as required.
+ */
 void Tutorial3::OnStarting()
 {
 	m_hMainText = NewObject<GameObject>("MainText");
@@ -19,7 +26,7 @@ void Tutorial3::OnStarting()
 	RegisterInput([this](const Input::Frame& frame) -> bool {
 		if (frame.IsReleased(KeyCode::Space))
 		{
-			g_pContext->LoadWorld("Temp");
+			g_pContext->LoadWorld("Tutorial4");
 		}
 		else if (frame.IsReleased(KeyCode::Escape))
 		{
@@ -33,16 +40,16 @@ void Tutorial3::OnStarting()
 			if (auto pBubble = FindObject<Bubble>(handle))
 			{
 				// Set a random time to live
-				s32 ttlSecs = Maths::Random::Range(MIN_TTL_SECS, MAX_TTL_SECS);
+				const s32 ttlSecs = Maths::Random::Range(MIN_TTL_SECS, MAX_TTL_SECS);
 				pBubble->m_ttl = Time::Seconds(static_cast<f32>(ttlSecs));
 				// Scale the size and speed proportional to its ttl
-				Fixed nSize = Fixed(ttlSecs) / Fixed(MAX_TTL_SECS);
+				const Fixed nSize = Fixed(ttlSecs) / Fixed(MAX_TTL_SECS);
 				pBubble->m_diameter += (nSize * 20);
 				pBubble->m_ySpeed -= (nSize * Fixed::OneHalf);
 				// Set a random x in the world
-				Fixed nX = Maths::Random::Range(-Fixed::One, Fixed::One);
+				const Fixed nX = Maths::Random::Range(-Fixed::One, Fixed::One);
 				// Y near the bottom
-				Fixed nY = -Fixed(0.8f);
+				const Fixed nY = -Fixed(0.8f);
 				pBubble->m_transform.SetPosition(g_pGFX->WorldProjection({nX, nY}));
 				pBubble->m_layer = m_bubbleLayer;
 			}

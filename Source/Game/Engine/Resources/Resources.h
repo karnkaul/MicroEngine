@@ -37,6 +37,11 @@ public:
 	template <typename T>
 	HRes Load(const std::string& id);
 
+#if defined(DEBUGGING)
+	// DEBUG
+	bool Unload(const std::string& id);
+#endif
+
 	template <typename T>
 	T* Find(HRes handle) const;
 };
