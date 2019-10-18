@@ -23,7 +23,7 @@ void Tutorial3::OnStarting()
 		}
 		else if (frame.IsReleased(KeyCode::Escape))
 		{
-			g_pContext->LoadPreviousWorld();
+			g_pContext->LoadWorld("Tutorial2");
 		}
 		else if (frame.IsReleased(KeyCode::Tab))
 		{
