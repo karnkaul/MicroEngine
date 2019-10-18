@@ -33,6 +33,7 @@ public:
 	bool DestroyObject(HObj& outHandle);
 	// Destroy all valid `GameObject`s and set those handles to INVALID
 	void DestroyAll(std::vector<HObj>& outHandles);
+	void DestroyAll(std::initializer_list<HObj*> outHandles);
 
 protected:
 	// Called when world is created

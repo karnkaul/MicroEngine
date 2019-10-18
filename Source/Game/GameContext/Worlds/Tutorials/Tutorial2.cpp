@@ -57,7 +57,7 @@ void Tutorial2::OnStarting()
 	}
 
 	// Set (or reset) the rectangle's time to live to a random value between min and max
-	s32 randomMilliseconds = Maths::Random::Range(m_RECT_TTL_MIN, m_RECT_TTL_MAX_S);
+	const s32 randomMilliseconds = Maths::Random::Range(m_RECT_TTL_MIN, m_RECT_TTL_MAX_S);
 	m_rectTTL = Time::Milliseconds(randomMilliseconds);
 	m_rectElapsed = Time::Zero;
 }

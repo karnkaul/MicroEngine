@@ -34,6 +34,15 @@ void GameWorld::DestroyAll(std::vector<HObj>& outHandles)
 	}
 }
 
+void GameWorld::DestroyAll(std::initializer_list<HObj*> outHandles)
+{
+	for (auto pObj : outHandles)
+	{
+		Assert(pObj, "Invalid pointer!");
+		DestroyObject(*pObj);
+	}
+}
+
 void GameWorld::OnCreated() {}
 void GameWorld::OnStarting() {}
 

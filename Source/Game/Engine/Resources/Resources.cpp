@@ -59,4 +59,21 @@ HRes Resources::FindID(const std::string& id) const
 	}
 	return INVALID_HANDLE;
 }
+
+#if defined(DEBUGGING)
+bool Resources::Unload(const std::string& id) 
+{
+	auto search = m_idToHandle.find(id);
+	if (search != m_idToHandle.end())
+	{
+		auto handle = search->second;
+		m_idToHandle.erase(search);
+		if (m_factory.Destroy(handle))
+		{
+			LOG_I("[Resources] Unloaded [%s]", id.data());
+		}
+	}
+	return false;
+}
+#endif
 } // namespace ME

@@ -20,10 +20,11 @@ Primitive::~Primitive()
 
 Primitive* Primitive::Instantiate(Type type)
 {
+	m_type = type;
 	std::string logText = "[Prim_";
 	logText += std::to_string(m_handle);
 	logText += "] ";
-	switch (type)
+	switch (m_type)
 	{
 	case Type::Rectangle:
 	{
@@ -143,6 +144,47 @@ Primitive* Primitive::SetShape(const ShapeData& data)
 		}
 	}
 	return this;
+}
+
+Rect2 Primitive::Bounds() const
+{
+	sf::FloatRect sfBounds;
+	switch (m_type)
+	{
+	case Type::Circle:
+	{
+		if (auto pCircle = CastDrawable<sf::CircleShape>())
+		{
+			sfBounds = pCircle->getLocalBounds();
+		}
+		break;
+	}
+	case Type::Rectangle:
+	{
+		if (auto pRect = CastDrawable<sf::RectangleShape>())
+		{
+			sfBounds = pRect->getLocalBounds();
+		}
+		break;
+	}
+	case Type::Text:
+	{
+		if (auto pText = CastDrawable<sf::Text>())
+		{
+			sfBounds = pText->getLocalBounds();
+		}
+		break;
+	}
+	case Type::Sprite:
+	{
+		if (auto sSprite = CastDrawable<sf::Sprite>())
+		{
+			sfBounds = sSprite->getLocalBounds();
+		}
+		break;
+	}
+	}
+	return Rect2::SizeCentre({Fixed(sfBounds.width), Fixed(sfBounds.height)});
 }
 
 void Primitive::Update()

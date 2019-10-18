@@ -1,3 +1,4 @@
+#include <fstream>
 #include "Resource.h"
 
 namespace ME
@@ -20,11 +21,24 @@ bool Resource::Load(std::string id, std::string path)
 	return OnLoad();
 }
 
-Font::Font() = default;
-Font::~Font() = default;
-
 bool Font::OnLoad()
 {
 	return m_bOK = m_font.loadFromFile(m_path);
+}
+
+bool Text::OnLoad() 
+{
+	std::ifstream file(m_path.data());
+	if (file.good())
+	{
+		std::string line;
+		while (std::getline(file, line))
+		{
+			m_text += line;
+			m_text += "\n";
+		}
+		return m_bOK = true;
+	}
+	return false;
 }
 } // namespace ME

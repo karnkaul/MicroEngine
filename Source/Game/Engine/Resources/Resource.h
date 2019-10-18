@@ -32,9 +32,14 @@ class Font final : public Resource
 public:
 	sf::Font m_font;
 
+protected:
+	bool OnLoad() override;
+};
+
+class Text final : public Resource
+{
 public:
-	Font();
-	~Font() override;
+	std::string m_text;
 
 protected:
 	bool OnLoad() override;
