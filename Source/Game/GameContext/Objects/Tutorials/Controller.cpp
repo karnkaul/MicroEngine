@@ -1,3 +1,4 @@
+#include <thread>
 #include "Engine/GData.h"
 #include "Engine/GameServices.h"
 #include "Controller.h"
@@ -65,6 +66,28 @@ void Controller::OnCreate()
 			delta.Normalise();
 			// Add the delta to the current target
 			m_targetVelocity += delta;
+
+			// Note: this is not wrapped in `DEBUGGING`, so it will also occur for Release builds!
+			if (frame.IsHeld(KeyCode::Backspace))
+			{
+				// !! DEMONSTRATION CODE ONLY!! DO NOT CALL SLEEP ANYWHERE YOURSELF !!
+				// Deliberately take way too much time before returning;
+				// This will cause a massive drop in FPS, and the engine
+				// will start throwing warnings about slowed-down time
+				// Try using different durations to see what happens : until 30 FPS
+				// the engine will cope, below that it will start throwing away chunks of time
+				// and the game will slow down
+				const auto SHORT = std::chrono::milliseconds(25);
+				const auto LONG = std::chrono::milliseconds(50);
+				auto duration = SHORT;
+				// Make LCtrl / RCtrl + Backspace slow down even more!
+				if (frame.IsHeld({KeyCode::LControl, KeyCode::RControl}))
+				{
+					duration = LONG;
+				}
+				std::this_thread::sleep_for(duration);
+			}
+
 			return false;
 		},
 		true);
@@ -88,12 +111,15 @@ void Controller::Tick(Time dt)
 		// Using the velocity itself as the min makes it progressively move towards 3 * targetVelocity;
 		// the rate of "catching up" depends on the value of alpha, which needs to be 
 		// scaled by `dt` again, to remain framerate independent.
-		// Verify framerate independence (and break it deliberately to see what happens) by changing GameLoop.cpp::FPS_TARGET
 		m_velocity = Maths::Lerp(m_velocity, 3 * m_targetVelocity, Fixed(dt.AsSeconds() * 20));
 		break;
 	}
 	}
 	// Compute displacement (velocity * time) (notice `dt` has effectively been multiplied *twice*)
+	// Verify framerate independence by using Backspace / Ctrl + Backspace while moving and observing 
+	// both FPS output and if/how the movement/rendering changes based on high `dt`.
+	// Also try removing `dt` scaling here to deliberately make movement framerate dependent, just so 
+	// you know how to recognise it when you see such a bug the next time.
 	const Vector2 displacement = Fixed(dt.AsSeconds()) * m_speed * m_velocity * 500;
 	Vector2 position = m_transform.Position() + displacement;
 	if (m_bClampToWorld)
