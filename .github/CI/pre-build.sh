@@ -7,7 +7,7 @@
 ## Arguments: 
 ##   1. (Optional) Whether to install clang/llvm (TRUE)
 
-ENV="cmake g++-8 ninja-build"
+ENV="cmake g++-8 ninja-build libx11-dev libxrandr-dev libgl1-mesa-dev libudev-dev libfreetype6-dev libflac-dev"
 CLANG=$1
 if [[ "$CLANG" == "TRUE" ]]; then
 	ENV="$ENV clang-8 lld-8"
