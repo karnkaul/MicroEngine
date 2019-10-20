@@ -11,12 +11,12 @@ on:
 
 jobs:
   build_release:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v1
     - name: == Pre-Build ==
       run: |
-        chmod -R a+x .github/CI
-        [ -f .github/CI/pre-build.sh ] && .github/CI/pre-build.sh
-    - name: == Build Release ==
-      run: .github/CI/build-config.sh Release
+        chmod a+x .github/CI/*.sh
+        [ -f .github/CI/pre-build.sh ] && .github/CI/pre-build.sh TRUE
+    - name: == Build Release (clang) ==
+      run: .github/CI/build-config.sh Release TRUE
