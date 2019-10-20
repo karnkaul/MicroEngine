@@ -8,14 +8,29 @@ namespace ME
 {
 namespace
 {
-constexpr u8 FPS_TARGET = 90;
 std::unique_ptr<App> uApp;
+
+void ProfileFrameTime(Time frameTime, Time maxDT)
+{
+	constexpr u8 MAX_STRIKES = 3;
+	static u8 strikes = 0;
+	if (frameTime > maxDT)
+	{
+		++strikes;
+		if (strikes >= MAX_STRIKES)
+		{
+			LOG_W("[GameLoop] Frame time is too high [%.2f] (max dt: [%.2f])! Game Time will appear slowed down!", frameTime.AsSeconds() * 1000, maxDT.AsSeconds() * 1000);
+			strikes = 0;
+		}
+	}
+}
 } // namespace
 
-s32 GameLoop::Run(s32 argc, char** argv)
+s32 GameLoop::Run(u8 minFPs, u8 maxFPS, s32 argc, char** argv)
 {
 	// Create an app object and ensure it's initialised
-	uApp = std::make_unique<App>(FPS_TARGET, argc, argv);
+	const Time MAX_DT = Time::Seconds(1.0f / minFPs);
+	uApp = std::make_unique<App>(minFPs, maxFPS, argc, argv);
 	if (!uApp->IsInit())
 	{
 		LOG_E("[GameLoop] Fatal error initialising engine...");
@@ -32,7 +47,7 @@ s32 GameLoop::Run(s32 argc, char** argv)
 	Time frameTime;
 	while (uApp->IsRunning())
 	{
-		Time dt = Time::Now() - frameStart;
+		Time dt = Maths::Clamp(Time::Now() - frameStart, Time::Zero, MAX_DT);
 		frameStart = Time::Now();
 		// Build and render frame
 		uApp->StartFrame();
@@ -41,6 +56,7 @@ s32 GameLoop::Run(s32 argc, char** argv)
 		uApp->Render();
 		// If frame completed before 1/60 ms, sleep this thread for the remaining time
 		frameTime = Time::Now() - frameStart;
+		ProfileFrameTime(frameTime, MAX_DT);
 		uApp->Sleep(frameTime);
 	}
 	// Destroy the app and cleanup its resources

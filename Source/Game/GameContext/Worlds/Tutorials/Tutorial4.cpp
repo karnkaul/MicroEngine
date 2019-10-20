@@ -47,7 +47,7 @@ void Tutorial4::OnStarting()
 	if (auto pMainText = FindObject<GameObject>(m_hMainText))
 	{
 		pMainText->Instantiate(Primitive::Type::Text);
-		pMainText->SetText("Pres [WASD] / [Up/Down/Left/Right] to move");
+		pMainText->SetText("Pres [WASD] / [Up/Down/Left/Right] to move\nHold [Backspace] to grind game to a halt");
 		pMainText->m_layer = controllerLayer + 1;
 	}
 }

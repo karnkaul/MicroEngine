@@ -28,10 +28,11 @@ private:
 	Viewport m_viewport;
 	std::string m_workingDir;
 	State m_state;
-	const Time m_tickRate;
+	const Time m_TICK_RATE;
+	const Time m_MAX_DT;
 
 public:
-	App(u8 fpsTarget, s32 argc, char** argv);
+	App(u8 minFPS, u8 maxFPS, s32 argc, char** argv);
 	~App();
 
 public:
