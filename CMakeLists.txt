@@ -10,13 +10,28 @@ set(CMAKE_CONFIGURATION_TYPES
 	CACHE STRING "" FORCE
 )
 set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "")
+set(CMAKE_SUPPRESS_REGENRATION 1)
 
 project(MicroEngine)
+## Version
+set(BUILD_VERSION "0.0.0.1" CACHE STRING "Build Version" FORCE)
+set(COMMIT_HASH "[unknown]" CACHE STRING "Commit hash" FORCE)
+execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+	WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+	OUTPUT_VARIABLE COMMIT_HASH
+	ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
 ## Enforce x64
 set(CMAKE_VS_PLATFORM_NAME "x64" CACHE STRING "" FORCE)
 if(NOT CMAKE_VS_PLATFORM_NAME STREQUAL "x64")
 	message(FATAL_ERROR "Only x64 builds are supported!")
 endif()
+
+add_custom_target(
+	RunCMake
+	COMMAND ${CMAKE_COMMAND} "${CMAKE_CURRENT_BINARY_DIR}"
+)
 
 ## Init/Update Submodules
 find_package(Git QUIET)
@@ -110,12 +125,17 @@ add_subdirectory(${SFML_SOURCE_DIR})
 set(SOURCES Source/Main.cpp)
 list(TRANSFORM SOURCES PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/")
 include("Source/Source.cmake")
+## Generated
+configure_file(Source/Game/BuildVersion.h.in BuildVersion.h @ONLY)
+list(APPEND SOURCES "${CMAKE_CURRENT_BINARY_DIR}/Source/Game/BuildVersion.h")
+set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/Source/Game/BuildVersion.h" PROPERTIES GENERATED TRUE)
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${SOURCES})
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 target_compile_definitions(${PROJECT_NAME} PUBLIC SFML_STATIC $<$<CONFIG:Debug>:DEBUGGING>)
 target_include_directories(${PROJECT_NAME} PUBLIC "${INC_PATH}")
+target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_BINARY_DIR}")
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/Source/Game")
 target_link_directories(${PROJECT_NAME} PUBLIC "${LIB_PATH}")
 target_link_libraries(${PROJECT_NAME} PUBLIC
@@ -125,6 +145,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 	${SFML_DEPS}
 )
 add_dependencies(${PROJECT_NAME}
+	RunCMake
 	sfml-graphics
 	sfml-window
 	sfml-system

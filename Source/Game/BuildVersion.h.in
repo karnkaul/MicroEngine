@@ -1,0 +1,7 @@
+#include <string>
+
+namespace ME
+{
+constexpr std::string_view BUILD_VERSION_STR="@BUILD_VERSION@";
+constexpr std::string_view COMMIT_HASH_STR="@COMMIT_HASH@";
+}

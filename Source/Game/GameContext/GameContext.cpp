@@ -1,3 +1,4 @@
+#include "BuildVersion.h"
 #include "GameContext.h"
 #include "Engine/GameServices.h"
 
@@ -42,7 +43,7 @@ bool GameContext::StartWorld(const std::string& id)
 	data.oCharSize = 14;
 	Assert(!g_defaultFonts.empty(), "No default fonts!");
 	data.opFont = g_defaultFonts.front();
-	Vector2 pos = g_pGFX->WorldProjection({1, 1}) - Vector2(80, 30);
+	Vector2 pos = g_pGFX->WorldProjection({1, 1}) + Vector2(-80, -30);
 	m_hFPS = g_pRenderer->New();
 	if (auto pFPS = g_pRenderer->Find(m_hFPS))
 	{
@@ -58,6 +59,20 @@ bool GameContext::StartWorld(const std::string& id)
 		data.oText = "FPS";
 		pText->SetText(data)->m_position = pos + Vector2(25, 0);
 		pText->m_layer = 1000;
+	}
+	pos = g_pGFX->WorldProjection({-1, 1}) + Vector2(80, -30);
+	m_hVersion = g_pRenderer->New();
+	if (auto pVersion = g_pRenderer->Find(m_hVersion))
+	{
+		pVersion->Instantiate(Primitive::Type::Text);
+		std::string versionText;
+		versionText += BUILD_VERSION_STR;
+		versionText += "\n";
+		versionText += COMMIT_HASH_STR;
+		data.oText = std::move(versionText);
+		data.oFill = Colour(255, 200, 235);
+		pVersion->SetText(data)->m_position = pos;
+		pVersion->m_layer = 1000;
 	}
 #endif
 	if (m_worlds.empty())

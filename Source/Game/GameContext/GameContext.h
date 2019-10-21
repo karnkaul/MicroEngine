@@ -25,6 +25,7 @@ private:
 #if defined(DEBUGGING)
 	HPrim m_hFPSText = INVALID_HANDLE;
 	HPrim m_hFPS = INVALID_HANDLE;
+	HPrim m_hVersion = INVALID_HANDLE;
 #endif
 
 public:

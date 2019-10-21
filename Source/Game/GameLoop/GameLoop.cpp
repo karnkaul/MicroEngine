@@ -1,5 +1,6 @@
 #include <memory>
 #include "SFML/Graphics.hpp"
+#include "BuildVersion.h"
 #include "Engine/Viewport/Viewport.h"
 #include "GameLoop.h"
 #include "App.h"
@@ -12,7 +13,7 @@ std::unique_ptr<App> uApp;
 
 void ProfileFrameTime(Time frameTime, Time maxDT)
 {
-	constexpr u8 MAX_STRIKES = 3;
+	constexpr u8 MAX_STRIKES = 5;
 	static u8 strikes = 0;
 	if (frameTime > maxDT)
 	{
@@ -28,6 +29,10 @@ void ProfileFrameTime(Time frameTime, Time maxDT)
 
 s32 GameLoop::Run(u8 minFPs, u8 maxFPS, s32 argc, char** argv)
 {
+	LOG_I("MicroEngine v%s", BUILD_VERSION_STR.data());
+#if defined(DEBUGGING)
+	LOG_I("Commit hash: %s", COMMIT_HASH_STR.data());
+#endif
 	// Create an app object and ensure it's initialised
 	const Time MAX_DT = Time::Seconds(1.0f / minFPs);
 	uApp = std::make_unique<App>(minFPs, maxFPS, argc, argv);

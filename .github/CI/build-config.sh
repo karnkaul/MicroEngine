@@ -3,7 +3,7 @@
 ## This script builds one or more configurations using cmake and ninja
 ## Arguments:
 ##   1. (Optional): Name of build configuration (Debug/RelWithDebInfo/etc)
-##   2. (Optional): Whether to use /usr/bin/clang++ (TRUE)
+##   2. (Optional): Whether to use clang++ (TRUE)
 
 ## Set config
 CONFIG=$1
