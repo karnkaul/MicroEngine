@@ -20,6 +20,8 @@ list(APPEND SOURCES
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/GameWorld.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Tutorial0.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Tutorial0.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/TutorialKing.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/TutorialKing.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Tutorial1.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Tutorial1.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Tutorial2.h"

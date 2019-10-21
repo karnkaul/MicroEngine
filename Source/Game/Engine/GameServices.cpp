@@ -41,6 +41,7 @@ GameServices::~GameServices()
 void GameServices::StartGame()
 {
 	m_context.ConstructWorld<Tutorial0>("Tutorial0");
+	m_context.ConstructWorld<TutorialKing>("TutorialKing");
 	m_context.ConstructWorld<Tutorial1>("Tutorial1");
 	m_context.ConstructWorld<Tutorial2>("Tutorial2");
 	m_context.ConstructWorld<Tutorial3>("Tutorial3");

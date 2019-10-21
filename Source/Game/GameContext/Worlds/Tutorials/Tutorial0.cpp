@@ -29,7 +29,7 @@ void Tutorial0::OnStarting()
 		if (frame.IsReleased(KeyCode::Space))
 		{
 			// GameContext service owns all worlds and exposes an API to load a different one
-			g_pContext->LoadWorld("Tutorial1");
+			g_pContext->LoadWorld("TutorialKing");
 		}
 		// Let's quit the app if Escape is released!
 		else if (frame.IsReleased(KeyCode::Escape))
