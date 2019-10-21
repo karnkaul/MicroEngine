@@ -10,7 +10,7 @@ set(CMAKE_CONFIGURATION_TYPES
 	CACHE STRING "" FORCE
 )
 set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "")
-set(CMAKE_SUPPRESS_REGENRATION 1)
+set(CMAKE_SUPPRESS_REGENERATION 1)
 
 project(MicroEngine)
 ## Version
@@ -127,11 +127,11 @@ list(TRANSFORM SOURCES PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/")
 include("Source/Source.cmake")
 ## Generated
 configure_file(Source/Game/BuildVersion.h.in BuildVersion.h @ONLY)
-list(APPEND SOURCES "${CMAKE_CURRENT_BINARY_DIR}/Source/Game/BuildVersion.h")
-set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/Source/Game/BuildVersion.h" PROPERTIES GENERATED TRUE)
-
+set(GENERATED_SOURCES "${CMAKE_CURRENT_BINARY_DIR}/BuildVersion.h")
+set_source_files_properties(${GENERATED_SOURCES} PROPERTIES GENERATED TRUE)
+source_group(Source "${CMAKE_CURRENT_BINARY_DIR}" FILES "${CMAKE_CURRENT_BINARY_DIR}/BuildVersion.h")
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${SOURCES})
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES} ${GENERATED_SOURCES})
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 target_compile_definitions(${PROJECT_NAME} PUBLIC SFML_STATIC $<$<CONFIG:Debug>:DEBUGGING>)
 target_include_directories(${PROJECT_NAME} PUBLIC "${INC_PATH}")
