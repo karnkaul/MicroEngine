@@ -1,3 +1,4 @@
+#pragma once
 #include "GameTypes.h"
 
 namespace ME

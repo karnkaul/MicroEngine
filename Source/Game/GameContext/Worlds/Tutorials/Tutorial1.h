@@ -1,3 +1,4 @@
+#pragma once
 #include "../GameWorld.h"
 
 namespace ME

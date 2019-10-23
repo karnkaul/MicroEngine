@@ -1,4 +1,5 @@
 #include <fstream>
+#include "Engine/SFTypes.h"
 #include "Resource.h"
 
 namespace ME
@@ -9,7 +10,7 @@ Resource::~Resource()
 {
 	if (m_bOK)
 	{
-		LOG_I("== [%s] %s destroyed", m_id.data(), m_type.data());
+		LOG_I("-- [%s] %s destroyed", m_id.data(), m_type.data());
 	}
 }
 
@@ -45,5 +46,10 @@ bool Text::OnLoad()
 bool Texture::OnLoad()
 {
 	return m_bOK = m_texture.loadFromFile(m_path);
+}
+
+Vector2 Texture::Size() const
+{
+	return Cast(m_texture.getSize());
 }
 } // namespace ME

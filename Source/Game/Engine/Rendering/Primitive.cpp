@@ -150,9 +150,11 @@ Primitive* Primitive::SetSprite(const SpriteData& data)
 {
 	if (auto pSprite = CastDrawable<sf::Sprite>())
 	{
+		Vector2 spriteSize;
 		if (data.pTexture)
 		{
 			pSprite->setTexture(data.pTexture->m_texture);
+			spriteSize = Cast(data.pTexture->m_texture.getSize());
 		}
 		if (data.oScale)
 		{
@@ -162,17 +164,18 @@ Primitive* Primitive::SetSprite(const SpriteData& data)
 		{
 			pSprite->setColor(Cast(*data.oFill));
 		}
-		auto bounds = pSprite->getLocalBounds();
-		Vector2 s(Fixed(bounds.width), Fixed(bounds.height));
-		if (data.oUV)
+		if (data.oTexCoords)
 		{
-			Vector2 tl = data.oUV->TopLeft();
-			Vector2 br = data.oUV->BottomRight();
-			sf::IntRect uv((tl.x * s.x).ToS32(), (tl.y * s.y).ToS32(), (br.x * s.x).ToS32(), (br.y * s.y).ToS32());
-			pSprite->setTextureRect(uv);
+			auto& tc = *data.oTexCoords;
+			sf::IntRect texCoords(tc.left.ToS32(), tc.top.ToS32(), tc.width.ToS32(), tc.height.ToS32());
+			pSprite->setTextureRect(texCoords);
+			spriteSize = {tc.width, tc.height};
 		}
-		sf::Vector2f o = Cast((s * Fixed::OneHalf));
-		pSprite->setOrigin(o);
+		if (spriteSize.SqrMagnitude() > 0.0)
+		{
+			sf::Vector2f o = Cast(spriteSize * Fixed::OneHalf);
+			pSprite->setOrigin(o);
+		}
 	}
 	return this;
 }

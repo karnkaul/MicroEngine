@@ -46,8 +46,12 @@ void Temp::OnStarting()
 	auto hSpaceShip = g_pResources->Load<Texture>("Textures/WhiteSpaceShip_128x128.png");
 	if (auto pObj1 = FindObject<GameObject>(m_hObj1))
 	{
-		SpriteData data(*g_pResources->Find<Texture>(hSpaceShip));
-		data.oUV = {Vector2(0, 0), Vector2(Fixed(0.5f), Fixed(0.5f))};
+		auto pTex = g_pResources->Find<Texture>(hSpaceShip);
+		Assert(pTex, "Texture is null!");
+		SpriteData data(*pTex);
+		TexCoords coords(pTex->Size());
+		coords.SetUV(0, 0, Fixed(0.5f), Fixed(0.5f));
+		data.oTexCoords = coords;
 		pObj1->Instantiate(Primitive::Type::Sprite).SetSprite(data);
 		if (pObj0)
 		{

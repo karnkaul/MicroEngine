@@ -15,6 +15,8 @@ list(APPEND SOURCES
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tutorials/Bubble.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tutorials/Controller.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tutorials/Controller.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tutorials/Chaser.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tutorials/Chaser.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tutorials/Rocket.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tutorials/Rocket.cpp"
 
@@ -37,9 +39,6 @@ list(APPEND SOURCES
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Temp.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Temp.cpp"
 
-	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Utility/SpriteSheet.h"
-	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Utility/SpriteSheet.cpp"
-
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Input/InputDataFrame.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Input/InputDataFrame.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Input/InputHandler.h"
@@ -59,7 +58,9 @@ list(APPEND SOURCES
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/PrimitiveData.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Renderer.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Renderer.cpp"
-
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Spritesheet.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Spritesheet.cpp"
+	
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Resources/Resource.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Resources/Resource.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Resources/Resources.h"

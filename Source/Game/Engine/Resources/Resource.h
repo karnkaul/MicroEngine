@@ -52,5 +52,8 @@ public:
 
 protected:
 	bool OnLoad() override;
+
+public:
+	Vector2 Size() const;
 };
 } // namespace ME

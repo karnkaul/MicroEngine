@@ -1,38 +1,28 @@
 #pragma once
-#include "../GameObject.h"
+#include "Engine/Rendering/Spritesheet.h"
+#include "Chaser.h"		// Check out this class first
 
 namespace ME
 {
-class Rocket : public GameObject
+// Derived class that sets up all the visuals for the base Rocket
+class Rocket : public Chaser
 {
-public:
-	// Always use `enum class` and not juse `enum`
-	// This is an enum declared within an existing class, so
-	// outside the class it must be accessed via `Rocket::State`.
-	enum class State
-	{
-		Idle = 0,
-		Chasing
-	};
-
-public:
-	Fixed m_speed = Fixed::One;
-	// Angular speed
-	Fixed m_omega = Fixed::One;
-	State m_state = State::Idle;
-	// Where to go when chasing
-	Vector2 m_targetPos;
+protected:
+	// New class! A Sprite can be asked to render only a part of a texture;
+	// the rectangle to render is specified via TexCoords (top, left, width, height).
+	// Spritesheet contains multiple TexCoords sequentially associated with one texture size,
+	// and also supports automatically incrementing the current index based on 
+	// the configured "period" of all frames to animate. (Rows, then columns.)
+	Spritesheet m_exhaustFrames;
+	HRes m_hShipTex = INVALID_HANDLE;
+	// A "sprite sheet" (in general) is still one texture (image)!
+	HRes m_hExhaustTex = INVALID_HANDLE;
+	// This rocket instance will ask its owning world to instantiate another GameObject, to 
+	// use for the exhaust.
+	HObj m_hExhaust = INVALID_HANDLE;
 
 protected:
-	// Similar to `GameWorld` derived objects, but without `Start()`/`Stop()`;
-	// `GameObject`s "start" when they are created, and "stop" on destruction.
 	void OnCreate() override;
 	void Tick(Time dt) override;
-
-private:
-	// These are private because even derived classes shouldn't be able to
-	// call them directly, they're sub-parts of Tick.
-	void Idle(Fixed dRot);
-	void Chase(Fixed dRot);
 };
-} // namespace ME
+}

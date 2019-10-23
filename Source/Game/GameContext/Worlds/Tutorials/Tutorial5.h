@@ -7,7 +7,6 @@ class Tutorial5 : public GameWorld
 {
 protected:
 	// Mouse chaser "rocket" ship
-	HRes m_hShipTex = INVALID_HANDLE;
 	HObj m_hRocket = INVALID_HANDLE;
 	HObj m_hMainText = INVALID_HANDLE;
 

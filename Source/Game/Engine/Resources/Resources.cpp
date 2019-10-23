@@ -70,7 +70,7 @@ bool Resources::Unload(const std::string& id)
 		m_idToHandle.erase(search);
 		if (m_factory.Destroy(handle))
 		{
-			LOG_I("[Resources] Unloaded [%s]", id.data());
+			LOG_I("-- [Resources] Unloaded [%s]", id.data());
 		}
 	}
 	return false;

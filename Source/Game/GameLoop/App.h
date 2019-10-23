@@ -1,8 +1,8 @@
+#pragma once
 #include <bitset>
 #include "GameTypes.h"
 #include "Engine/GameServices.h"
 #include "Engine/Viewport/Viewport.h"
-#pragma once
 
 namespace ME
 {

@@ -3,75 +3,71 @@
 
 namespace ME
 {
-void Rocket::OnCreate()
+void Rocket::OnCreate() 
 {
-	RegisterInput(
-		[this](const Input::Frame& frame) -> bool {
-			m_targetPos = frame.mouseInput.worldPosition;
-			if (frame.IsReleased(KeyCode::Tab))
+	// Base class is Chaser, not GameObject!
+	Chaser::OnCreate();
+
+	m_hShipTex = g_pResources->Load<Texture>("Textures/WhiteSpaceShip_128x128.png");
+	if (auto pTexture = g_pResources->Find<Texture>(m_hShipTex))
+	{
+		// New Primtive type: Sprite - uses a texture to render itself
+		Instantiate(Primitive::Type::Sprite);
+		SpriteData data(*pTexture);
+		// 128x128 is too large, reduce it to 64x64; try 128x128 to see what it's like
+		data.oScale = {Fixed::OneHalf, Fixed::OneHalf};
+		SetSprite(data);
+		// Check out this texture: you'll notice it's like a flip-book
+		m_hExhaustTex = g_pResources->Load<Texture>("Textures/Exhaust_128x128_2x4.png");
+		if (auto pExhaustTex = g_pResources->Find<Texture>(m_hExhaustTex))
+		{
+			// Spritesheet::Autobuild takes in a texture (to obtain its size)
+			m_exhaustFrames.Autobuild(*pExhaustTex, 2, 4);
+			// Period is the TOTAL time for ALL frames to play;
+			// basically the index will return to 0 in this much time.
+			m_exhaustFrames.m_period = Time::Milliseconds(250);
+			// Obtain a reference to the world (not const, because `NewObject<T>()` will modify it)
+			auto& world = GameWorld::Active();		// This call will Assert if there is no active GameWorld
+			m_hExhaust = world.NewObject<GameObject>("Exhaust");
+			if (auto pExhaust = world.FindObject<GameObject>(m_hExhaust))
 			{
-				m_state = (m_state == State::Chasing) ? State::Idle : State::Chasing;
+				pExhaust->Instantiate(Primitive::Type::Sprite);
+				SpriteData data(*pExhaustTex);
+				// Set the texture coordinates to whatever the spritesheet's index points to
+				data.oTexCoords = m_exhaustFrames.m_texCoords[m_exhaustFrames.m_index];
+				pExhaust->SetSprite(data);
+				// Move the exhaust a bit to the left of the ship (when both are facing Right)
+				const Fixed x = -(pExhaust->Bounds().Size().x * Fixed::OneHalf + 10);
+				pExhaust->m_transform.SetPosition({x, 0});
+				// Set the exhaust as a "child" transform of the rocket;
+				// this will automatically apply the parent's transformation to the child
+				// Ask for more details about this; it's a complicated topic.
+				// Roughly speaking, `SetParent()` will make an object "stick" to another (in 2D space).
+				pExhaust->m_transform.SetParent(m_transform);
 			}
-			return false;
-		},
-		true);
+		}
+	}
 }
 
 void Rocket::Tick(Time dt)
 {
-	// Compute delta rotation (positive is counter-clockwise)
-	auto dr = Fixed(dt.AsSeconds()) * m_omega * 150;
-	// Update orientation
-	switch (m_state)
+	if (auto pExhaust = GameWorld::Active().FindObject<GameObject>(m_hExhaust))
 	{
-	case State::Idle:
-	{
-		Idle(dr);
-		break;
-	}
-	case State::Chasing:
-	{
-		Chase(dr);
-		break;
-	}
-	}
-	// Move along (updated) orientation
-	Vector2 displacement = Fixed(dt.AsSeconds()) * m_transform.Orientation() * m_speed * 200;
-	m_transform.SetPosition(m_transform.Position() + displacement);
-
-	GameObject::Tick(dt);
-}
-
-void Rocket::Idle(Fixed dRot)
-{
-	// Just keep rotating steadily
-	m_transform.SetOrientation(Vector2::Rotate(m_transform.Orientation(), dRot));
-}
-
-void Rocket::Chase(Fixed dRot)
-{
-	// Get a normalised vector to the target
-	Vector2 nTarget = (m_targetPos - m_transform.Position()).Normalised();
-	Vector2 nSelf = m_transform.Orientation();
-	// Project self onto target (FYI: dot products are commutative scalars: A.B == B.A)
-	Fixed proj = nSelf.Dot(nTarget);
-	// Stop rotating if projection is one (will never be, which is why movement is shaky)
-	if (Maths::Abs(proj) < Fixed::One)
-	{
-		// We need the normal in order to determine which direction to rotate in: the sign of its projection
-		// will vary based on which side of `nSelf` `nTarget` lies (cos is positive in both 1st and 4th quadrants)
-		// So, compute Y-component of the orientation vector and dot *that* against nTarget.
-		Vector2 normal = Vector2::Rotate(nSelf, 90);
-		// Why this roundabout way and not just `normalProj = proj.ArcCos().Sin()`?
-		// Because trig functions only work in 180 degrees, we need full 360 degree resolution,
-		// and vectors are sufficient to do that (at least with one DOF / in 2D space)
-
-		// If the normal projection is negative, the target is > 180 degrees away, so rotate in the other direction
-		if (nTarget.Dot(normal) < Fixed::Zero)
+		// Rocket is also a GameObject, so expect it's layer to have changed by 
+		// some owning World/Object after OnCreate / on some other Tick; 
+		// therefore update all sub-object layers every Tick here.
+		pExhaust->m_layer = m_layer;
+		// Spritesheet Tick moves its clock forward and returns true if its index has changed
+		if (m_exhaustFrames.Tick(dt))
 		{
-			dRot = -dRot;
+			SpriteData data;
+			// Set the new texture coordinates
+			data.oTexCoords = m_exhaustFrames.m_texCoords[m_exhaustFrames.m_index];
+			pExhaust->SetSprite(data);
 		}
-		m_transform.SetOrientation(Vector2::Rotate(nSelf, dRot));
 	}
+
+	// Base class is Chaser, not GameObject!
+	Chaser::Tick(dt);
 }
-} // namespace ME
+}
