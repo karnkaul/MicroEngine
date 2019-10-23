@@ -66,4 +66,4 @@ void Tutorial5::OnStopping()
 {
 	m_hRocket = m_hMainText = INVALID_HANDLE;
 }
-}
+} // namespace ME

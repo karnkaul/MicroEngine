@@ -7,7 +7,7 @@ class Rocket : public GameObject
 {
 public:
 	// Always use `enum class` and not juse `enum`
-	// This is an enum declared within an existing class, so 
+	// This is an enum declared within an existing class, so
 	// outside the class it must be accessed via `Rocket::State`.
 	enum class State
 	{
@@ -30,7 +30,7 @@ protected:
 	void Tick(Time dt) override;
 
 private:
-	// These are private because even derived classes shouldn't be able to 
+	// These are private because even derived classes shouldn't be able to
 	// call them directly, they're sub-parts of Tick.
 	void Idle(Fixed dRot);
 	void Chase(Fixed dRot);

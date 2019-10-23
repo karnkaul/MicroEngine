@@ -4,7 +4,7 @@
 
 namespace ME
 {
-void Tutorial4::OnCreated() 
+void Tutorial4::OnCreated()
 {
 	// A new type of Resource: Text, can be used to load config etc.
 	// This Resource will be used by Controller, so the path is a tight coupling
@@ -31,7 +31,7 @@ void Tutorial4::OnStarting()
 	LayerID controllerLayer = 0;
 	if (auto pController = FindObject<Controller>(m_hController))
 	{
-		// The first instance of split configuration: set up the appearance of 
+		// The first instance of split configuration: set up the appearance of
 		// the object here, which Controller's logic doesn't care about.
 		pController->Instantiate(Primitive::Type::Circle);
 		ShapeData data;

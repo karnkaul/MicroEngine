@@ -59,11 +59,12 @@ void Rocket::Chase(Fixed dRot)
 	if (Maths::Abs(proj) < Fixed::One)
 	{
 		// We need the normal in order to determine which direction to rotate in: the sign of its projection
-		// will vary based on which side of `nSelf` `nTarget` lies (cos is positive on both 1st and 4th quadrants)
+		// will vary based on which side of `nSelf` `nTarget` lies (cos is positive in both 1st and 4th quadrants)
 		// So, compute Y-component of the orientation vector and dot *that* against nTarget.
 		Vector2 normal = Vector2::Rotate(nSelf, 90);
-		// Why this roundabout way and not just `sin = cos.ArcCos().Sin()`?
-		// Because trig functions only work in 180 degrees, we need 360 degree resolution
+		// Why this roundabout way and not just `normalProj = proj.ArcCos().Sin()`?
+		// Because trig functions only work in 180 degrees, we need full 360 degree resolution,
+		// and vectors are sufficient to do that (at least with one DOF / in 2D space)
 
 		// If the normal projection is negative, the target is > 180 degrees away, so rotate in the other direction
 		if (nTarget.Dot(normal) < Fixed::Zero)

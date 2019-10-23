@@ -26,7 +26,7 @@ bool Font::OnLoad()
 	return m_bOK = m_font.loadFromFile(m_path);
 }
 
-bool Text::OnLoad() 
+bool Text::OnLoad()
 {
 	std::ifstream file(m_path.data());
 	if (file.good())

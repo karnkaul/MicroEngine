@@ -6,6 +6,5 @@ namespace ME
 struct SpriteSheet
 {
 	Texture* m_pTexture = nullptr;
-
 };
-}
+} // namespace ME

@@ -22,4 +22,4 @@ void GameInit::CreateWorlds()
 	ConstructWorld<Tutorial5>("Tutorial5");
 	ConstructWorld<Temp>("Temp");
 }
-}
+} // namespace ME

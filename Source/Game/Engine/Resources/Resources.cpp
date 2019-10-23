@@ -61,7 +61,7 @@ HRes Resources::FindID(const std::string& id) const
 }
 
 #if defined(DEBUGGING)
-bool Resources::Unload(const std::string& id) 
+bool Resources::Unload(const std::string& id)
 {
 	auto search = m_idToHandle.find(id);
 	if (search != m_idToHandle.end())

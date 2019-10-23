@@ -21,4 +21,4 @@ void GameInit::ConstructWorld(std::string id)
 	Assert(g_pContext, "Context is null!");
 	g_pContext->ConstructWorld<T>(id);
 }
-}
+} // namespace ME
