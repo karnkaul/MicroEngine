@@ -44,4 +44,13 @@ public:
 protected:
 	bool OnLoad() override;
 };
+
+class Texture final : public Resource
+{
+public:
+	sf::Texture m_texture;
+
+protected:
+	bool OnLoad() override;
+};
 } // namespace ME

@@ -42,15 +42,13 @@ void Temp::OnStarting()
 		pObj0->m_transform.SetPosition({0, 200});
 	}
 
-	m_hObj1 = NewObject<GameObject>("Yellow-Rect");
-	auto pObj1 = FindObject<GameObject>(m_hObj1);
-	if (pObj1)
+	m_hObj1 = NewObject<GameObject>("Ship-Sprite");
+	auto hSpaceShip = g_pResources->Load<Texture>("Textures/WhiteSpaceShip_128x128.png");
+	if (auto pObj1 = FindObject<GameObject>(m_hObj1))
 	{
-		ShapeData data;
-		data.oSize = {500, 200};
-		data.oFill = Colour(100, 100, 0);
-		data.oOutline = Colour::Magenta;
-		pObj1->Instantiate(Primitive::Type::Rectangle).SetShape(data);
+		SpriteData data(*g_pResources->Find<Texture>(hSpaceShip));
+		data.oUV = {Vector2(0, 0), Vector2(Fixed(0.5f), Fixed(0.5f))};
+		pObj1->Instantiate(Primitive::Type::Sprite).SetSprite(data);
 		if (pObj0)
 		{
 			// Exploit matrix transformation to "lock" it to prim0

@@ -70,6 +70,13 @@ GameObject& GameObject::SetShape(const ShapeData& data)
 	return *this;
 }
 
+GameObject& GameObject::SetSprite(const SpriteData& data)
+{
+	Assert(m_pPrim, "Primitive is null!");
+	m_pPrim->SetSprite(data);
+	return *this;
+}
+
 void GameObject::SetEnabled(bool bEnabled)
 {
 	if (m_pPrim)

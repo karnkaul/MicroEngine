@@ -3,6 +3,8 @@ list(APPEND SOURCES
 
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/GameContext.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/GameContext.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/GameInit.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/GameInit.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/GameObjectBase.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/GameObjectBase.cpp"
 
@@ -13,6 +15,8 @@ list(APPEND SOURCES
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tutorials/Bubble.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tutorials/Controller.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tutorials/Controller.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tutorials/Rocket.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tutorials/Rocket.cpp"
 
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/GameWorld.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/GameWorld.cpp"
@@ -28,8 +32,13 @@ list(APPEND SOURCES
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Tutorial3.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Tutorial4.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Tutorial4.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Tutorial5.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Tutorial5.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Temp.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Temp.cpp"
+
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Utility/SpriteSheet.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Utility/SpriteSheet.cpp"
 
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Input/InputDataFrame.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Input/InputDataFrame.cpp"

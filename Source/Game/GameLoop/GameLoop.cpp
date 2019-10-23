@@ -20,7 +20,8 @@ void ProfileFrameTime(Time frameTime, Time maxDT)
 		++strikes;
 		if (strikes >= MAX_STRIKES)
 		{
-			LOG_W("[GameLoop] Frame time is too high [%.2f] (max dt: [%.2f])! Game Time will appear slowed down!", frameTime.AsSeconds() * 1000, maxDT.AsSeconds() * 1000);
+			LOG_W("[GameLoop] Frame time is too high [%.2f] (max dt: [%.2f])! Game Time will appear slowed down!",
+				  frameTime.AsSeconds() * 1000, maxDT.AsSeconds() * 1000);
 			strikes = 0;
 		}
 	}

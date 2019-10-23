@@ -6,8 +6,8 @@ namespace ME
 {
 /**
  * Note: the approach used here, of constructing and destroying new objects arbitrarily, is not
- * meant to be used in real game code - such small allocations fragment the memory over time 
- * (especially on runtimes with simple allocators). There are many ways to solve this problem, 
+ * meant to be used in real game code - such small allocations fragment the memory over time
+ * (especially on runtimes with simple allocators). There are many ways to solve this problem,
  * one of the easiest and most popular ones being that of an object pool: create the max number you
  * will need, enable/disable them as required.
  */

@@ -1,3 +1,4 @@
+#pragma once
 #include "GameTypes.h"
 #include "Engine/GFX.h"
 #include "Engine/Input/Input.h"

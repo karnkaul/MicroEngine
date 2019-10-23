@@ -42,6 +42,7 @@ public:
 	Primitive* Instantiate(Type type);
 	Primitive* SetText(const TextData& data);
 	Primitive* SetShape(const ShapeData& data);
+	Primitive* SetSprite(const SpriteData& data);
 
 	Rect2 Bounds() const;
 

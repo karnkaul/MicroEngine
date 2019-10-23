@@ -41,7 +41,7 @@ void Controller::OnCreate()
 	}
 	RegisterInput(
 		[this](const Input::Frame& frame) -> bool {
-			// We want a unit vector pointing in some direction, as if the player 
+			// We want a unit vector pointing in some direction, as if the player
 			// were moving an analogue stick; for keybnoard it's just one of eight.
 			Vector2 delta;
 			if (frame.IsHeld({KeyCode::A, KeyCode::Left}))
@@ -106,19 +106,19 @@ void Controller::Tick(Time dt)
 	case Type::Interpolated:
 	{
 		// New function: this takes in a min and max and a normalised "alpha" [0, 1],
-		// and returns a linear interpolation (LERP) of min/max using alpha. 
+		// and returns a linear interpolation (LERP) of min/max using alpha.
 		// Eg: Lerp(0, 10, 0.5) = 5; Lerp(0, 10, 0.8) = 8
 		// Using the velocity itself as the min makes it progressively move towards 3 * targetVelocity;
-		// the rate of "catching up" depends on the value of alpha, which needs to be 
+		// the rate of "catching up" depends on the value of alpha, which needs to be
 		// scaled by `dt` again, to remain framerate independent.
 		m_velocity = Maths::Lerp(m_velocity, 3 * m_targetVelocity, Fixed(dt.AsSeconds() * 20));
 		break;
 	}
 	}
 	// Compute displacement (velocity * time) (notice `dt` has effectively been multiplied *twice*)
-	// Verify framerate independence by using Backspace / Ctrl + Backspace while moving and observing 
+	// Verify framerate independence by using Backspace / Ctrl + Backspace while moving and observing
 	// both FPS output and if/how the movement/rendering changes based on high `dt`.
-	// Also try removing `dt` scaling here to deliberately make movement framerate dependent, just so 
+	// Also try removing `dt` scaling here to deliberately make movement framerate dependent, just so
 	// you know how to recognise it when you see such a bug the next time.
 	const Vector2 displacement = Fixed(dt.AsSeconds()) * m_speed * m_velocity * 500;
 	Vector2 position = m_transform.Position() + displacement;

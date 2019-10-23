@@ -27,6 +27,17 @@ struct ShapeData
 	std::optional<Fixed> oBorder;
 };
 
+struct SpriteData
+{
+	class Texture* pTexture = nullptr;
+	std::optional<Rect2> oUV;
+	std::optional<Vector2> oScale;
+	std::optional<Colour> oFill;
+
+	SpriteData();
+	SpriteData(Texture& texture);
+};
+
 inline TextData::TextData() = default;
 inline TextData::TextData(const char* szText)
 {
@@ -38,4 +49,6 @@ inline TextData::TextData(std::string text)
 	oText = text;
 }
 
+inline SpriteData::SpriteData() = default;
+inline SpriteData::SpriteData(Texture& texture) : pTexture(&texture) {}
 } // namespace ME
