@@ -146,6 +146,37 @@ Primitive* Primitive::SetShape(const ShapeData& data)
 	return this;
 }
 
+Primitive* Primitive::SetSprite(const SpriteData& data)
+{
+	if (auto pSprite = CastDrawable<sf::Sprite>())
+	{
+		if (data.pTexture)
+		{
+			pSprite->setTexture(data.pTexture->m_texture);
+		}
+		if (data.oScale)
+		{
+			pSprite->setScale(Cast(*data.oScale));
+		}
+		if (data.oFill)
+		{
+			pSprite->setColor(Cast(*data.oFill));
+		}
+		auto bounds = pSprite->getLocalBounds();
+		Vector2 s(Fixed(bounds.width), Fixed(bounds.height));
+		if (data.oUV)
+		{
+			Vector2 tl = data.oUV->TopLeft();
+			Vector2 br = data.oUV->BottomRight();
+			sf::IntRect uv((tl.x * s.x).ToS32(), (tl.y * s.y).ToS32(), (br.x * s.x).ToS32(), (br.y * s.y).ToS32());
+			pSprite->setTextureRect(uv);
+		}
+		sf::Vector2f o = Cast((s * Fixed::OneHalf));
+		pSprite->setOrigin(o);
+	}
+	return this;
+}
+
 Rect2 Primitive::Bounds() const
 {
 	sf::FloatRect sfBounds;

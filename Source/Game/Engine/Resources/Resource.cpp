@@ -41,4 +41,9 @@ bool Text::OnLoad()
 	}
 	return false;
 }
+
+bool Texture::OnLoad()
+{
+	return m_bOK = m_texture.loadFromFile(m_path);
+}
 } // namespace ME

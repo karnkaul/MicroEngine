@@ -18,7 +18,7 @@ void Tutorial4::OnStarting()
 	RegisterInput([](const Input::Frame& frame) -> bool {
 		if (frame.IsReleased(KeyCode::Space))
 		{
-			g_pContext->LoadWorld("Temp");
+			g_pContext->LoadWorld("Tutorial5");
 		}
 		else if (frame.IsReleased(KeyCode::Escape))
 		{

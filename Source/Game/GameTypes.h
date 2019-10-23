@@ -55,22 +55,8 @@ namespace ME
 constexpr s32 INVALID_HANDLE = -1;
 using LayerID = s32;
 
-using Lock = std::lock_guard<std::mutex>;
-using Task = std::function<void()>;
-
-template <typename T>
-using UPtr = std::unique_ptr<T>;
-template <typename T>
-using SPtr = std::shared_ptr<T>;
-template <typename T>
-using WPtr = std::weak_ptr<T>;
-template <typename T>
-using Dual = std::pair<T, T>;
-template <typename T, typename U>
-using Pair = std::pair<T, U>;
-
-using Token = SPtr<s32>;
-using WToken = WPtr<s32>;
+using Token = std::shared_ptr<s32>;
+using WToken = std::weak_ptr<s32>;
 
 using Fixed = Core::Fixed;
 using Matrix3 = Core::Matrix3;

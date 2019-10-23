@@ -42,6 +42,7 @@ public:
 	GameObject& Instantiate(Primitive::Type type);
 	GameObject& SetText(const TextData& data);
 	GameObject& SetShape(const ShapeData& data);
+	GameObject& SetSprite(const SpriteData& data);
 
 	virtual void SetEnabled(bool bEnabled);
 	void Destroy();
