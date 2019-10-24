@@ -10,7 +10,6 @@ set(CMAKE_CONFIGURATION_TYPES
 	CACHE STRING "" FORCE
 )
 set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "")
-set(CMAKE_SUPPRESS_REGENERATION 1)
 
 project(MicroEngine)
 ## Version
@@ -30,7 +29,7 @@ endif()
 
 add_custom_target(
 	RunCMake
-	COMMAND ${CMAKE_COMMAND} "${CMAKE_CURRENT_BINARY_DIR}"
+	COMMAND ${CMAKE_COMMAND} "${CMAKE_CURRENT_BINARY_DIR}" -DUPDATE_SUBMODULES=0
 )
 
 ## Init/Update Submodules
@@ -152,4 +151,5 @@ add_dependencies(${PROJECT_NAME}
 )
 set(EXE_NAME Untitled$<$<NOT:$<CONFIG:Release>>:-$<CONFIG>>${EXE_SUFFIX})
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME ${EXE_NAME})
+set_target_properties(RunCMake PROPERTIES FOLDER CMake)
 post_target()

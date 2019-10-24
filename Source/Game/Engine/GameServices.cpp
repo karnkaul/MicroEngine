@@ -1,5 +1,5 @@
 #include "GameServices.h"
-#include "GameContext/Worlds/Worlds.h"
+#include "GameContext/GameInit.h"
 
 namespace ME
 {
@@ -40,13 +40,8 @@ GameServices::~GameServices()
 
 void GameServices::StartGame()
 {
-	m_context.ConstructWorld<Tutorial0>("Tutorial0");
-	m_context.ConstructWorld<TutorialKing>("TutorialKing");
-	m_context.ConstructWorld<Tutorial1>("Tutorial1");
-	m_context.ConstructWorld<Tutorial2>("Tutorial2");
-	m_context.ConstructWorld<Tutorial3>("Tutorial3");
-	m_context.ConstructWorld<Tutorial4>("Tutorial4");
-	m_context.ConstructWorld<Temp>("Temp");
+
+	GameInit::CreateWorlds();
 	m_context.StartWorld("Tutorial0");
 }
 } // namespace ME

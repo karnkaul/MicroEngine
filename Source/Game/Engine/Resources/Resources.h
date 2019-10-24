@@ -65,7 +65,7 @@ HRes Resources::Load(const std::string& id)
 			if (pT->Load(id, std::move(path)))
 			{
 				m_idToHandle.emplace(id, handle);
-				LOG_I("[Resources] [%s] %s loaded", pT->m_id.data(), pT->m_type.data());
+				LOG_I("== [Resources] [%s] %s loaded", pT->m_id.data(), pT->m_type.data());
 				return handle;
 			}
 			else

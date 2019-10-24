@@ -41,9 +41,11 @@ private:
 	void StartFrame();
 	void Tick(Time dt);
 	void Stop();
+	void Clear();
 
 	friend class App;
 	friend class GameServices;
+	friend class GameInit;
 };
 
 template <typename T>

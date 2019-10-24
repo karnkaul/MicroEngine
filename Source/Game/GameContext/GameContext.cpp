@@ -141,4 +141,12 @@ void GameContext::Stop()
 		m_pActive = nullptr;
 	}
 }
+
+void GameContext::Clear()
+{
+	m_pActive = nullptr;
+	m_worlds.clear();
+	m_nextWorldID.clear();
+	m_prevWorldID.clear();
+}
 } // namespace ME

@@ -43,6 +43,8 @@ App::~App()
 	g_pRenderer->Clear();
 	// Clear all resources
 	g_pResources->Clear();
+	// Destroy all Worlds
+	g_pContext->Clear();
 	LOG_I("[App] terminated and destroyed");
 }
 
