@@ -59,7 +59,7 @@ void Chaser::Chase(Fixed dRot)
 	if (Maths::Abs(proj) < Fixed::One)
 	{
 		// We need the normal in order to determine which direction to rotate in: the sign of its projection
-		// will vary based on which side of `nSelf` `nTarget` lies (cos is positive in both 1st and 4th quadrants)
+		// will vary based on which side of `nSelf` `nTarget` lies
 		// So, compute Y-component of the orientation vector and dot *that* against nTarget.
 		const Vector2 normal = Vector2::Rotate(nSelf, 90);
 		// Why this roundabout way and not just `normalProj = proj.ArcCos().Sin()`?

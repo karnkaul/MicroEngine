@@ -3,14 +3,14 @@
 
 namespace ME
 {
-// Base class that contains all the chasing logic and API but nothing about rendering; 
+// Base class that contains all the chasing logic and API but nothing about rendering;
 // either owning World or a derived class is expected to handle that.
 class Chaser : public GameObject
 {
 public:
 	// Always use `enum class` and not juse `enum`
 	// This is an enum declared within an existing class, so
-	// outside the class it must be accessed via `Rocket::State`.
+	// outside the class it must be accessed via `Chaser::State`.
 	enum class State
 	{
 		Idle = 0,
