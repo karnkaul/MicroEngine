@@ -31,6 +31,10 @@ private:
 	const Time m_TICK_RATE;
 	const Time m_MAX_DT;
 
+#if defined(DEBUGGING)
+	std::vector<Token> m_debugTokens;
+#endif
+
 public:
 	App(u8 minFPS, u8 maxFPS, s32 argc, char** argv);
 	~App();

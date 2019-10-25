@@ -1,7 +1,8 @@
 #pragma once
 #include <bitset>
-#include "../GameObjectBase.h"
 #include "Engine/Rendering/Primitive.h"
+#include "Collision.h"
+#include "../GameObjectBase.h"
 
 namespace ME
 {
@@ -23,11 +24,10 @@ public:
 	LayerID m_layer = 0;
 
 protected:
-	std::bitset<2> m_flags;
-
-protected:
+	Collision m_collision;
 	HPrim m_hPrim = INVALID_HANDLE;
 	Primitive* m_pPrim = nullptr;
+	std::bitset<2> m_flags;
 
 private:
 	TextData m_textData;
@@ -44,6 +44,9 @@ public:
 	GameObject& SetShape(const ShapeData& data);
 	GameObject& SetSprite(const SpriteData& data);
 
+	const Collision& GetCollision() const;
+	Collision& GetCollision();
+
 	virtual void SetEnabled(bool bEnabled);
 	void Destroy();
 
@@ -59,5 +62,6 @@ private:
 	void Create(std::string id);
 
 	friend class GameWorld;
+	friend class Collision;
 };
 } // namespace ME

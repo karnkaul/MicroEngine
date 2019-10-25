@@ -1,4 +1,5 @@
 #include "Engine/GameServices.h"
+#include "Engine/Physics/ColliderData.h"
 #include "../../Objects/Tutorials/Rocket.h" // Check out this class first
 #include "Tutorial5.h"
 
@@ -33,12 +34,17 @@ void Tutorial5::OnStarting()
 	{
 		pText->Instantiate(Primitive::Type::Text);
 		pText->SetText("Press [Tab] to toggle chasing");
+		// Add a Circle Collider to pText, with diameter = 100
+		pText->GetCollision().AddCircle(nullptr, 100);
 	}
 	m_hRocket = NewObject<Rocket>("Rocket");
 	if (auto pRocket = FindObject<Rocket>(m_hRocket))
 	{
 		pRocket->m_layer = 10;
+		// Add an AABB Collider to pRocket, with size = half of its bounds
+		pRocket->GetCollision().AddAABB(nullptr, AABBData({pRocket->Bounds().Size() * Fixed::OneHalf}));
 	}
+	// Note: Press [Shift] + [c] to toggle collider
 }
 
 void Tutorial5::Tick(Time dt)

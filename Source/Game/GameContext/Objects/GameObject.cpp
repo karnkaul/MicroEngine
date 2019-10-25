@@ -6,11 +6,12 @@ namespace ME
 const Colour GameObject::DEFAULT_TEXT_COLOUR = Colour(255, 255, 255, 255);
 const u32 GameObject::DEFAULT_TEXT_SIZE = 40;
 
-GameObject::GameObject() = default;
+GameObject::GameObject() : m_collision(*this) {}
 GameObject::GameObject(GameObject&&) = default;
 GameObject::~GameObject()
 {
 	g_pRenderer->Destroy(m_hPrim);
+	LOG_D("[%s] %s (%d) destroyed", m_name.data(), m_type.data(), m_handle);
 }
 
 Primitive& GameObject::GetPrim()
@@ -77,6 +78,16 @@ GameObject& GameObject::SetSprite(const SpriteData& data)
 	return *this;
 }
 
+Collision& GameObject::GetCollision()
+{
+	return m_collision;
+}
+
+const Collision& GameObject::GetCollision() const
+{
+	return m_collision;
+}
+
 void GameObject::SetEnabled(bool bEnabled)
 {
 	if (m_pPrim)
@@ -115,6 +126,7 @@ void GameObject::Tick(Time /*dt*/)
 		m_pPrim->m_position = m_transform.WorldPosition();
 		m_pPrim->m_orientation = m_transform.WorldOrientation();
 	}
+	m_collision.Update(m_transform.WorldPosition());
 }
 
 void GameObject::Create(std::string id)

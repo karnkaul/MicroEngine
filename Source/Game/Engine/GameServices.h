@@ -2,6 +2,7 @@
 #include "GameTypes.h"
 #include "Engine/GFX.h"
 #include "Engine/Input/Input.h"
+#include "Engine/Physics/Physics.h"
 #include "Engine/Rendering/Renderer.h"
 #include "Engine/Resources/Resources.h"
 #include "GameContext/GameContext.h"
@@ -10,6 +11,7 @@ namespace ME
 {
 extern class GFX* g_pGFX;
 extern class Input* g_pInput;
+extern class Physics* g_pPhysics;
 extern class Resources* g_pResources;
 extern class Renderer* g_pRenderer;
 extern class GameContext* g_pContext;
@@ -20,6 +22,7 @@ private:
 	GameContext m_context;
 	GFX m_gfx;
 	Input m_input;
+	Physics m_physics;
 	Renderer m_renderer;
 	Resources m_resources;
 

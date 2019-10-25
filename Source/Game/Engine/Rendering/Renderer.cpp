@@ -21,12 +21,7 @@ HPrim Renderer::New()
 
 Primitive* Renderer::Find(HPrim handle)
 {
-	if (auto pPrim = m_factory.Find<Primitive>(handle))
-	{
-		pPrim->m_handle = handle;
-		return pPrim;
-	}
-	return nullptr;
+	return m_factory.Find<Primitive>(handle);
 }
 
 bool Renderer::Destroy(HPrim handle)

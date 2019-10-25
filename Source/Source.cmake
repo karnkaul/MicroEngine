@@ -8,6 +8,8 @@ list(APPEND SOURCES
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/GameObjectBase.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/GameObjectBase.cpp"
 
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Collision.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Collision.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/GameObject.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/GameObject.cpp"
 	
@@ -50,6 +52,13 @@ list(APPEND SOURCES
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Input/KeyboardInput.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Input/Input.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Input/Input.cpp"
+
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Physics/Collider.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Physics/Collider.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Physics/ColliderData.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Physics/ColliderData.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Physics/Physics.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Physics/Physics.cpp"
 
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Colour.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Colour.cpp"

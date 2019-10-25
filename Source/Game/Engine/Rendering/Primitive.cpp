@@ -18,6 +18,11 @@ Primitive::~Primitive()
 	}
 }
 
+void Primitive::SetHandle(HPrim handle)
+{
+	m_handle = handle;
+}
+
 Primitive* Primitive::Instantiate(Type type)
 {
 	m_type = type;
