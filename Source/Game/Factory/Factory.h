@@ -74,6 +74,7 @@ FHandle Factory<FType, FHandle>::New()
 {
 	static_assert(std::is_base_of<FType, T>::value, "T must derive from FType!");
 	T t;
+	t.SetHandle(m_nextHandle);
 	m_instanced.emplace(m_nextHandle, std::move(t));
 	return m_nextHandle++;
 }
@@ -129,7 +130,9 @@ template <typename T>
 FHandle UFactory<FType, FHandle>::New()
 {
 	static_assert(std::is_base_of<FType, T>::value, "T must derive from FType!");
-	m_instanced.emplace(m_nextHandle, std::make_unique<T>());
+	auto uT = std::make_unique<T>();
+	uT->SetHandle(m_nextHandle);
+	m_instanced.emplace(m_nextHandle, std::move(uT));
 	return m_nextHandle++;
 }
 

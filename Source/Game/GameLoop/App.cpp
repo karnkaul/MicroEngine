@@ -1,5 +1,8 @@
 #include <thread>
 #include "App.h"
+#if defined(DEBUGGING)
+#include "Engine/Physics/Collider.h"
+#endif
 
 namespace ME
 {
@@ -33,6 +36,16 @@ App::App(u8 minFPS, u8 maxFPS, s32 argc, char** argv) : m_TICK_RATE(Time::Second
 	{
 		m_state.flags[State::INIT] = true;
 	}
+
+#if defined(DEBUGGING)
+	m_debugTokens.push_back(g_pInput->RegisterSudo([](const Input::Frame& frame) {
+		if (frame.IsHeld(KeyCode::LShift) && frame.IsReleased(KeyCode::C))
+		{
+			Collider::s_bShowDebugShape = !Collider::s_bShowDebugShape;
+		}
+		return false;
+	}));
+#endif
 }
 
 App::~App()

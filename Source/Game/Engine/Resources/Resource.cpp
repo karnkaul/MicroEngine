@@ -10,8 +10,13 @@ Resource::~Resource()
 {
 	if (m_bOK)
 	{
-		LOG_I("-- [%s] %s destroyed", m_id.data(), m_type.data());
+		LOG_I("-- [%s] %s (Resource_%d) destroyed", m_id.data(), m_type.data(), m_handle);
 	}
+}
+
+void Resource::SetHandle(HRes handle)
+{
+	m_handle = handle;
 }
 
 bool Resource::Load(std::string id, std::string path)

@@ -6,9 +6,11 @@ namespace ME
 GameObjectBase::GameObjectBase() = default;
 GameObjectBase::GameObjectBase(GameObjectBase&&) = default;
 GameObjectBase& GameObjectBase::operator=(GameObjectBase&&) = default;
-GameObjectBase::~GameObjectBase()
+GameObjectBase::~GameObjectBase() = default;
+
+void GameObjectBase::SetHandle(HObj handle)
 {
-	LOG_D("[%s] %s destroyed", m_name.data(), Type().data());
+	m_handle = handle;
 }
 
 std::string_view GameObjectBase::Name() const

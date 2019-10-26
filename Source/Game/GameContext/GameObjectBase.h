@@ -15,11 +15,17 @@ protected:
 	mutable std::string_view m_type;
 	std::vector<Token> m_inputTokens;
 
+protected:
+	HObj m_handle = INVALID_HANDLE;
+
 public:
 	GameObjectBase();
 	GameObjectBase(GameObjectBase&&);
 	GameObjectBase& operator=(GameObjectBase&&);
 	virtual ~GameObjectBase();
+
+public:
+	void SetHandle(HObj handle);
 
 public:
 	std::string_view Name() const;

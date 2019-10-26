@@ -49,6 +49,7 @@ void GameWorld::OnStarting() {}
 void GameWorld::Tick(Time dt)
 {
 	Core::RemoveIf<HObj, std::unique_ptr<GameObject>>(m_objectFactory.m_instanced, [](const auto& uObj) { return uObj->IsDestroyed(); });
+	g_pPhysics->Update();
 	for (auto& kvp : m_objectFactory.m_instanced)
 	{
 		auto& obj = kvp.second;

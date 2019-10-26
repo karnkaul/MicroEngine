@@ -1,5 +1,6 @@
 #pragma once
 #include "PrimitiveData.h"
+#include "Engine/Handles.h"
 
 namespace sf
 {
@@ -30,13 +31,16 @@ public:
 private:
 	std::unique_ptr<sf::Drawable> m_uD;
 	sf::Transformable* m_pT = nullptr;
-	s32 m_handle = INVALID_HANDLE;
+	HPrim m_handle = INVALID_HANDLE;
 
 public:
 	Primitive();
 	Primitive(Primitive&&);
 	Primitive& operator=(Primitive&&);
 	~Primitive();
+
+public:
+	void SetHandle(HPrim handle);
 
 public:
 	Primitive* Instantiate(Type type);
