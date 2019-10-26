@@ -4,6 +4,7 @@
 #include "Factory/Factory.h"
 #include "../GameObjectBase.h"
 #include "../Objects/GameObject.h"
+#include "../ObjectPool.h"
 
 namespace ME
 {
@@ -14,6 +15,7 @@ private:
 
 private:
 	UFactory<GameObject> m_objectFactory;
+	Factory<ObjectPool> m_poolFactory;
 
 public:
 	static GameWorld& Active();
@@ -34,6 +36,9 @@ public:
 	// Destroy all valid `GameObject`s and set those handles to INVALID
 	void DestroyAll(std::vector<HObj>& outHandles);
 	void DestroyAll(std::initializer_list<HObj*> outHandles);
+
+	HPool NewPool();
+	ObjectPool* FindPool(HPool handle);
 
 protected:
 	// Called when world is created

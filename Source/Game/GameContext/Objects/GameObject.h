@@ -12,7 +12,8 @@ protected:
 	enum class Flags
 	{
 		Enabled = 0,
-		Destroyed
+		Destroyed,
+		Despawned,
 	};
 
 public:
@@ -27,10 +28,11 @@ protected:
 	Collision m_collision;
 	HPrim m_hPrim = INVALID_HANDLE;
 	Primitive* m_pPrim = nullptr;
-	std::bitset<2> m_flags;
+	std::bitset<3> m_flags;
 
 private:
 	TextData m_textData;
+	class ObjectPool* m_pPool = nullptr;
 
 public:
 	GameObject();
@@ -56,12 +58,15 @@ public:
 
 protected:
 	virtual void OnCreate();
+	virtual void OnRespawn();
 	virtual void Tick(Time dt);
 
 private:
-	void Create(std::string id);
+	void Create(std::string name);
+	void Respawn(std::string name);
 
 	friend class GameWorld;
 	friend class Collision;
+	friend class ObjectPool;
 };
 } // namespace ME

@@ -7,6 +7,8 @@ list(APPEND SOURCES
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/GameInit.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/GameObjectBase.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/GameObjectBase.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/ObjectPool.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/ObjectPool.cpp"
 
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Collision.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Collision.cpp"
@@ -19,6 +21,8 @@ list(APPEND SOURCES
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tutorials/Controller.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tutorials/Chaser.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tutorials/Chaser.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tutorials/Projectile.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tutorials/Projectile.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tutorials/Rocket.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tutorials/Rocket.cpp"
 

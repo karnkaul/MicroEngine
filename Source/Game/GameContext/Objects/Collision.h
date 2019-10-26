@@ -9,12 +9,14 @@ namespace ME
 class Collision
 {
 public:
-	struct Data
+	struct Info
 	{
-		const class GameObject* pInstigator = nullptr;
-		const Collider* pOther = nullptr;
+		class GameObject* pThis = nullptr;
+		GameObject* pInstigator = nullptr;
+		const Collider* pColliderThis = nullptr;
+		const Collider* pColliderInstigator = nullptr;
 	};
-	using OnHit = LE::Delegate<Data>;
+	using OnHit = LE::Delegate<Info>;
 
 protected:
 	struct Unit
@@ -37,13 +39,14 @@ public:
 
 public:
 	void Update(Vector2 position);
-
-public:
 	void SetEnabled(bool bEnabled);
-
-public:
 	OnHit::Token AddCircle(OnHit::Callback onHit, Fixed diameter, Vector2 offset = Vector2::Zero);
 	OnHit::Token AddAABB(OnHit::Callback onHit, const AABBData& aabbData, Vector2 offset = Vector2::Zero);
 	void RemoveAll();
+
+	s32 Signature() const;
+
+private:
+	void SetupCollider(Collider& collider);
 };
 } // namespace ME

@@ -1,5 +1,6 @@
 #include "Engine/GameServices.h"
 #include "Rocket.h"
+#include "Bubble.h"
 
 namespace ME
 {
@@ -15,7 +16,7 @@ void Rocket::OnCreate()
 		Instantiate(Primitive::Type::Sprite);
 		SpriteData data(*pTexture);
 		// 128x128 is too large, reduce it to 64x64; try 128x128 to see what it's like
-		data.oScale = {Fixed::OneHalf, Fixed::OneHalf};
+		data.oScale = {Fixed(0.75f), Fixed(0.75f)};
 		SetSprite(data);
 		// Check out this texture: you'll notice it's like a flip-book
 		m_hExhaustTex = g_pResources->Load<Texture>("Textures/Exhaust_128x128_2x4.png");
@@ -37,7 +38,7 @@ void Rocket::OnCreate()
 				data.oTexCoords = m_exhaustFrames.m_texCoords[m_exhaustFrames.m_index];
 				pExhaust->SetSprite(data);
 				// Move the exhaust a bit to the left of the ship (when both are facing Right)
-				const Fixed x = -(pExhaust->Bounds().Size().x * Fixed::OneHalf + 10);
+				const Fixed x = -(pExhaust->Bounds().Size().x * Fixed::OneHalf + 20);
 				pExhaust->m_transform.SetPosition({x, 0});
 				// Set the exhaust as a "child" transform of the rocket;
 				// this will automatically apply the parent's transformation to the child.
@@ -46,6 +47,8 @@ void Rocket::OnCreate()
 				pExhaust->m_transform.SetParent(m_transform);
 			}
 		}
+
+		m_collisionToken = m_collision.AddAABB(nullptr, AABBData({Bounds().Size() * Fixed::OneHalf}));
 	}
 }
 

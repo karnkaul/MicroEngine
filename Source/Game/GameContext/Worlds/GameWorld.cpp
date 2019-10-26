@@ -43,6 +43,16 @@ void GameWorld::DestroyAll(std::initializer_list<HObj*> outHandles)
 	}
 }
 
+HPool GameWorld::NewPool()
+{
+	return m_poolFactory.New<ObjectPool>();
+}
+
+ObjectPool* GameWorld::FindPool(HPool handle)
+{
+	return m_poolFactory.Find<ObjectPool>(handle);
+}
+
 void GameWorld::OnCreated() {}
 void GameWorld::OnStarting() {}
 
@@ -81,6 +91,7 @@ void GameWorld::Stop()
 {
 	m_inputTokens.clear();
 	OnStopping();
+	m_poolFactory.Clear();
 	m_objectFactory.Clear();
 	s_pActive = nullptr;
 	LOG_I("[%s] %s Stopped", m_name.data(), m_type.data());

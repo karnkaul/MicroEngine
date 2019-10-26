@@ -94,12 +94,26 @@ void GameObject::SetEnabled(bool bEnabled)
 	{
 		m_pPrim->m_bEnabled = bEnabled;
 	}
+	if (bEnabled)
+	{
+		m_flags[ToIdx(Flags::Despawned)] = false;
+		this->GameObject::Tick(Time::Zero);
+	}
+	m_collision.SetEnabled(bEnabled);
 	m_flags[ToIdx(Flags::Enabled)] = bEnabled;
 }
 
 void GameObject::Destroy()
 {
-	m_flags[ToIdx(Flags::Destroyed)] = true;
+	if (m_pPool)
+	{
+		SetEnabled(false);
+		m_flags[ToIdx(Flags::Despawned)] = true;
+	}
+	else
+	{
+		m_flags[ToIdx(Flags::Destroyed)] = true;
+	}
 }
 
 bool GameObject::IsEnabled() const
@@ -118,6 +132,8 @@ Rect2 GameObject::Bounds() const
 }
 
 void GameObject::OnCreate() {}
+void GameObject::OnRespawn() {}
+
 void GameObject::Tick(Time /*dt*/)
 {
 	if (m_pPrim)
@@ -129,13 +145,20 @@ void GameObject::Tick(Time /*dt*/)
 	m_collision.Update(m_transform.WorldPosition());
 }
 
-void GameObject::Create(std::string id)
+void GameObject::Create(std::string name)
 {
-	m_name = std::move(id);
+	m_name = std::move(name);
 	m_pPrim = g_pRenderer->Find(m_hPrim = g_pRenderer->New());
 	Assert(m_pPrim && m_hPrim != INVALID_HANDLE, "Could not allocate Primitive for GameObject!");
-	SetEnabled(true);
 	OnCreate();
+	SetEnabled(true);
 	LOG_D("[%s] %s created", m_name.data(), Type().data());
+}
+
+void GameObject::Respawn(std::string name)
+{
+	m_name = std::move(name);
+	OnRespawn();
+	SetEnabled(true);
 }
 } // namespace ME
