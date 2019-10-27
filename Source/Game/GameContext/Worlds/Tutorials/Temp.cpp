@@ -1,5 +1,6 @@
 #include "Engine/GameServices.h"
 #include "Temp.h"
+#include "../../Objects/UI/UIButton.h"
 
 namespace ME
 {
@@ -62,6 +63,13 @@ void Temp::OnStarting()
 		}
 	}
 
+	m_hObj2 = NewObject<UIButton>("Test-Button");
+	if (auto pBtn = FindObject<UIButton>(m_hObj2))
+	{
+		pBtn->SetUIText("Click!").m_transform.SetPosition({100, 100});
+		m_tokens.push_back(pBtn->Register([]() { LOG_I("Button pressed!"); }));
+	}
+
 	// Reset all clocks etc
 	static const Time LAYER_TTL = Time::Seconds(1.5f);
 	static const Time PRIM_TTL = Time::Seconds(3.5f);
@@ -115,5 +123,6 @@ void Temp::OnStopping()
 	// Reset the handles, just in case
 	m_hObj0 = INVALID_HANDLE;
 	m_hObj1 = INVALID_HANDLE;
+	m_hObj2 = INVALID_HANDLE;
 }
 } // namespace ME

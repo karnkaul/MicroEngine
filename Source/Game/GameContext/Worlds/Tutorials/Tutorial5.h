@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "../GameWorld.h"
 
 namespace ME
@@ -6,6 +7,8 @@ namespace ME
 class Tutorial5 : public GameWorld
 {
 protected:
+	// Various UI Button handles
+	std::vector<HObj> m_uiButtons;
 	// New Handle: for ObjectPools (owned by GameWorld)
 	HPool m_hBubbles;
 	HPool m_hProjectiles;

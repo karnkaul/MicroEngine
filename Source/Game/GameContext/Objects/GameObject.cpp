@@ -114,6 +114,7 @@ void GameObject::Destroy()
 	{
 		m_flags[ToIdx(Flags::Destroyed)] = true;
 	}
+	OnDestroy();
 }
 
 bool GameObject::IsEnabled() const
@@ -144,6 +145,8 @@ void GameObject::Tick(Time /*dt*/)
 	}
 	m_collision.Update(m_transform.WorldPosition());
 }
+
+void GameObject::OnDestroy() {}
 
 void GameObject::Create(std::string name)
 {

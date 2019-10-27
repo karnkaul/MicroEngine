@@ -71,7 +71,7 @@ Collision::OnHit::Token Collision::AddCircle(OnHit::Callback onHit, Fixed diamet
 		data.oBorder = Collider::s_debugShapeWidth;
 		data.oOutline = Colour::Green;
 		data.oFill = Colour::Transparent;
-		pCircle->SetShape(data)->m_layer = 500;
+		pCircle->SetShape(data)->m_layer = Layers::L1000_DEBUG_WORLD;
 		pCircle->m_bEnabled = Collider::s_bShowDebugShape;
 	}
 	Unit data{offset, pCollider, hCircle};
@@ -98,7 +98,7 @@ Collision::OnHit::Token Collision::AddAABB(OnHit::Callback onHit, const AABBData
 		data.oBorder = Collider::s_debugShapeWidth;
 		data.oOutline = Colour::Green;
 		data.oFill = Colour::Transparent;
-		pRect->SetShape(data)->m_layer = 500;
+		pRect->SetShape(data)->m_layer = Layers::L1000_DEBUG_WORLD;
 		pRect->m_bEnabled = Collider::s_bShowDebugShape;
 	}
 	Unit data{offset, pCollider, hRect};

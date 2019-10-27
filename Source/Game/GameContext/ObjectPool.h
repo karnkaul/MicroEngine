@@ -21,6 +21,8 @@ public:
 	void SetGenerator(std::function<GameObject*()> generator);
 	void PreInstantiate(std::string namePrefix, u32 count = 1);
 	GameObject* NewObject(std::string name);
+	template <typename T>
+	T* NewObject(std::string name);
 
 	bool Destroy(GameObject& obj);
 	void DestroyAll();
@@ -29,4 +31,10 @@ public:
 	u32 Spawned() const;
 	u32 Despawned() const;
 };
+
+template <typename T>
+T* ObjectPool::NewObject(std::string name)
+{
+	return dynamic_cast<T*>(NewObject(std::move(name)));
+}
 } // namespace ME

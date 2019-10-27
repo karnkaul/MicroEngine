@@ -6,10 +6,12 @@ namespace ME
 class Temp : public GameWorld
 {
 private:
+	std::vector<Token> m_tokens;
 	// A new handle type, for a Resource (Asset)
 	HRes m_hSerifFont = INVALID_HANDLE;
 	HObj m_hObj0 = INVALID_HANDLE;
 	HObj m_hObj1 = INVALID_HANDLE;
+	HObj m_hObj2 = INVALID_HANDLE;
 	// Time! It's a very simple struct that basically stores microseconds uint64_t; very useful for time _spans_, though
 	Time m_obj1LayerTTL;
 	bool m_bObj1LayerChanged = false;
