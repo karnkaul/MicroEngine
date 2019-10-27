@@ -19,9 +19,9 @@ namespace
 static const std::string NEXT_WORLD = "Temp";
 static const std::string PREV_WORLD = "Tutorial4";
 constexpr u32 INIT_BUBBLES = 3;
-}
+} // namespace
 
-void Tutorial5::OnCreated()
+void Tutorial5::OnCreate()
 {
 	// A Texture is an image that lives on the GPU memory; it is extremely
 	// fast and performant when in use, but is *very* slow to create.
@@ -33,7 +33,8 @@ void Tutorial5::OnCreated()
 
 void Tutorial5::OnStarting()
 {
-	RegisterInput([this](const Input::Frame& frame) -> bool {
+	// Lambdas/closures can also be created as an "object" and passed around
+	auto onInput = [this](const Input::Frame& frame) -> bool {
 		if (frame.IsReleased(KeyCode::Space))
 		{
 			g_pContext->LoadWorld(NEXT_WORLD);
@@ -58,18 +59,18 @@ void Tutorial5::OnStarting()
 				 * if the passed type is the same as (or parent of) what's used in the generator. It will
 				 * simply return nullptr for any other types, even though a generated object will be spawned!
 				 * The generator function is towards the end of OnStarting().
-				*/
+				 */
 				auto pProjectile = pPool->NewObject<Projectile>(std::move(name));
 				if (pProjectile)
 				{
-					if (auto pRocket = FindObject<Rocket>(m_hRocket))
+					if (const auto pRocket = FindObject<Rocket>(m_hRocket))
 					{
 						const auto& t = pRocket->m_transform;
 						pProjectile->m_transform.SetOrientation(t.WorldOrientation());
 						// Move it a bit (75 units) in the direction of the orientation
-						Vector2 pos = t.WorldPosition() + (t.WorldOrientation() * 75);
+						const auto pos = t.WorldPosition() + (t.WorldOrientation() * 75);
 						pProjectile->m_transform.SetPosition(pos);
-						// Calling SetEnabled(true) after performing all operations on a GameObject 
+						// Calling SetEnabled(true) after performing all operations on a GameObject
 						// updates all its components (Collision, Primitive, etc) to the present state;
 						// this is especially useful for pooled objects that DON'T have `OnCreate()` called again!
 						pProjectile->SetEnabled(true);
@@ -78,7 +79,9 @@ void Tutorial5::OnStarting()
 			}
 		}
 		return false;
-	});
+	};
+	// Pass the functor object
+	RegisterInput(std::move(onInput));
 
 	m_hMainText = NewObject<GameObject>("MainText");
 	if (auto pText = FindObject<GameObject>(m_hMainText))
@@ -106,7 +109,11 @@ void Tutorial5::OnStarting()
 		pBtn->m_layer = Layers::L1500_UI;
 		// Note: Call SetUIText on all UIObjects (uses another GameObject instead of itself)
 		pBtn->SetUIText("Toggle Colliders").m_transform.SetPosition(g_pGFX->WorldProjection({0, -1}) + Vector2(0, 100));
-		m_inputTokens.push_back(pBtn->Register([]() { Collider::s_bShowDebugShape = !Collider::s_bShowDebugShape; }));
+		// Short lambdas can fit it one line, even with a token push_back.
+		// This is basically what `RegisterInput()` also does: stores a token in a vector which is cleared on `Stop()`.
+		// The "token" is used by the underlying Delegate to determine if the calling object is still alive;
+		// discarded tokens are considered to represent "dead" objects and will be removed from its callback list.
+		m_miscTokens.push_back(pBtn->Register([]() { Collider::s_bShowDebugShape = !Collider::s_bShowDebugShape; }));
 		m_uiButtons.push_back(hColliderBtn);
 	}
 #endif
@@ -116,7 +123,7 @@ void Tutorial5::OnStarting()
 	{
 		pBtn->m_layer = Layers::L1500_UI;
 		pBtn->SetUIText("<<").m_transform.SetPosition(g_pGFX->WorldProjection({-1, 1}) + Vector2(100, -100));
-		m_inputTokens.push_back(pBtn->Register([]() { g_pContext->LoadWorld(PREV_WORLD); }));
+		m_miscTokens.push_back(pBtn->Register([]() { g_pContext->LoadWorld(PREV_WORLD); }));
 		m_uiButtons.push_back(hPrevButton);
 	}
 
@@ -126,7 +133,7 @@ void Tutorial5::OnStarting()
 	{
 		pBtn->m_layer = Layers::L1500_UI;
 		pBtn->SetUIText(">>").m_transform.SetPosition(g_pGFX->WorldProjection({1, 1}) + Vector2(-100, -100));
-		m_inputTokens.push_back(pBtn->Register([]() { g_pContext->LoadWorld(NEXT_WORLD); }));
+		m_miscTokens.push_back(pBtn->Register([]() { g_pContext->LoadWorld(NEXT_WORLD); }));
 		m_uiButtons.push_back(hNextButton);
 	}
 	// This is an Object Pool, which is what would be the right way to spawn
@@ -134,15 +141,13 @@ void Tutorial5::OnStarting()
 	// a function that instantiates a new GameObject (or derived type) and returns a pointer
 	// to it. The pool will use this to create new objects (if none are available).
 	m_bubbleCount = 0;
-	m_hBubbles = NewPool();
+	m_hBubbles = NewPool("Bubbles");
 	if (auto pBubbles = FindPool(m_hBubbles))
 	{
-		pBubbles->SetGenerator([this]() -> GameObject* {
+		auto bubblesGen = [this]() -> GameObject* {
 			// We want to set up everything related to Bubbles except their transform, which will be done
 			// per instance obtained from the pool at runtime (not this code, the one in Tick).
-			std::string name = "Bubble_";
-			name += std::to_string(m_bubbleCount++);
-			auto handle = NewObject<Bubble>(std::move(name));
+			auto handle = NewObject<Bubble>("Bubble");
 			if (auto pBubble = FindObject<Bubble>(handle))
 			{
 				// Set a random time to live
@@ -159,7 +164,8 @@ void Tutorial5::OnStarting()
 			}
 			// Lambda requires a GameObject* return, so return null here
 			return nullptr;
-		});
+		};
+		pBubbles->SetGenerator(std::move(bubblesGen));
 		// PreInstantiate will instantiate the number of objects passed, using the given string as a
 		// name prefix. This prevents the need to have to instantiate new objects later (no allocations
 		// during hot game-time is extremely desriable, though not always achievable).
@@ -168,13 +174,11 @@ void Tutorial5::OnStarting()
 
 	// Same thing for projectiles
 	m_projectileCount = 0;
-	m_hProjectiles = NewPool();
+	m_hProjectiles = NewPool("Projectiles");
 	if (auto pProjectiles = FindPool(m_hProjectiles))
 	{
-		pProjectiles->SetGenerator([this]() -> GameObject* {
-			std::string name = "Projectile_";
-			name += std::to_string(m_projectileCount++);
-			auto handle = NewObject<Projectile>(std::move(name));
+		auto projectileGen = [this]() -> GameObject* {
+			auto handle = NewObject<Projectile>("Projectile");
 			if (auto pProjectile = FindObject<Projectile>(handle))
 			{
 				pProjectile->Instantiate(Primitive::Type::Rectangle);
@@ -182,10 +186,16 @@ void Tutorial5::OnStarting()
 				data.oSize = {75, 6};
 				data.oFill = Colour::Cyan;
 				pProjectile->SetShape(data).m_layer = Layers::L0100_DEFAULT + 10;
-				// Add an AABB collider to this Collision component (with no callback)
-				auto token = pProjectile->GetCollision().AddAABB(
-					[this, handle](Collision::Info info) { FindObject<Projectile>(handle)->OnHit(info); }, AABBData({20, 20}));
-				m_collisionTokens.push_back(token);
+				// Add an AABB collider to this Collision component (with a callback that just calls Projectile::OnHit,
+				// which is coded to destroy the colliding object if it is a `Bubble`)
+				auto onCollision = [this, handle](Collision::Info info) {
+					if (auto pProjectile = FindObject<Projectile>(handle))
+					{
+						pProjectile->OnHit(info);
+					}
+				};
+				auto token = pProjectile->GetCollision().AddAABB(std::move(onCollision), AABBData({20, 20}));
+				m_miscTokens.push_back(token);
 				if (auto pRocket = FindObject<Rocket>(m_hRocket))
 				{
 					// Setup the speed here itself, since we want all instances to share that property
@@ -194,7 +204,8 @@ void Tutorial5::OnStarting()
 				return pProjectile;
 			}
 			return nullptr;
-		});
+		};
+		pProjectiles->SetGenerator(std::move(projectileGen));
 		pProjectiles->PreInstantiate("Projectile", 20);
 	}
 }
@@ -229,6 +240,7 @@ void Tutorial5::Tick(Time dt)
 void Tutorial5::OnStopping()
 {
 	m_hBubbles = m_hProjectiles = m_hRocket = m_hMainText = INVALID_HANDLE;
+	m_miscTokens.clear();
 	m_uiButtons.clear();
 }
 } // namespace ME

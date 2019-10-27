@@ -19,4 +19,4 @@ protected:
 	void InteractBegin() override;
 	void InteractEnd() override;
 };
-}
+} // namespace ME

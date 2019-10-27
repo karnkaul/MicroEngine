@@ -43,9 +43,14 @@ void GameWorld::DestroyAll(std::initializer_list<HObj*> outHandles)
 	}
 }
 
-HPool GameWorld::NewPool()
+HPool GameWorld::NewPool(std::string name)
 {
-	return m_poolFactory.New<ObjectPool>();
+	auto handle = m_poolFactory.New<ObjectPool>();
+	if (auto pPool = m_poolFactory.Find<ObjectPool>(handle))
+	{
+		pPool->OnCreate(std::move(name));
+	}
+	return handle;
 }
 
 ObjectPool* GameWorld::FindPool(HPool handle)
@@ -53,7 +58,7 @@ ObjectPool* GameWorld::FindPool(HPool handle)
 	return m_poolFactory.Find<ObjectPool>(handle);
 }
 
-void GameWorld::OnCreated() {}
+void GameWorld::OnCreate() {}
 void GameWorld::OnStarting() {}
 
 void GameWorld::Tick(Time dt)
@@ -76,7 +81,7 @@ void GameWorld::Create(std::string name)
 {
 	m_name = std::move(name);
 	Type(); // Call updates Type to `this`
-	OnCreated();
+	OnCreate();
 	LOG_I("[GameContext] [%s] GameWorld created", m_name.data());
 }
 

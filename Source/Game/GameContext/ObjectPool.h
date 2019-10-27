@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 #include <vector>
 #include "GameTypes.h"
 #include "Engine/Handles.h"
@@ -8,6 +9,7 @@ namespace ME
 class ObjectPool final
 {
 private:
+	std::string m_name;
 	std::vector<class GameObject*> m_objects;
 	std::function<GameObject*()> m_generator;
 	HPool m_handle = INVALID_HANDLE;
@@ -16,10 +18,11 @@ public:
 	ObjectPool();
 	~ObjectPool();
 
+	void OnCreate(std::string name);
 	void SetHandle(HPool handle);
 
 	void SetGenerator(std::function<GameObject*()> generator);
-	void PreInstantiate(std::string namePrefix, u32 count = 1);
+	void PreInstantiate(std::string namePrefix, s32 count = 1, bool bDespawnAll = true);
 	GameObject* NewObject(std::string name);
 	template <typename T>
 	T* NewObject(std::string name);

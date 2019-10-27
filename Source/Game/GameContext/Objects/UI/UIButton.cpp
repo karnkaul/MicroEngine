@@ -65,7 +65,7 @@ void UIButton::InteractBegin()
 	}
 }
 
-void UIButton::InteractEnd() 
+void UIButton::InteractEnd()
 {
 	m_onInteract();
 }

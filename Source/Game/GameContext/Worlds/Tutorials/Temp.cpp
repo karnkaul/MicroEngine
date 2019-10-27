@@ -4,7 +4,7 @@
 
 namespace ME
 {
-void Temp::OnCreated()
+void Temp::OnCreate()
 {
 	Assert(g_pResources, "Resources is null!");
 	// Get a handle to the Default-Serif.ttf font; load heavy stuff when created

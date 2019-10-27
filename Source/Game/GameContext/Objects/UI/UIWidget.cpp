@@ -16,58 +16,60 @@ void UIWidget::OnCreate()
 		pText->m_transform.SetParent(m_transform);
 		pText->m_layer = m_layer + 1;
 	}
-	RegisterInput([this](const Input::Frame& frame) -> bool {
-		Vector2 mousePos = frame.mouseInput.worldPosition;
-		Rect2 bounds = Bounds();
-		AABBData aabb(bounds.BottomLeft() + m_transform.WorldPosition(), bounds.TopRight() + m_transform.WorldPosition());
-		bool bBlock = false;
-		switch (m_state)
-		{
-		case State::Deselected:
-		{
-			if (aabb.IsPointInRect(mousePos))
+	RegisterInput(
+		[this](const Input::Frame& frame) -> bool {
+			Vector2 mousePos = frame.mouseInput.worldPosition;
+			Rect2 bounds = Bounds();
+			AABBData aabb(bounds.BottomLeft() + m_transform.WorldPosition(), bounds.TopRight() + m_transform.WorldPosition());
+			bool bBlock = false;
+			switch (m_state)
 			{
-				m_state = State::Selected;
-				Select();
-			}
-			break;
-		}
-		case State::Selected:
-		{
-			if (!aabb.IsPointInRect(mousePos))
+			case State::Deselected:
 			{
-				m_state = State::Deselected;
-				Deselect();
-			}
-			if (frame.IsPressed(KeyType::MOUSE_BTN_0) || frame.IsPressed(KeyCode::Enter))
-			{
-				m_state = State::Interacting;
-				InteractBegin();
-			}
-			break;
-		}
-		case State::Interacting:
-		{
-			if (aabb.IsPointInRect(mousePos))
-			{
-				if (frame.IsReleased(KeyType::MOUSE_BTN_0) || frame.IsReleased(KeyCode::Enter))
+				if (aabb.IsPointInRect(mousePos))
 				{
 					m_state = State::Selected;
-					InteractEnd();
 					Select();
-					bBlock = true;
 				}
+				break;
 			}
-			else
+			case State::Selected:
 			{
-				m_state = State::Deselected;
-				Deselect();
+				if (!aabb.IsPointInRect(mousePos))
+				{
+					m_state = State::Deselected;
+					Deselect();
+				}
+				if (frame.IsPressed(KeyType::MOUSE_BTN_0) || frame.IsPressed(KeyCode::Enter))
+				{
+					m_state = State::Interacting;
+					InteractBegin();
+				}
+				break;
 			}
-			break;
-		}
-		}
-		return m_state == State::Interacting || bBlock;
-	}, true);
+			case State::Interacting:
+			{
+				if (aabb.IsPointInRect(mousePos))
+				{
+					if (frame.IsReleased(KeyType::MOUSE_BTN_0) || frame.IsReleased(KeyCode::Enter))
+					{
+						m_state = State::Selected;
+						InteractEnd();
+						Select();
+						bBlock = true;
+					}
+				}
+				else
+				{
+					m_state = State::Deselected;
+					Deselect();
+				}
+				break;
+			}
+			}
+			return m_state == State::Interacting || bBlock;
+		},
+		true);
 }
 
 void UIWidget::OnDestroy()
@@ -97,7 +99,6 @@ UIWidget& UIWidget::SetUIText(const TextData& data)
 			}
 			SetShape(data);
 		}
-
 	}
 	return *this;
 }

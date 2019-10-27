@@ -37,12 +37,12 @@ public:
 	void DestroyAll(std::vector<HObj>& outHandles);
 	void DestroyAll(std::initializer_list<HObj*> outHandles);
 
-	HPool NewPool();
+	HPool NewPool(std::string name);
 	ObjectPool* FindPool(HPool handle);
 
 protected:
 	// Called when world is created
-	virtual void OnCreated();
+	virtual void OnCreate();
 	// Called when World is activated, must be overidden
 	virtual void OnStarting() = 0;
 	// Called every frame with deltaTime

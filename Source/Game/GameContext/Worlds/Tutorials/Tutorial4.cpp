@@ -4,7 +4,7 @@
 
 namespace ME
 {
-void Tutorial4::OnCreated()
+void Tutorial4::OnCreate()
 {
 	// A new type of Resource: Text, can be used to load config etc.
 	// This Resource will be used by Controller, so the path is a tight coupling

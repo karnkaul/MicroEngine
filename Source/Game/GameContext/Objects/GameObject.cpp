@@ -109,6 +109,7 @@ void GameObject::Destroy()
 	{
 		SetEnabled(false);
 		m_flags[ToIdx(Flags::Despawned)] = true;
+		LOG_D("[%s] %s despawned", m_name.data(), Type().data());
 	}
 	else
 	{
@@ -162,6 +163,7 @@ void GameObject::Respawn(std::string name)
 {
 	m_name = std::move(name);
 	OnRespawn();
+	LOG_D("[%s] %s respawned", m_name.data(), Type().data());
 	SetEnabled(true);
 }
 } // namespace ME
