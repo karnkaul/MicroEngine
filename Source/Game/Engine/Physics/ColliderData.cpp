@@ -2,6 +2,14 @@
 
 namespace ME
 {
+namespace
+{
+	bool InRange(Fixed x, Fixed lower, Fixed upper) 
+	{
+		return x >= lower && x <= upper;
+	}
+}
+
 const AABBData AABBData::One = AABBData(Vector2::One);
 const CircleData CircleData::One = CircleData(Fixed::One, Vector2(0, 0));
 
@@ -9,25 +17,35 @@ AABBData::AABBData(Vector2 lowerBound, const Vector2 upperBound) : lowerBound(st
 
 AABBData::AABBData(Vector2 size) : AABBData(-Fixed::OneHalf * size, Fixed::OneHalf * size) {}
 
-bool AABBData::Intersecting(const AABBData&) const
+bool AABBData::Intersecting(const AABBData& other) const
 {
-	return false;
+	bool xInRange = InRange(other.lowerBound.x, lowerBound.x, upperBound.x) || InRange(other.upperBound.x, lowerBound.x, upperBound.x);
+	bool yInRange = InRange(other.lowerBound.y, lowerBound.y, upperBound.y) || InRange(other.upperBound.y, lowerBound.y, upperBound.y);
+	return xInRange && yInRange;
 }
 
-bool AABBData::IsPointInRect(Vector2) const
+bool AABBData::IsPointInRect(Vector2 point) const
 {
-	return false;
+	bool xInRange = InRange(point.x, lowerBound.x, upperBound.x);
+	bool yInRange = InRange(point.y, lowerBound.y, upperBound.y);
+	return xInRange && yInRange;
 }
 
 CircleData::CircleData(Fixed radius, Vector2 centre) : centre(std::move(centre)), radius(std::move(radius)) {}
 
-bool CircleData::IsIntersecting(const CircleData&) const
+bool CircleData::IsIntersecting(const CircleData& other) const
 {
-	return false;
+	f64 centreDist = (other.centre - centre).SqrMagnitude();
+	f64 radiusDist = (other.radius + radius).ToF64();
+
+	return (radiusDist * radiusDist) > centreDist;
 }
 
-bool CircleData::IsPointInCircle(Vector2) const
+bool CircleData::IsPointInCircle(Vector2 point) const
 {
-	return false;
+	f64 distanceSqr = (point - centre).SqrMagnitude();
+	f64 radiusDistSqr = radius.ToF64() * radius.ToF64();
+
+	return radiusDistSqr > distanceSqr;
 }
 } // namespace ME
