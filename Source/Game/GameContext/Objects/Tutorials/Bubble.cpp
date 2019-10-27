@@ -11,10 +11,16 @@ void Bubble::OnCreate()
 	SetShape(data);
 }
 
+void Bubble::OnRespawn()
+{
+	m_elapsed = Time::Zero;
+	m_colour.a = 255;
+}
+
 void Bubble::Tick(Time dt)
 {
-	m_ttl -= dt;
-	if (m_ttl <= Time::Zero)
+	m_elapsed += dt;
+	if (m_elapsed >= m_ttl)
 	{
 		// This bubble is ded
 		Destroy();
@@ -31,7 +37,7 @@ void Bubble::Tick(Time dt)
 
 	// Properties might have changed, update the underlying shape to match
 	ShapeData data;
-	data.oSize = {m_diameter, m_diameter};
+	data.oSize = {m_diameter * Fixed::OneHalf, m_diameter * Fixed::OneHalf};
 	data.oFill = m_colour;
 	data.oOutline = m_outline;
 	SetShape(data);

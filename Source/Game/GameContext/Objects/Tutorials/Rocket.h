@@ -20,6 +20,7 @@ protected:
 	// This rocket instance will ask its owning world to instantiate another GameObject, to
 	// use for the exhaust.
 	HObj m_hExhaust = INVALID_HANDLE;
+	Token m_collisionToken;
 
 protected:
 	void OnCreate() override;

@@ -6,9 +6,15 @@ namespace ME
 class Tutorial5 : public GameWorld
 {
 protected:
+	// New Handle: for ObjectPools (owned by GameWorld)
+	HPool m_hBubbles;
+	HPool m_hProjectiles;
 	// Mouse chaser "rocket" ship
 	HObj m_hRocket = INVALID_HANDLE;
 	HObj m_hMainText = INVALID_HANDLE;
+	s32 m_bubbleCount = 0;
+	s32 m_projectileCount = 0;
+	std::vector<Token> m_collisionTokens;
 
 protected:
 	void OnCreated() override;

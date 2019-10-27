@@ -36,7 +36,7 @@ void Chaser::Tick(Time dt)
 	}
 	}
 	// Move along (updated) orientation
-	const Vector2 displacement = Fixed(dt.AsSeconds()) * m_transform.Orientation() * m_speed * 200;
+	const Vector2 displacement = Fixed(dt.AsSeconds()) * m_transform.Orientation() * m_speed * 100;
 	m_transform.SetPosition(m_transform.Position() + displacement);
 
 	GameObject::Tick(dt);

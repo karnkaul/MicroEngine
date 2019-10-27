@@ -59,11 +59,8 @@ void Collision::SetEnabled(bool bEnabled)
 Collision::OnHit::Token Collision::AddCircle(OnHit::Callback onHit, Fixed diameter, Vector2 offset)
 {
 	CircleCollider* pCollider = g_pPhysics->CreateCircleCollider(std::string(m_pOwner->Name()));
-	pCollider->m_ignoreSig = m_signature;
-	pCollider->m_name += ("_" + Strings::ToString(m_colliders.size()));
 	pCollider->SetCircle(diameter);
-	pCollider->m_instigator = m_pOwner->m_handle;
-	pCollider->m_callback = [this](const Collider& other) { m_onHit({m_pOwner, &other}); };
+	SetupCollider(*pCollider);
 #if defined(DEBUGGING)
 	auto hCircle = g_pRenderer->New();
 	if (auto pCircle = g_pRenderer->Find(hCircle))
@@ -89,11 +86,8 @@ Collision::OnHit::Token Collision::AddCircle(OnHit::Callback onHit, Fixed diamet
 Collision::OnHit::Token Collision::AddAABB(OnHit::Callback onHit, const AABBData& aabbData, Vector2 offset)
 {
 	AABBCollider* pCollider = g_pPhysics->CreateAABBCollider(std::string(m_pOwner->Name()));
-	pCollider->m_ignoreSig = m_signature;
-	pCollider->m_name += ("_" + Strings::ToString(m_colliders.size()));
 	pCollider->SetAABB(aabbData);
-	pCollider->m_instigator = m_pOwner->m_handle;
-	pCollider->m_callback = [this](const Collider& other) { m_onHit({m_pOwner, &other}); };
+	SetupCollider(*pCollider);
 #if defined(DEBUGGING)
 	auto hRect = g_pRenderer->New();
 	if (auto pRect = g_pRenderer->Find(hRect))
@@ -123,5 +117,23 @@ void Collision::RemoveAll()
 		pCollider.pCollider->m_bDestroyed = true;
 	}
 	m_colliders.clear();
+}
+
+s32 Collision::Signature() const
+{
+	return m_signature;
+}
+
+void Collision::SetupCollider(Collider& collider)
+{
+	collider.m_ignoreSig = m_signature;
+	collider.m_name += "_";
+	collider.m_name += std::to_string(m_colliders.size());
+	collider.m_instigator = m_pOwner->m_handle;
+	collider.m_position = m_pOwner->m_transform.WorldPosition();
+	collider.m_callback = [this](const Collider& lhs, const Collider& rhs) {
+		auto pInstigator = GameWorld::Active().FindObject<GameObject>(rhs.m_instigator);
+		m_onHit({m_pOwner, pInstigator, &lhs, &rhs});
+	};
 }
 } // namespace ME

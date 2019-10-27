@@ -48,17 +48,9 @@ Collider::~Collider() = default;
 
 void Collider::OnHit(const Collider& other)
 {
-#if ENABLED(DEBUG_LOGGING)
-	static u8 DEBUG_skip = 0;
-	if (++DEBUG_skip > 20)
-	{
-		LOG_D("[%s] colliding with [%s] (throttled log)", m_name.c_str(), other.m_name.c_str());
-		DEBUG_skip = 0;
-	}
-#endif
 	if (m_callback)
 	{
-		m_callback(other);
+		m_callback(*this, other);
 	}
 }
 

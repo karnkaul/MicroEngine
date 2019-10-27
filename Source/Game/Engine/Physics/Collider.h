@@ -15,7 +15,7 @@ public:
 public:
 	Vector2 m_position;
 	std::string m_name;
-	std::function<void(const Collider& other)> m_callback;
+	std::function<void(const Collider& lhs, const Collider& rhs)> m_callback;
 	HObj m_instigator = INVALID_HANDLE;
 	s32 m_ignoreSig = 0;
 	class Entity* m_pOwner = nullptr;
