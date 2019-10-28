@@ -109,11 +109,13 @@ void GameObject::Destroy()
 	{
 		SetEnabled(false);
 		m_flags[ToIdx(Flags::Despawned)] = true;
+		LOG_D("[%s] %s despawned", m_name.data(), Type().data());
 	}
 	else
 	{
 		m_flags[ToIdx(Flags::Destroyed)] = true;
 	}
+	OnDestroy();
 }
 
 bool GameObject::IsEnabled() const
@@ -145,6 +147,8 @@ void GameObject::Tick(Time /*dt*/)
 	m_collision.Update(m_transform.WorldPosition());
 }
 
+void GameObject::OnDestroy() {}
+
 void GameObject::Create(std::string name)
 {
 	m_name = std::move(name);
@@ -159,6 +163,7 @@ void GameObject::Respawn(std::string name)
 {
 	m_name = std::move(name);
 	OnRespawn();
+	LOG_D("[%s] %s respawned", m_name.data(), Type().data());
 	SetEnabled(true);
 }
 } // namespace ME

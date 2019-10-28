@@ -18,6 +18,7 @@ void Projectile::Tick(Time dt)
 	m_elapsed += dt;
 	if (m_elapsed >= m_ttl)
 	{
+		// Self destruct
 		Destroy();
 		return;
 	}
@@ -31,6 +32,7 @@ void Projectile::Tick(Time dt)
 
 void Projectile::OnHit(Collision::Info info)
 {
+	// Destroy bubbles on contact; the other GameObject* is available via info.pInstigator
 	if (auto pBubble = dynamic_cast<Bubble*>(info.pInstigator))
 	{
 		LOG_D("[%s] Collided with %s, destroying both", m_name.data(), pBubble->Name().data());

@@ -19,7 +19,7 @@ protected:
 	// New callback: this is called ONLY ONCE per World, after it has been constructed
 	// Use it for loading and storing resources, as they only get destroyed at the end
 	// of the application, not between World loads.
-	void OnCreated() override;
+	void OnCreate() override;
 	void OnStarting() override;
 	void Tick(Time dt) override;
 	void OnStopping() override;

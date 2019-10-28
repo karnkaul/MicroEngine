@@ -14,6 +14,11 @@ list(APPEND SOURCES
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Collision.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/GameObject.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/GameObject.cpp"
+
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/UI/UIWidget.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/UI/UIWidget.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/UI/UIButton.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/UI/UIButton.cpp"
 	
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tutorials/Bubble.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tutorials/Bubble.cpp"
@@ -68,6 +73,7 @@ list(APPEND SOURCES
 
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Colour.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Colour.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/LayerIDs.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Primitive.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Primitive.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/PrimitiveData.h"

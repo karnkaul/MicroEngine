@@ -22,7 +22,7 @@ public:
 
 public:
 	Transform m_transform;
-	LayerID m_layer = 0;
+	LayerID m_layer = Layers::L0100_DEFAULT;
 
 protected:
 	Collision m_collision;
@@ -60,6 +60,7 @@ protected:
 	virtual void OnCreate();
 	virtual void OnRespawn();
 	virtual void Tick(Time dt);
+	virtual void OnDestroy();
 
 private:
 	void Create(std::string name);

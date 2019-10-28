@@ -50,7 +50,7 @@ bool GameContext::StartWorld(const std::string& id)
 		pFPS->Instantiate(Primitive::Type::Text);
 		data.oText = "0";
 		pFPS->SetText(data)->m_position = pos;
-		pFPS->m_layer = 1000;
+		pFPS->m_layer = Layers::L3000_OVERLAY;
 	}
 	m_hFPSText = g_pRenderer->New();
 	if (auto pText = g_pRenderer->Find(m_hFPSText))
@@ -58,7 +58,7 @@ bool GameContext::StartWorld(const std::string& id)
 		pText->Instantiate(Primitive::Type::Text);
 		data.oText = "FPS";
 		pText->SetText(data)->m_position = pos + Vector2(25, 0);
-		pText->m_layer = 1000;
+		pText->m_layer = Layers::L3000_OVERLAY;
 	}
 	pos = g_pGFX->WorldProjection({-1, 1}) + Vector2(80, -30);
 	m_hVersion = g_pRenderer->New();
@@ -72,7 +72,7 @@ bool GameContext::StartWorld(const std::string& id)
 		data.oText = std::move(versionText);
 		data.oFill = Colour(255, 200, 235);
 		pVersion->SetText(data)->m_position = pos;
-		pVersion->m_layer = 1000;
+		pVersion->m_layer = Layers::L3000_OVERLAY;
 	}
 #endif
 	if (m_worlds.empty())

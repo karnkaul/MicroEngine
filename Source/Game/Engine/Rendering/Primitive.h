@@ -1,6 +1,7 @@
 #pragma once
 #include "PrimitiveData.h"
 #include "Engine/Handles.h"
+#include "Engine/Rendering/LayerIDs.h"
 
 namespace sf
 {
@@ -12,6 +13,10 @@ namespace ME
 {
 class Primitive final
 {
+#if defined(DEBUGGING)
+public:
+	bool m_bDEBUG = false;
+#endif
 public:
 	enum class Type
 	{
@@ -24,7 +29,7 @@ public:
 public:
 	Vector2 m_position;
 	Vector2 m_orientation = Vector2::Right;
-	LayerID m_layer = 0;
+	LayerID m_layer = Layers::L0100_DEFAULT;
 	Type m_type;
 	bool m_bEnabled = true;
 

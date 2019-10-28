@@ -4,11 +4,11 @@ namespace ME
 {
 namespace
 {
-	bool InRange(Fixed x, Fixed lower, Fixed upper) 
-	{
-		return x >= lower && x <= upper;
-	}
+bool InRange(Fixed x, Fixed lower, Fixed upper)
+{
+	return x >= lower && x <= upper;
 }
+} // namespace
 
 const AABBData AABBData::One = AABBData(Vector2::One);
 const CircleData CircleData::One = CircleData(Fixed::One, Vector2(0, 0));

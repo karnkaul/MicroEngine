@@ -11,7 +11,7 @@ protected:
 	HObj m_hMainText = INVALID_HANDLE;
 
 protected:
-	void OnCreated() override;
+	void OnCreate() override;
 	void OnStarting() override;
 	void OnStopping() override;
 };

@@ -57,6 +57,7 @@ using LayerID = s32;
 
 using Token = std::shared_ptr<s32>;
 using WToken = std::weak_ptr<s32>;
+using Task = std::function<void()>;
 
 using Fixed = Core::Fixed;
 using Matrix3 = Core::Matrix3;

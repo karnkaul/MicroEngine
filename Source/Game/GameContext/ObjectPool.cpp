@@ -4,12 +4,21 @@
 namespace ME
 {
 ObjectPool::ObjectPool() = default;
+
 ObjectPool::~ObjectPool()
 {
 	for (auto pObj : m_objects)
 	{
 		pObj->m_pPool = nullptr;
 	}
+	LOGIF_D(!m_name.empty(), "%s destroyed", m_name.data());
+}
+
+void ObjectPool::OnCreate(std::string name)
+{
+	m_name = std::move(name);
+	m_name += "_Pool";
+	LOG_D("%s created", m_name.data());
 }
 
 void ObjectPool::SetHandle(HPool handle)
@@ -22,17 +31,22 @@ void ObjectPool::SetGenerator(std::function<GameObject*()> generator)
 	m_generator = std::move(generator);
 }
 
-void ObjectPool::PreInstantiate(std::string namePrefix, u32 count /* = 1 */)
+void ObjectPool::PreInstantiate(std::string namePrefix, s32 count /* = 1 */, bool bDespawnAll /* = true */)
 {
-	for (u32 i = 0; i < count; ++i)
+	count -= ToS32(Despawned());
+	for (s32 i = 0; i < count; ++i)
 	{
-		namePrefix += "_";
-		namePrefix += std::to_string(i);
-		NewObject(std::move(namePrefix));
+		std::string name = namePrefix;
+		name += "_P_";
+		name += std::to_string(i);
+		NewObject(std::move(name));
 	}
-	for (auto pObj : m_objects)
+	if (bDespawnAll)
 	{
-		pObj->Destroy();
+		for (auto pObj : m_objects)
+		{
+			pObj->Destroy();
+		}
 	}
 }
 
