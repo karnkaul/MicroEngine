@@ -36,19 +36,21 @@ void TutorialKing::OnStarting()
 
 	m_hPlayer = NewObject<Controller>("Player");
 	auto pPlayer = FindObject<Controller>(m_hPlayer);
+	ShapeData data;
 
 	if (pPlayer)
 	{
 		pPlayer->Instantiate(Primitive::Type::Circle);
-		ShapeData data;
 		data.oSize = {50, 50};
 		data.oFill = Colour::Blue;
 		data.oOutline = Colour::Yellow;
 		data.oBorder = 2;
 		pPlayer->SetShape(data);
 		pPlayer->m_layer = playerLayer;
+		pPlayer->m_speed = Fixed(0.5);
+		pPlayer->GetCollision().AddCircle(nullptr, 100);
 	}
-	/*
+
 	m_hEnemy = NewObject<GameObject>("Enemy");
 	auto pEnemy = FindObject<GameObject>(m_hEnemy);
 
@@ -56,13 +58,18 @@ void TutorialKing::OnStarting()
 	{
 		pEnemy->Instantiate(Primitive::Type::Circle);
 		data.oFill = Colour::Red;
+		data.oSize = {25, 25};
+		pEnemy->SetShape(data);
+		pEnemy->m_layer = playerLayer - 1;
+		pEnemy->m_transform.SetPosition(Vector2(150, 150));
+		pEnemy->GetCollision().AddCircle(nullptr, 50);
 	}
-	*/
 }
 
 void TutorialKing::OnStopping()
 {
 	m_hMainText = INVALID_HANDLE;
 	m_hPlayer = INVALID_HANDLE;
+	m_hEnemy = INVALID_HANDLE;
 }
 } // namespace ME
