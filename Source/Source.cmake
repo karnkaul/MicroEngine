@@ -14,6 +14,8 @@ list(APPEND SOURCES
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Collision.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/GameObject.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/GameObject.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tilemap.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tilemap.cpp"
 
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/UI/UIWidget.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/UI/UIWidget.cpp"
@@ -79,7 +81,7 @@ list(APPEND SOURCES
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Renderer.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Spritesheet.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Rendering/Spritesheet.cpp"
-	
+
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Resources/Resource.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Resources/Resource.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/Engine/Resources/Resources.h"

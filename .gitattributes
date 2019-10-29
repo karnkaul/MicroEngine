@@ -1,12 +1,14 @@
 *			text	eol=lf
 
-*.h			text
-*.cpp		text
+*.h			text	eol=lf
+*.cpp		text	eol=lf
 
-*.txt		text
-*.md		text
-*.sh		text
+*.txt		text	eol=lf
+*.md		text	eol=lf
+*.sh		text	eol=lf
 
-*.json		text
+*.json		text	eol=lf
 *.png		binary
 *.ttf		binary
+
+*.psd		binary

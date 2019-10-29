@@ -107,15 +107,22 @@ void GameObject::Destroy()
 {
 	if (m_pPool)
 	{
-		SetEnabled(false);
-		m_flags[ToIdx(Flags::Despawned)] = true;
-		LOG_D("[%s] %s despawned", m_name.data(), Type().data());
+		if (!m_flags[ToIdx(Flags::Despawned)])
+		{
+			SetEnabled(false);
+			m_flags[ToIdx(Flags::Despawned)] = true;
+			OnDespawn();
+			LOG_D("[%s] %s despawned", m_name.data(), Type().data());
+		}
 	}
 	else
 	{
-		m_flags[ToIdx(Flags::Destroyed)] = true;
+		if (!m_flags[ToIdx(Flags::Destroyed)])
+		{
+			m_flags[ToIdx(Flags::Destroyed)] = true;
+			OnDestroy();
+		}
 	}
-	OnDestroy();
 }
 
 bool GameObject::IsEnabled() const
@@ -147,6 +154,7 @@ void GameObject::Tick(Time /*dt*/)
 	m_collision.Update(m_transform.WorldPosition());
 }
 
+void GameObject::OnDespawn() {}
 void GameObject::OnDestroy() {}
 
 void GameObject::Create(std::string name)
