@@ -11,8 +11,9 @@ private:
 	HObj m_hEnemy = INVALID_HANDLE;
 
 protected:
-	void OnCreated() override;
+	void OnCreate() override;
 	void OnStarting() override;
+	//void Tick(Time dt) override;
 	void OnStopping() override; 
 };
 } // namespace ME

@@ -4,7 +4,7 @@
 
 namespace ME
 {
-void TutorialKing::OnCreated()
+void TutorialKing::OnCreate()
 {
 	g_pResources->Load<Text>("Tutorials/T4_Controller.json");
 }
@@ -47,7 +47,7 @@ void TutorialKing::OnStarting()
 		data.oBorder = 2;
 		pPlayer->SetShape(data);
 		pPlayer->m_layer = playerLayer;
-		pPlayer->m_speed = Fixed(0.5);
+		pPlayer->m_speed = Fixed(0.5f);
 		pPlayer->GetCollision().AddCircle(nullptr, 100);
 	}
 
@@ -65,6 +65,14 @@ void TutorialKing::OnStarting()
 		pEnemy->GetCollision().AddCircle(nullptr, 50);
 	}
 }
+
+/*void TutorialKing::Tick(Time dt)
+{
+	if (auto pPlayer = FindObject<Controller>(m_hPlayer))
+	{
+	
+	}
+}*/
 
 void TutorialKing::OnStopping()
 {
