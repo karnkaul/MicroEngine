@@ -1,6 +1,7 @@
 #include "Engine/GameServices.h"
 #include "Engine/Physics/ColliderData.h"
 #include "../../ObjectPool.h" // Check out this class first
+#include "../../Objects/Tilemap.h" // Check out this class first
 #include "../../Objects/Tutorials/Bubble.h"
 #include "../../Objects/Tutorials/Projectile.h" // Check out this class first
 #include "../../Objects/Tutorials/Rocket.h"		// Check out this class first
@@ -18,7 +19,7 @@ namespace
 //		the anonymous namespace already does that, so it's basically redundant.
 static const std::string NEXT_WORLD = "Temp";
 static const std::string PREV_WORLD = "Tutorial4";
-constexpr u32 INIT_BUBBLES = 3;
+constexpr u32 INIT_BUBBLES = 5;
 } // namespace
 
 void Tutorial5::OnCreate()
@@ -29,6 +30,7 @@ void Tutorial5::OnCreate()
 	// is because by convention our "default" orientation in the world is `Vector2::Right` (1, 0).
 	g_pResources->Load<Texture>("Textures/WhiteSpaceShip_128x128.png");
 	g_pResources->Load<Texture>("Textures/Exhaust_128x128_2x4.png");
+	m_hTile = g_pResources->Load<Texture>("Textures/PurpleBrickTile_512x512.png");
 }
 
 void Tutorial5::OnStarting()
@@ -169,7 +171,7 @@ void Tutorial5::OnStarting()
 		// PreInstantiate will instantiate the number of objects passed, using the given string as a
 		// name prefix. This prevents the need to have to instantiate new objects later (no allocations
 		// during hot game-time is extremely desriable, though not always achievable).
-		pBubbles->PreInstantiate("Bubble", 3);
+		pBubbles->PreInstantiate("Bubble", INIT_BUBBLES);
 	}
 
 	// Same thing for projectiles
@@ -206,7 +208,17 @@ void Tutorial5::OnStarting()
 			return nullptr;
 		};
 		pProjectiles->SetGenerator(std::move(projectileGen));
-		pProjectiles->PreInstantiate("Projectile", 20);
+		pProjectiles->PreInstantiate("Projectile", 10);
+	}
+
+	// Tilemap
+	m_hTilemap = NewObject<Tilemap>("TestTiles");
+	if (auto pTilemap = FindObject<Tilemap>(m_hTilemap))
+	{
+		if (auto pTexture = g_pResources->Find<Texture>(m_hTile))
+		{
+			pTilemap->FillSpace(g_pGFX->WorldSpace(), *pTexture);
+		}
 	}
 }
 
@@ -239,7 +251,7 @@ void Tutorial5::Tick(Time dt)
 
 void Tutorial5::OnStopping()
 {
-	m_hBubbles = m_hProjectiles = m_hRocket = m_hMainText = INVALID_HANDLE;
+	m_hBubbles = m_hProjectiles = m_hRocket = m_hMainText = m_hTilemap = INVALID_HANDLE;
 	m_miscTokens.clear();
 	m_uiButtons.clear();
 }

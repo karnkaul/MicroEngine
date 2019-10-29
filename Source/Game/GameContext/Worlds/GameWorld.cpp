@@ -97,6 +97,10 @@ void GameWorld::Stop()
 	m_inputTokens.clear();
 	OnStopping();
 	m_poolFactory.Clear();
+	for (auto& kvp : m_objectFactory.m_instanced)
+	{
+		kvp.second->Destroy();
+	}
 	m_objectFactory.Clear();
 	s_pActive = nullptr;
 	LOG_I("[%s] %s Stopped", m_name.data(), m_type.data());

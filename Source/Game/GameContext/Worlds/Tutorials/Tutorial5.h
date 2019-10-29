@@ -16,7 +16,11 @@ protected:
 	HPool m_hProjectiles = INVALID_HANDLE;
 	// Mouse chaser "rocket" ship
 	HObj m_hRocket = INVALID_HANDLE;
+	// Tilemap : covers screen with tiles of a given texture
+	HObj m_hTilemap = INVALID_HANDLE;
 	HObj m_hMainText = INVALID_HANDLE;
+	// Texture for Tilemap
+	HRes m_hTile = INVALID_HANDLE;
 	s32 m_bubbleCount = 0;
 	s32 m_projectileCount = 0;
 

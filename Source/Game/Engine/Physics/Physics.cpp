@@ -30,7 +30,7 @@ void Physics::Update()
 		auto& lhs = m_colliders[i];
 		if (!lhs->m_bEnabled)
 		{
-			return;
+			continue;
 		}
 		for (size_t j = i + 1; j < m_colliders.size(); ++j)
 		{
