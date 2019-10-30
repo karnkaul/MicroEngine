@@ -107,7 +107,7 @@ set(SFML_VERSION 2.5.1)
 set(SFML_SOURCE_DIR "${TP_SRC_PATH}/SFML")
 download_extract_archive(
 	"SFML-${SFML_VERSION}-sources.zip"
-	"https://www.sfml-dev.org/files/SFML-${SFML_VERSION}-sources.zip"
+	"https://github.com/SFML/SFML/releases/download/${SFML_VERSION}/SFML-${SFML_VERSION}-sources.zip"
 	"${TP_SRC_PATH}"
 	"SFML-${SFML_VERSION}"
 	"SFML"

@@ -18,4 +18,4 @@ public:
 	void FillSpace(Vector2 space, Texture& texture);
 	void Clear();
 };
-} // namespace LittleEngine
+} // namespace ME

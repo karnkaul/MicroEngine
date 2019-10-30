@@ -25,7 +25,7 @@ void Viewport::SetData(ViewportData data)
 	m_data = std::move(data);
 }
 
-void Viewport::Create(u8 AAlevel, u32 framerateLimit)
+void Viewport::Create()
 {
 	Assert(!isOpen(), "Duplicate call to Viewport::Create()!");
 	auto max = MaxSize();
@@ -38,11 +38,11 @@ void Viewport::Create(u8 AAlevel, u32 framerateLimit)
 
 	sf::View view(sf::Vector2f(0, 0), sf::Vector2f(static_cast<f32>(vp.x), static_cast<f32>(vp.y)));
 	sf::ContextSettings settings;
-	settings.antialiasingLevel = AAlevel;
+	settings.antialiasingLevel = m_data.aaLevel;
 	create(sf::VideoMode(vp.x, vp.y), m_data.title, Cast(m_data.style), settings);
 	setView(view);
-	setVerticalSyncEnabled(true);
-	setFramerateLimit(framerateLimit);
+	setVerticalSyncEnabled(m_data.bVsync);
+	setFramerateLimit(m_data.maxFPS);
 
 	sf::Vector2i c(ToS32(max.width - vp.x) / 2, ToS32(max.height - vp.y) / 2);
 	setPosition(c);

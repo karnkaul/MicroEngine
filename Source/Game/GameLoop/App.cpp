@@ -1,37 +1,14 @@
 #include <thread>
 #include "App.h"
+#include "OS.h"
 #if defined(DEBUGGING)
 #include "Engine/Physics/Collider.h"
 #endif
 
 namespace ME
 {
-App::App(u8 minFPS, u8 maxFPS, s32 argc, char** argv) : m_TICK_RATE(Time::Seconds(1.0f / maxFPS)), m_MAX_DT(Time::Seconds(1.0f / minFPS))
+App::App(u8 minFPS, u8 maxFPS) : m_TICK_RATE(Time::Seconds(1.0f / maxFPS)), m_MAX_DT(Time::Seconds(1.0f / minFPS))
 {
-#if ENABLED(DEBUG_LOGGING)
-	LE::g_MinLogSeverity = LE::LogSeverity::Debug;
-#endif
-#if ENABLED(ASSERTS)
-	std::string msg;
-	msg.reserve(16);
-	msg += "Invalid argc! ";
-	msg += std::to_string(argc);
-	AssertVar(argc > 0, msg.c_str());
-#endif
-	if (argc > 0)
-	{
-		std::string_view exePath = argv[0];
-#ifdef TARGET_WIN64
-		const char delim = '\\';
-#else
-		const char delim = '/';
-#endif
-		m_workingDir = exePath.substr(0, exePath.find_last_of(delim));
-		LOG_I("Working dir: %s", m_workingDir.data());
-	}
-	g_pResources->s_resourcesPath = m_workingDir;
-	g_pResources->s_resourcesPath += "/";
-	g_pResources->s_resourcesPath += "Resources";
 	if (g_pResources->Init({"Default-Mono.ttf", "Default-Serif.ttf"}))
 	{
 		m_state.flags[State::INIT] = true;
@@ -61,15 +38,11 @@ App::~App()
 	LOG_I("[App] terminated and destroyed");
 }
 
-void App::CreateViewport(u32 width, u32 height, const std::string& title)
+void App::CreateViewport(const ViewportData& data)
 {
 	Assert(!m_viewport.isOpen(), "Viewport already open!");
-	ViewportData data;
-	data.viewportSize.width = width;
-	data.viewportSize.height = height;
-	data.title = title;
-	m_viewport.SetData(std::move(data));
-	m_viewport.Create(s_AA);
+	m_viewport.SetData(data);
+	m_viewport.Create();
 }
 
 void App::StartGame()
@@ -135,10 +108,5 @@ bool App::IsRunning() const
 bool App::IsViewportOpen() const
 {
 	return m_viewport.isOpen();
-}
-
-std::string_view App::WorkingDir() const
-{
-	return m_workingDir;
 }
 } // namespace ME

@@ -20,13 +20,9 @@ public:
 		std::bitset<3> flags;
 	};
 
-public:
-	static constexpr u8 s_AA = 8;
-
 private:
 	GameServices m_services;
 	Viewport m_viewport;
-	std::string m_workingDir;
 	State m_state;
 	const Time m_TICK_RATE;
 	const Time m_MAX_DT;
@@ -36,11 +32,11 @@ private:
 #endif
 
 public:
-	App(u8 minFPS, u8 maxFPS, s32 argc, char** argv);
+	App(u8 minFPS, u8 maxFPS);
 	~App();
 
 public:
-	void CreateViewport(u32 width, u32 height, const std::string& title);
+	void CreateViewport(const ViewportData& data);
 	void StartGame();
 
 	void StartFrame();
@@ -53,6 +49,5 @@ public:
 	bool IsInit() const;
 	bool IsRunning() const;
 	bool IsViewportOpen() const;
-	std::string_view WorkingDir() const;
 };
 } // namespace ME

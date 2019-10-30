@@ -3,7 +3,9 @@
 #include "BuildVersion.h"
 #include "Engine/Viewport/Viewport.h"
 #include "GameLoop.h"
+#include "GameSettings.h"
 #include "App.h"
+#include "OS.h"
 
 namespace ME
 {
@@ -13,7 +15,7 @@ std::unique_ptr<App> uApp;
 
 void ProfileFrameTime(Time frameTime, Time maxDT)
 {
-	constexpr u8 MAX_STRIKES = 5;
+	constexpr u8 MAX_STRIKES = 3;
 	static u8 strikes = 0;
 	if (frameTime > maxDT)
 	{
@@ -25,26 +27,34 @@ void ProfileFrameTime(Time frameTime, Time maxDT)
 			strikes = 0;
 		}
 	}
+	else
+	{
+		strikes = 0;
+	}
 }
 } // namespace
 
-s32 GameLoop::Run(u8 minFPs, u8 maxFPS, s32 argc, char** argv)
+s32 GameLoop::Run(s32 argc, char** argv)
 {
-	LOG_I("MicroEngine v%s", BUILD_VERSION_STR.data());
-#if defined(DEBUGGING)
-	LOG_I("Commit hash: %s", COMMIT_HASH_STR.data());
+	OS::Init(argc, argv);
+	GameSettings& settings = GameSettings::Inst();
+#if ENABLED(DEBUG_LOGGING)
+	LE::g_MinLogSeverity = static_cast<LE::LogSeverity>(settings.m_logSeverity);
 #endif
+	LOG_I("MicroEngine v%s (%s)", BUILD_VERSION_STR.data(), COMMIT_HASH_STR.data());
 	// Create an app object and ensure it's initialised
-	const Time MAX_DT = Time::Seconds(1.0f / minFPs);
-	uApp = std::make_unique<App>(minFPs, maxFPS, argc, argv);
+	const Time MAX_DT = Time::Seconds(1.0f / 30);
+	uApp = std::make_unique<App>(30, settings.m_maxFPS);
 	if (!uApp->IsInit())
 	{
 		LOG_E("[GameLoop] Fatal error initialising engine...");
 		return 1;
 	}
 	// Create a viewport (render window)
-	ViewportSize size = g_pGFX->GetViewportSize();
-	uApp->CreateViewport(size.width, size.height, "Untitled Game");
+	ViewportData data;
+	data.viewportSize = g_pGFX->GetViewportSize();
+	data.title = "Untitled Game";
+	uApp->CreateViewport(data);
 	// Construct Worlds and start the game
 	uApp->StartGame();
 
@@ -75,11 +85,5 @@ void GameLoop::Stop()
 {
 	// Set the CLOSED flag
 	uApp->Quit();
-}
-
-const std::string_view GameLoop::PWD()
-{
-	// Might be useful utility, eg, to save/load files relative to executable path
-	return uApp->WorkingDir();
 }
 } // namespace ME

@@ -26,11 +26,9 @@ struct ViewportData
 	ViewportSize viewportSize;
 	std::string title;
 	ViewportStyle style = ViewportStyle::Default;
-
-	ViewportData();
-	ViewportData(ViewportSize viewportSize, std::string title, ViewportStyle style);
-	ViewportData(ViewportData&&) = default;
-	ViewportData& operator=(ViewportData&&) = default;
+	u8 aaLevel = 8;
+	u16 maxFPS = 240;
+	bool bVsync = true;
 };
 
 struct ViewportRecreateData

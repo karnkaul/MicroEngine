@@ -1,6 +1,6 @@
 #include "Engine/GameServices.h"
 #include "Engine/Physics/ColliderData.h"
-#include "../../ObjectPool.h" // Check out this class first
+#include "../../ObjectPool.h"	   // Check out this class first
 #include "../../Objects/Tilemap.h" // Check out this class first
 #include "../../Objects/Tutorials/Bubble.h"
 #include "../../Objects/Tutorials/Projectile.h" // Check out this class first
@@ -211,7 +211,9 @@ void Tutorial5::OnStarting()
 		pProjectiles->PreInstantiate("Projectile", 10);
 	}
 
-	// Tilemap
+	// Tilemap fills a given space (x, y) with tiles of a given texture.
+	// This implementation fills from the centre outwards, since all our coordinate systems
+	// have a centred origin.
 	m_hTilemap = NewObject<Tilemap>("TestTiles");
 	if (auto pTilemap = FindObject<Tilemap>(m_hTilemap))
 	{
