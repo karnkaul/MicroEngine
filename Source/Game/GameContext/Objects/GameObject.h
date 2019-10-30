@@ -62,7 +62,7 @@ protected:
 	virtual void Tick(Time dt);
 	virtual void OnDespawn();
 	virtual void OnDestroy();
-	
+
 private:
 	void Create(std::string name);
 	void Respawn(std::string name);

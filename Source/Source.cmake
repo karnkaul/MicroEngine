@@ -106,6 +106,10 @@ list(APPEND SOURCES
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameLoop/App.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameLoop/GameLoop.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameLoop/GameLoop.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameLoop/GameSettings.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameLoop/GameSettings.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameLoop/OS.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameLoop/OS.cpp"
 	
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameTypes.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/NoCopy.h"

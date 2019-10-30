@@ -1,11 +1,12 @@
 #include <fstream>
 #include "Resources.h"
+#include "GameLoop/OS.h"
 
 namespace ME
 {
 std::vector<Font*> g_defaultFonts;
 
-std::string Resources::s_resourcesPath;
+std::string Resources::s_resourcesPath = "Resources";
 
 Resources::Resources() = default;
 Resources::~Resources() = default;
@@ -39,7 +40,7 @@ void Resources::Clear()
 
 std::string Resources::ResourcePath(const std::string& id) const
 {
-	std::string ret = s_resourcesPath;
+	std::string ret = OS::FullPath(s_resourcesPath);
 	ret += "/";
 	ret += id;
 	return ret;
