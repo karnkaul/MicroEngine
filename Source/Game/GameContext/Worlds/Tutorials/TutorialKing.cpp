@@ -1,6 +1,7 @@
 #include "TutorialKing.h"
 #include "Engine/GameServices.h"
 #include "../../Objects/Tutorials/Controller.h"
+#include "../../Objects/Tutorials/Food.h"
 
 namespace ME
 {
@@ -51,33 +52,33 @@ void TutorialKing::OnStarting()
 		pPlayer->GetCollision().AddCircle(nullptr, 100);
 	}
 
-	m_hEnemy = NewObject<GameObject>("Enemy");
-	auto pEnemy = FindObject<GameObject>(m_hEnemy);
-
-	if (pEnemy)
+	m_hFood = NewObject<Food>("Food");
+	auto pFood = FindObject<Food>(m_hFood);
+	auto handle = m_hFood;
+	if (pFood)
 	{
-		pEnemy->Instantiate(Primitive::Type::Circle);
+		pFood->Instantiate(Primitive::Type::Circle);
 		data.oFill = Colour::Red;
 		data.oSize = {25, 25};
-		pEnemy->SetShape(data);
-		pEnemy->m_layer = playerLayer - 1;
-		pEnemy->m_transform.SetPosition(Vector2(150, 150));
-		pEnemy->GetCollision().AddCircle(nullptr, 50);
+		pFood->SetShape(data);
+		pFood->m_layer = playerLayer;
+		pFood->m_transform.SetPosition(Vector2(150, 150));
+
+		auto OnHit = [this, handle](Collision::Info info) {
+			if (auto pFood = FindObject<Food>(handle))
+			{
+				pFood->OnHit(info);
+			}
+		};
+		auto token = pFood->GetCollision().AddCircle(std::move(OnHit), 50);
+		m_callbackTokens.push_back(token);
 	}
 }
-
-/*void TutorialKing::Tick(Time dt)
-{
-	if (auto pPlayer = FindObject<Controller>(m_hPlayer))
-	{
-	
-	}
-}*/
 
 void TutorialKing::OnStopping()
 {
 	m_hMainText = INVALID_HANDLE;
 	m_hPlayer = INVALID_HANDLE;
-	m_hEnemy = INVALID_HANDLE;
+	m_hFood = INVALID_HANDLE;
 }
 } // namespace ME
