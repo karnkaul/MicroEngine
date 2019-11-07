@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
+set(CMAKE_SUPPRESS_REGENERATION TRUE CACHE INTERNAL "" FORCE)
 
 include(FetchContent)
 
