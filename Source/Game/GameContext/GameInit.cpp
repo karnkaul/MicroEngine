@@ -6,6 +6,7 @@
 #include "Worlds/Tutorials/Tutorial3.h"
 #include "Worlds/Tutorials/Tutorial4.h"
 #include "Worlds/Tutorials/Tutorial5.h"
+#include "Worlds/Tutorials/Tutorial6.h"
 #include "Worlds/Tutorials/Temp.h"
 
 namespace ME
@@ -20,6 +21,7 @@ void GameInit::CreateWorlds()
 	ConstructWorld<Tutorial3>("Tutorial3");
 	ConstructWorld<Tutorial4>("Tutorial4");
 	ConstructWorld<Tutorial5>("Tutorial5");
+	ConstructWorld<Tutorial6>("Tutorial6");
 	ConstructWorld<Temp>("Temp");
 }
 } // namespace ME
