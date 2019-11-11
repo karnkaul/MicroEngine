@@ -139,6 +139,11 @@ void Controller::Tick(Time dt)
 	m_transform.SetPosition(position);
 	// Reset target (we aren't dealing with acceleration; in fact we cannot, without a fixed-time loop)
 	m_targetVelocity = Vector2::Zero;
+
+	ShapeData data;
+	data.oSize = {m_radius, m_radius};
+	SetShape(data);
+
 	GameObject::Tick(dt);
 }
 } // namespace ME

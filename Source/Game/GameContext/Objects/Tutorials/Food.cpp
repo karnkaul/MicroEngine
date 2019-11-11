@@ -16,6 +16,7 @@ void Food::OnHit(Collision::Info info)
 	if (auto pPlayer = dynamic_cast<Controller*>(info.pInstigator))
 	{
 		LOG_D("[%s] Collided with %s, destroying [%s]", m_name.data(), pPlayer->Name().data(), m_name.data());
+		pPlayer->m_radius += Fixed(2);
 		Destroy();
 	}
 }
