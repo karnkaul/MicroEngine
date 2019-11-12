@@ -9,6 +9,7 @@ namespace
 {
 static const std::string nextWorld = "Tutorial1";
 static const std::string previousWorld = "Tutorial0";
+static const std::string currentWorld = "TutorialKing";
 constexpr u32 INIT_FOODS = 5;
 } // namespace
 
@@ -19,7 +20,9 @@ void TutorialKing::OnCreate()
 
 void TutorialKing::OnStarting()
 {
-	RegisterInput([](const Input::Frame& frame) -> bool {
+	m_gameState = GameState::PLAYING;
+
+	RegisterInput([this](const Input::Frame& frame) -> bool {
 		if (frame.IsReleased(KeyCode::Space))
 		{
 			g_pContext->LoadWorld(nextWorld);
@@ -28,6 +31,11 @@ void TutorialKing::OnStarting()
 		{
 			g_pContext->LoadWorld(previousWorld);
 		}
+		else if (frame.IsReleased(KeyCode::R) && m_gameState == GameState::WINNING)
+		{
+			g_pContext->LoadWorld(currentWorld);
+		}
+
 		return false;
 	});
 
@@ -89,34 +97,13 @@ void TutorialKing::OnStarting()
 		pFoods->SetGenerator(std::move(foodGen));
 		pFoods->PreInstantiate("Food", INIT_FOODS);
 	}
-
-	/*m_hFood = NewObject<Food>("Food");
-	auto pFood = FindObject<Food>(m_hFood);
-	auto handle = m_hFood;
-	if (pFood)
-	{
-		data.oFill = Colour::Red;
-		data.oSize = {25, 25};
-		pFood->SetShape(data);
-		pFood->m_layer = playerLayer;
-		pFood->m_transform.SetPosition(Vector2(150, 150));
-
-		auto OnHit = [this, handle](Collision::Info info) {
-			if (auto pFood = FindObject<Food>(handle))
-			{
-				pFood->OnHit(info);
-			}
-		};
-		auto token = pFood->GetCollision().AddCircle(std::move(OnHit), 50);
-		m_callbackTokens.push_back(token);
-	}*/
 }
 
 void TutorialKing::Tick(Time dt)
 {
 	if (auto pFoods = FindPool(m_hFood))
 	{
-		if (pFoods->Spawned() < INIT_FOODS)
+		if (pFoods->Spawned() < INIT_FOODS && m_gameState == GameState::PLAYING)
 		{
 			std::string name = "Food_";
 			name += std::to_string(m_foodCount++);
@@ -127,7 +114,36 @@ void TutorialKing::Tick(Time dt)
 			pFood->SetEnabled(true);
 		}
 	}
+
+	if (auto pPlayer = FindObject<Controller>(m_hPlayer))
+	{
+		if (pPlayer->m_radius > Fixed(90))
+		{
+			OnWin();
+		}
+	}
+
 	GameWorld::Tick(dt);
+}
+
+void TutorialKing::OnWin()
+{
+	m_gameState = GameState::WINNING;
+	if (auto pPlayer = FindObject<Controller>(m_hPlayer))
+	{
+		pPlayer->Destroy();
+	}
+
+	if (auto pFoods = FindPool(m_hFood))
+	{
+		pFoods->DestroyAll();
+	}
+
+	if (auto pMainText = FindObject<GameObject>(m_hMainText))
+	{
+		pMainText->SetText("You have WON!\n[Space] To load next world\n[ESC] To load previous world\n[R] To reload current world");
+		pMainText->m_transform.SetPosition(Vector2(0, 0));
+	}
 }
 
 void TutorialKing::OnStopping()
