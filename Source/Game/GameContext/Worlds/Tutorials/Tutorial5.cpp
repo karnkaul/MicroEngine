@@ -254,6 +254,7 @@ void Tutorial5::Tick(Time dt)
 void Tutorial5::OnStopping()
 {
 	m_hBubbles = m_hProjectiles = m_hRocket = m_hMainText = m_hTilemap = INVALID_HANDLE;
+	m_playerScore = 0;
 	m_miscTokens.clear();
 	m_uiButtons.clear();
 }

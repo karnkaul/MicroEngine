@@ -30,7 +30,7 @@ void Projectile::Tick(Time dt)
 	GameObject::Tick(dt);
 }
 
-void Projectile::OnHit(Collision::Info info)
+bool Projectile::OnHit(Collision::Info info)
 {
 	// Destroy bubbles on contact; the other GameObject* is available via info.pInstigator
 	if (auto pBubble = dynamic_cast<Bubble*>(info.pInstigator))
@@ -38,6 +38,8 @@ void Projectile::OnHit(Collision::Info info)
 		LOG_D("[%s] Collided with %s, destroying both", m_name.data(), pBubble->Name().data());
 		pBubble->Destroy();
 		Destroy();
+		return true;
 	}
+	return false;
 }
 } // namespace ME

@@ -19,6 +19,6 @@ protected:
 	void Tick(Time dt) override;
 
 public:
-	void OnHit(Collision::Info info);
+	bool OnHit(Collision::Info info);
 };
 } // namespace ME

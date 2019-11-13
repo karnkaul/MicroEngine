@@ -1,9 +1,9 @@
 #include "Engine/GameServices.h"
 #include "Engine/Physics/ColliderData.h"
-#include "../../ObjectPool.h"  
-#include "../../Objects/Tilemap.h" 
+#include "../../ObjectPool.h"
+#include "../../Objects/Tilemap.h"
 #include "../../Objects/Tutorials/Bubble.h"
-#include "../../Objects/Tutorials/Projectile.h" 
+#include "../../Objects/Tutorials/Projectile.h"
 #include "../../Objects/Tutorials/Rocket.h"
 #include "../../Objects/UI/UIButton.h"
 #include "Tutorial6.h"
@@ -64,6 +64,15 @@ void Tutorial6::OnStarting()
 	{
 		pText->Instantiate(Primitive::Type::Text);
 		pText->SetText("Press [Tab] to toggle chasing");
+	}
+	m_hPlayerScore = NewObject<GameObject>("PlayerScore");
+	if (auto pPlayerScore = FindObject<GameObject>(m_hPlayerScore))
+	{
+		pPlayerScore->Instantiate(Primitive::Type::Text);
+		std::string text = "Player Score: ";
+		text += std::to_string(m_playerScore);
+		pPlayerScore->SetText(std::move(text));
+		pPlayerScore->m_transform.SetPosition(g_pGFX->WorldProjection({Fixed(0.0f), Fixed(0.8f)}));
 	}
 	m_hRocket = NewObject<Rocket>("Rocket");
 	if (auto pRocket = FindObject<Rocket>(m_hRocket))
@@ -138,7 +147,10 @@ void Tutorial6::OnStarting()
 				auto onCollision = [this, handle](Collision::Info info) {
 					if (auto pProjectile = FindObject<Projectile>(handle))
 					{
-						pProjectile->OnHit(info);
+						if (pProjectile->OnHit(info))
+						{
+							++m_playerScore;
+						}
 					}
 				};
 				auto token = pProjectile->GetCollision().AddAABB(std::move(onCollision), AABBData({20, 20}));
@@ -186,12 +198,20 @@ void Tutorial6::Tick(Time dt)
 			pBubble->SetEnabled(true);
 		}
 	}
+	if (auto pPlayerScore = FindObject<GameObject>(m_hPlayerScore))
+	{
+		std::string text = "Player Score: ";
+		text += std::to_string(m_playerScore);
+		pPlayerScore->SetText(std::move(text));
+	}
+
 	GameWorld::Tick(dt);
 }
 
 void Tutorial6::OnStopping()
 {
-	m_hBubbles = m_hProjectiles = m_hRocket = m_hMainText = m_hTilemap = INVALID_HANDLE;
+	m_hBubbles = m_hProjectiles = m_hRocket = m_hMainText = m_hTilemap = m_hPlayerScore = INVALID_HANDLE;
+	m_playerScore = 0;
 	m_miscTokens.clear();
 	m_uiButtons.clear();
 }
