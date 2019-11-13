@@ -1,6 +1,7 @@
 #include "GameInit.h"
 // Include all GameWorld headers
 #include "Worlds/Tutorials/Tutorial0.h"
+#include "Worlds/Tutorials/TutorialKing.h"
 #include "Worlds/Tutorials/Tutorial1.h"
 #include "Worlds/Tutorials/Tutorial2.h"
 #include "Worlds/Tutorials/Tutorial3.h"
@@ -16,6 +17,7 @@ void GameInit::CreateWorlds()
 	// Construct all GameWorlds in use. While the order is irrelevant in code,
 	// for readability, keep it in chronological order (of development).
 	ConstructWorld<Tutorial0>("Tutorial0");
+	ConstructWorld<TutorialKing>("TutorialKing");
 	ConstructWorld<Tutorial1>("Tutorial1");
 	ConstructWorld<Tutorial2>("Tutorial2");
 	ConstructWorld<Tutorial3>("Tutorial3");

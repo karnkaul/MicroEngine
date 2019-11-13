@@ -15,6 +15,7 @@ public:
 
 public:
 	Fixed m_speed = Fixed::One; // Coefficient of velocity
+	Fixed m_radius = 50;
 	Type m_type;
 	bool m_bClampToWorld = true; // Prevents object from going off screen
 

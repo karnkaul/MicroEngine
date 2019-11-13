@@ -44,6 +44,7 @@ GameServices::~GameServices()
 
 void GameServices::StartGame()
 {
+
 	GameInit::CreateWorlds();
 	m_context.StartWorld("Tutorial0");
 }
