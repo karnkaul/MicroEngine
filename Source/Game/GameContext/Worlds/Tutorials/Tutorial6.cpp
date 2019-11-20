@@ -51,6 +51,7 @@ void Tutorial6::OnStarting()
 						const auto pos = t.WorldPosition() + (t.WorldOrientation() * 75);
 						pProjectile->m_transform.SetPosition(pos);
 						pProjectile->SetEnabled(true);
+						--m_playerScore;
 					}
 				}
 			}
@@ -65,14 +66,19 @@ void Tutorial6::OnStarting()
 		pText->Instantiate(Primitive::Type::Text);
 		pText->SetText("Press [Tab] to toggle chasing");
 	}
-	m_hPlayerScore = NewObject<GameObject>("PlayerScore");
-	if (auto pPlayerScore = FindObject<GameObject>(m_hPlayerScore))
+	m_hPlayerStatistics = NewObject<GameObject>("PlayerStatistics");
+	if (auto pPlayerStatistics = FindObject<GameObject>(m_hPlayerStatistics))
 	{
-		pPlayerScore->Instantiate(Primitive::Type::Text);
+		pPlayerStatistics->Instantiate(Primitive::Type::Text);
 		std::string text = "Player Score: ";
 		text += std::to_string(m_playerScore);
-		pPlayerScore->SetText(std::move(text));
-		pPlayerScore->m_transform.SetPosition(g_pGFX->WorldProjection({Fixed(0.0f), Fixed(0.8f)}));
+		text += "\nAccuracy: ";
+		text += std::to_string(m_projectileHitCount);
+		text += "/";
+		text += std::to_string(m_projectileCount);
+
+		pPlayerStatistics->SetText(std::move(text));
+		pPlayerStatistics->m_transform.SetPosition(g_pGFX->WorldProjection({Fixed(0.0f), Fixed(0.8f)}));
 	}
 	m_hRocket = NewObject<Rocket>("Rocket");
 	if (auto pRocket = FindObject<Rocket>(m_hRocket))
@@ -149,7 +155,8 @@ void Tutorial6::OnStarting()
 					{
 						if (pProjectile->OnHit(info))
 						{
-							++m_playerScore;
+							m_playerScore += 2;
+							++m_projectileHitCount;
 						}
 					}
 				};
@@ -198,11 +205,33 @@ void Tutorial6::Tick(Time dt)
 			pBubble->SetEnabled(true);
 		}
 	}
-	if (auto pPlayerScore = FindObject<GameObject>(m_hPlayerScore))
+
+	/*if (auto pProjectiles = FindPool(m_hProjectiles))
 	{
+		for (auto pProjectile : pProjectiles->m_objects)
+		{
+			
+		}
+	}*/
+
+	if (auto pPlayerStatistics = FindObject<GameObject>(m_hPlayerStatistics))
+	{
+		/*std::string text = "Player Score: ";
+		text += std::to_string(m_playerScore);
+		pPlayerStatistics->SetText(std::move(text));*/
+		if (m_projectileCount > 0)
+		{
+			m_accuracy = std::round(((f64(m_projectileHitCount) / f64(m_projectileCount)) * 100) * 100) / 100;
+		}
+
 		std::string text = "Player Score: ";
 		text += std::to_string(m_playerScore);
-		pPlayerScore->SetText(std::move(text));
+		text += "\nAccuracy: ";
+		text += std::to_string(m_projectileHitCount);
+		text += "/";
+		text += std::to_string(m_projectileCount);
+		text += " (" + std::to_string(m_accuracy) + "%)\n";
+		pPlayerStatistics->SetText(std::move(text));
 	}
 
 	GameWorld::Tick(dt);
@@ -210,8 +239,8 @@ void Tutorial6::Tick(Time dt)
 
 void Tutorial6::OnStopping()
 {
-	m_hBubbles = m_hProjectiles = m_hRocket = m_hMainText = m_hTilemap = m_hPlayerScore = INVALID_HANDLE;
-	m_playerScore = 0;
+	m_hBubbles = m_hProjectiles = m_hRocket = m_hMainText = m_hTilemap = m_hPlayerStatistics = INVALID_HANDLE;
+	m_playerScore = m_projectileHitCount = 0;
 	m_miscTokens.clear();
 	m_uiButtons.clear();
 }
