@@ -22,6 +22,7 @@ protected:
 	s32 m_projectileHitCount = 0;
 	s32 m_playerScore = 0;
 	f64 m_accuracy = 0;
+	Time m_playedTime = Time::Zero;
 
 protected:
 	void OnCreate() override;

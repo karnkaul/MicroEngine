@@ -1,3 +1,4 @@
+#include <array>
 #include "Engine/GameServices.h"
 #include "Engine/Physics/ColliderData.h"
 #include "../../ObjectPool.h"
@@ -26,6 +27,8 @@ void Tutorial6::OnCreate()
 
 void Tutorial6::OnStarting()
 {
+	m_playedTime = Time::Zero;
+
 	auto onInput = [this](const Input::Frame& frame) -> bool {
 		if (frame.IsReleased(KeyCode::Space))
 		{
@@ -78,7 +81,7 @@ void Tutorial6::OnStarting()
 		text += std::to_string(m_projectileCount);
 
 		pPlayerStatistics->SetText(std::move(text));
-		pPlayerStatistics->m_transform.SetPosition(g_pGFX->WorldProjection({Fixed(0.0f), Fixed(0.8f)}));
+		pPlayerStatistics->m_transform.SetPosition(g_pGFX->WorldProjection({Fixed(0.0f), Fixed(0.6f)}));
 	}
 	m_hRocket = NewObject<Rocket>("Rocket");
 	if (auto pRocket = FindObject<Rocket>(m_hRocket))
@@ -186,6 +189,8 @@ void Tutorial6::OnStarting()
 
 void Tutorial6::Tick(Time dt)
 {
+	m_playedTime += dt;
+
 	if (auto pRocket = FindObject<Chaser>(m_hRocket))
 	{
 		SpriteData data;
@@ -224,13 +229,22 @@ void Tutorial6::Tick(Time dt)
 			m_accuracy = std::round(((f64(m_projectileHitCount) / f64(m_projectileCount)) * 100) * 100) / 100;
 		}
 
+		std::array<char, 7> buf;
+		std::snprintf(buf.data(), buf.size(), "%3.2f", m_accuracy);
+		//SPRINTF(buf.data(), buf.size(), "%3.2f", m_accuracy);
 		std::string text = "Player Score: ";
 		text += std::to_string(m_playerScore);
 		text += "\nAccuracy: ";
 		text += std::to_string(m_projectileHitCount);
 		text += "/";
 		text += std::to_string(m_projectileCount);
-		text += " (" + std::to_string(m_accuracy) + "%)\n";
+		text += " (";
+		text += buf.data();
+		text += "%)\nTime Played: ";
+		buf.fill('0');
+		std::snprintf(buf.data(), buf.size(), "%.0f", m_playedTime.AsSeconds());
+		text += buf.data();
+		text += " seconds\n";
 		pPlayerStatistics->SetText(std::move(text));
 	}
 
