@@ -14,7 +14,7 @@ namespace ME
 namespace
 {
 static const std::string NEXT_WORLD = "Temp";
-static const std::string PREV_WORLD = "Tutorial5";
+static const std::string PREV_WORLD = "TutorialKing";
 constexpr u32 INIT_BUBBLES = 5;
 } // namespace
 

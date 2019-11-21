@@ -18,11 +18,6 @@ void GameInit::CreateWorlds()
 	// for readability, keep it in chronological order (of development).
 	ConstructWorld<Tutorial0>("Tutorial0");
 	ConstructWorld<TutorialKing>("TutorialKing");
-	ConstructWorld<Tutorial1>("Tutorial1");
-	ConstructWorld<Tutorial2>("Tutorial2");
-	ConstructWorld<Tutorial3>("Tutorial3");
-	ConstructWorld<Tutorial4>("Tutorial4");
-	ConstructWorld<Tutorial5>("Tutorial5");
 	ConstructWorld<Tutorial6>("Tutorial6");
 	ConstructWorld<Temp>("Temp");
 }

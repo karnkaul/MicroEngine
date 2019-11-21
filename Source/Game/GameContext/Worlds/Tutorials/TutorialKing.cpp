@@ -7,7 +7,7 @@ namespace ME
 {
 namespace
 {
-static const std::string nextWorld = "Tutorial1";
+static const std::string nextWorld = "Tutorial6";
 static const std::string previousWorld = "Tutorial0";
 static const std::string currentWorld = "TutorialKing";
 constexpr u32 INIT_FOODS = 5;
