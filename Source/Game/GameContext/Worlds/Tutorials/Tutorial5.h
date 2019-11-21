@@ -6,6 +6,9 @@ namespace ME
 {
 class Tutorial5 : public GameWorld
 {
+public: 
+	s32 m_playerScore = 0;
+
 protected:
 	// Various UI Button handles
 	std::vector<HObj> m_uiButtons;

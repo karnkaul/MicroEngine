@@ -46,6 +46,6 @@ void GameServices::StartGame()
 {
 
 	GameInit::CreateWorlds();
-	m_context.StartWorld("Tutorial0");
+	m_context.StartWorld("Tutorial6");
 }
 } // namespace ME
