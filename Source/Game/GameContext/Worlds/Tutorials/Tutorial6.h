@@ -17,12 +17,14 @@ protected:
 	HObj m_hPlayerStatistics = INVALID_HANDLE;
 	HRes m_hTile = INVALID_HANDLE;
 
-	s32 m_bubbleCount = 0;
-	s32 m_projectileCount = 0;
-	s32 m_projectileHitCount = 0;
+	u32 m_bubbleCount = 0;
+	u32 m_bubblesToSpawn = 0;
+	u32 m_projectileCount = 0;
+	u32 m_projectileHitCount = 0;
 	s32 m_playerScore = 0;
 	f64 m_accuracy = 0;
 	Time m_playedTime = Time::Zero;
+	Time m_incrTimer = Time::Seconds(5);
 
 protected:
 	void OnCreate() override;

@@ -28,6 +28,8 @@ void Tutorial6::OnCreate()
 void Tutorial6::OnStarting()
 {
 	m_playedTime = Time::Zero;
+	m_bubblesToSpawn = INIT_BUBBLES;
+	m_incrTimer = Time::Seconds(5);
 
 	auto onInput = [this](const Input::Frame& frame) -> bool {
 		if (frame.IsReleased(KeyCode::Space))
@@ -190,6 +192,13 @@ void Tutorial6::OnStarting()
 void Tutorial6::Tick(Time dt)
 {
 	m_playedTime += dt;
+	m_incrTimer -= dt;
+
+	if (m_incrTimer <= Time::Zero)
+	{
+		++m_bubblesToSpawn;
+		m_incrTimer = Time::Seconds(5);
+	}
 
 	if (auto pRocket = FindObject<Chaser>(m_hRocket))
 	{
@@ -199,7 +208,7 @@ void Tutorial6::Tick(Time dt)
 	}
 	if (auto pBubbles = FindPool(m_hBubbles))
 	{
-		if (pBubbles->Spawned() < INIT_BUBBLES)
+		if (pBubbles->Spawned() < m_bubblesToSpawn)
 		{
 			std::string name = "Bubble_";
 			name += std::to_string(m_bubbleCount++);

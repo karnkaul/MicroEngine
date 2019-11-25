@@ -31,6 +31,7 @@ void Bubble::Tick(Time dt)
 	// Scale it by `dt` so its independent of frame-rate (is larger
 	// when more time elapses between frames, so overall movement
 	// over time remains identical over varying framerates)
+	m_ySpeed += Fixed(dt.AsSeconds() / 50);
 	const Fixed dy = m_ySpeed * Fixed(dt.AsMilliseconds() / 5);
 	const Vector2 newPos = m_transform.Position() + Vector2(0, dy);
 	m_transform.SetPosition(newPos);
