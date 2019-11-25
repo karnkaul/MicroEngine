@@ -14,7 +14,7 @@ namespace ME
 namespace
 {
 static const std::string NEXT_WORLD = "Temp";
-static const std::string PREV_WORLD = "TutorialKing";
+static const std::string PREV_WORLD = "Tutorial5";
 constexpr u32 INIT_BUBBLES = 5;
 } // namespace
 
@@ -211,19 +211,8 @@ void Tutorial6::Tick(Time dt)
 		}
 	}
 
-	/*if (auto pProjectiles = FindPool(m_hProjectiles))
-	{
-		for (auto pProjectile : pProjectiles->m_objects)
-		{
-			
-		}
-	}*/
-
 	if (auto pPlayerStatistics = FindObject<GameObject>(m_hPlayerStatistics))
 	{
-		/*std::string text = "Player Score: ";
-		text += std::to_string(m_playerScore);
-		pPlayerStatistics->SetText(std::move(text));*/
 		if (m_projectileCount > 0)
 		{
 			m_accuracy = std::round(((f64(m_projectileHitCount) / f64(m_projectileCount)) * 100) * 100) / 100;
@@ -231,7 +220,6 @@ void Tutorial6::Tick(Time dt)
 
 		std::array<char, 7> buf;
 		std::snprintf(buf.data(), buf.size(), "%3.2f", m_accuracy);
-		//SPRINTF(buf.data(), buf.size(), "%3.2f", m_accuracy);
 		std::string text = "Player Score: ";
 		text += std::to_string(m_playerScore);
 		text += "\nAccuracy: ";
@@ -242,7 +230,7 @@ void Tutorial6::Tick(Time dt)
 		text += buf.data();
 		text += "%)\nTime Played: ";
 		buf.fill('0');
-		std::snprintf(buf.data(), buf.size(), "%.0f", m_playedTime.AsSeconds());
+		std::snprintf(buf.data(), buf.size(), "%5.0f", m_playedTime.AsSeconds());
 		text += buf.data();
 		text += " seconds\n";
 		pPlayerStatistics->SetText(std::move(text));
@@ -255,6 +243,7 @@ void Tutorial6::OnStopping()
 {
 	m_hBubbles = m_hProjectiles = m_hRocket = m_hMainText = m_hTilemap = m_hPlayerStatistics = INVALID_HANDLE;
 	m_playerScore = m_projectileHitCount = 0;
+	m_accuracy = 0.0f;
 	m_miscTokens.clear();
 	m_uiButtons.clear();
 }
