@@ -1,4 +1,5 @@
 #include "Bubble.h"
+#include "Rocket.h"
 
 namespace ME
 {
@@ -45,5 +46,17 @@ void Bubble::Tick(Time dt)
 
 	// Finally let the base class update the actual primitive's transform
 	GameObject::Tick(dt);
+}
+
+bool Bubble::OnHit(Collision::Info info)
+{
+	if (auto pRocket = dynamic_cast<Rocket*>(info.pInstigator))
+	{
+		LOG_D("[%s] Collided with %s, destroying all objects", m_name.data(), pRocket->Name().data());
+		pRocket->Destroy();
+		Destroy();
+		return true;
+	}
+	return false;
 }
 } // namespace ME

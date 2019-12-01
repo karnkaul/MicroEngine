@@ -7,6 +7,12 @@ namespace ME
 class Tutorial6 : public GameWorld
 {
 protected:
+	enum GameState
+	{
+		PLAYING = 0,
+		ROCKETDESTROYED
+	};
+
 	std::vector<HObj> m_uiButtons;
 	std::vector<Token> m_miscTokens;
 	HPool m_hBubbles = INVALID_HANDLE;
@@ -21,6 +27,7 @@ protected:
 	u32 m_bubblesToSpawn = 0;
 	u32 m_projectileCount = 0;
 	u32 m_projectileHitCount = 0;
+	u32 m_gameState = PLAYING;
 	s32 m_playerScore = 0;
 	f64 m_accuracy = 0;
 	Time m_playedTime = Time::Zero;
@@ -31,5 +38,6 @@ protected:
 	void OnStarting() override;
 	void Tick(Time dt) override;
 	void OnStopping() override;
+	void OnRocketDestruction();
 };
 } // namespace ME

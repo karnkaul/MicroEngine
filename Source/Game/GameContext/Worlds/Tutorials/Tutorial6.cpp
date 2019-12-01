@@ -14,6 +14,7 @@ namespace ME
 namespace
 {
 static const std::string NEXT_WORLD = "Temp";
+static const std::string CURRENT_WORLD = "Tutorial6";
 static const std::string PREV_WORLD = "Tutorial5";
 constexpr u32 INIT_BUBBLES = 5;
 } // namespace
@@ -27,6 +28,7 @@ void Tutorial6::OnCreate()
 
 void Tutorial6::OnStarting()
 {
+	m_gameState = PLAYING;
 	m_playedTime = Time::Zero;
 	m_bubblesToSpawn = INIT_BUBBLES;
 	m_incrTimer = Time::Seconds(5);
@@ -40,25 +42,35 @@ void Tutorial6::OnStarting()
 		{
 			g_pContext->LoadWorld(PREV_WORLD);
 		}
-		else if (frame.IsReleased(KeyType::MOUSE_BTN_0) || frame.IsReleased(KeyCode::LControl))
+		else if (m_gameState == PLAYING)
 		{
-			std::string name = "Projectile_";
-			name += std::to_string(m_projectileCount++);
-			if (auto pPool = FindPool(m_hProjectiles))
+			if (frame.IsReleased(KeyType::MOUSE_BTN_0) || frame.IsReleased(KeyCode::LControl))
 			{
-				auto pProjectile = pPool->NewObject<Projectile>(std::move(name));
-				if (pProjectile)
+				std::string name = "Projectile_";
+				name += std::to_string(m_projectileCount++);
+				if (auto pPool = FindPool(m_hProjectiles))
 				{
-					if (const auto pRocket = FindObject<Rocket>(m_hRocket))
+					auto pProjectile = pPool->NewObject<Projectile>(std::move(name));
+					if (pProjectile)
 					{
-						const auto& t = pRocket->m_transform;
-						pProjectile->m_transform.SetOrientation(t.WorldOrientation());
-						const auto pos = t.WorldPosition() + (t.WorldOrientation() * 75);
-						pProjectile->m_transform.SetPosition(pos);
-						pProjectile->SetEnabled(true);
-						--m_playerScore;
+						if (const auto pRocket = FindObject<Rocket>(m_hRocket))
+						{
+							const auto& t = pRocket->m_transform;
+							pProjectile->m_transform.SetOrientation(t.WorldOrientation());
+							const auto pos = t.WorldPosition() + (t.WorldOrientation() * 75);
+							pProjectile->m_transform.SetPosition(pos);
+							pProjectile->SetEnabled(true);
+							--m_playerScore;
+						}
 					}
 				}
+			}
+		}
+		else if (m_gameState == ROCKETDESTROYED)
+		{
+			if (frame.IsReleased(KeyCode::R))
+			{
+				g_pContext->LoadWorld(CURRENT_WORLD);
 			}
 		}
 		return false;
@@ -74,6 +86,7 @@ void Tutorial6::OnStarting()
 	m_hPlayerStatistics = NewObject<GameObject>("PlayerStatistics");
 	if (auto pPlayerStatistics = FindObject<GameObject>(m_hPlayerStatistics))
 	{
+		pPlayerStatistics->SetEnabled(true);
 		pPlayerStatistics->Instantiate(Primitive::Type::Text);
 		std::string text = "Player Score: ";
 		text += std::to_string(m_playerScore);
@@ -132,7 +145,17 @@ void Tutorial6::OnStarting()
 				const Fixed nSize = Fixed(ttlSecs) / Fixed(10);
 				pBubble->m_diameter += (nSize * 20);
 				pBubble->m_ySpeed -= (nSize * Fixed::OneHalf);
-				pBubble->GetCollision().AddCircle(nullptr, pBubble->m_diameter);
+				auto onCollision = [this, handle](Collision::Info info) {
+					if (auto pBubble = FindObject<Bubble>(handle))
+					{
+						if (dynamic_cast<Rocket*>(info.pInstigator))
+						{
+							OnRocketDestruction();
+						}
+					}
+				};
+				auto token = pBubble->GetCollision().AddCircle(onCollision, pBubble->m_diameter);
+				m_miscTokens.push_back(token);
 				pBubble->m_layer = Layers::L0100_DEFAULT - 10;
 				return pBubble;
 			}
@@ -208,7 +231,7 @@ void Tutorial6::Tick(Time dt)
 	}
 	if (auto pBubbles = FindPool(m_hBubbles))
 	{
-		if (pBubbles->Spawned() < m_bubblesToSpawn)
+		if (pBubbles->Spawned() < m_bubblesToSpawn && m_gameState == PLAYING)
 		{
 			std::string name = "Bubble_";
 			name += std::to_string(m_bubbleCount++);
@@ -220,7 +243,8 @@ void Tutorial6::Tick(Time dt)
 		}
 	}
 
-	if (auto pPlayerStatistics = FindObject<GameObject>(m_hPlayerStatistics))
+	auto pPlayerStatistics = FindObject<GameObject>(m_hPlayerStatistics);
+	if (pPlayerStatistics && m_gameState == PLAYING)
 	{
 		if (m_projectileCount > 0)
 		{
@@ -246,6 +270,35 @@ void Tutorial6::Tick(Time dt)
 	}
 
 	GameWorld::Tick(dt);
+}
+
+void Tutorial6::OnRocketDestruction()
+{
+	m_gameState = ROCKETDESTROYED;
+	if (auto pRocket = FindObject<Rocket>(m_hRocket))
+	{
+		pRocket->Destroy();
+	}
+
+	if (auto pBubbles = FindPool(m_hBubbles))
+	{
+		pBubbles->DestroyAll();
+	}
+
+	if (auto pProjectiles = FindPool(m_hProjectiles))
+	{
+		pProjectiles->DestroyAll();
+	}
+
+	if (auto pPlayerStatistics = FindObject<GameObject>(m_hPlayerStatistics))
+	{
+		pPlayerStatistics->SetEnabled(false);
+	}
+
+	if (auto pMainText = FindObject<GameObject>(m_hMainText))
+	{
+		pMainText->SetText("Game Over!\nR: Reload current world\nEsc: Load previous world\nSpace: Load next world");
+	}
 }
 
 void Tutorial6::OnStopping()
