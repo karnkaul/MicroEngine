@@ -16,8 +16,6 @@ void GameInit::CreateWorlds()
 {
 	// Construct all GameWorlds in use. While the order is irrelevant in code,
 	// for readability, keep it in chronological order (of development).
-	ConstructWorld<Tutorial0>("Tutorial0");
-	ConstructWorld<TutorialKing>("TutorialKing");
 	ConstructWorld<Tutorial6>("Tutorial6");
 	ConstructWorld<Temp>("Temp");
 }

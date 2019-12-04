@@ -7,10 +7,10 @@ namespace ME
 class Tutorial6 : public GameWorld
 {
 protected:
-	enum GameState
+	enum class GameState
 	{
-		PLAYING = 0,
-		ROCKETDESTROYED
+		Playing = 0,
+		RocketDestroyed
 	};
 
 	std::vector<HObj> m_uiButtons;
@@ -27,7 +27,7 @@ protected:
 	u32 m_bubblesToSpawn = 0;
 	u32 m_projectileCount = 0;
 	u32 m_projectileHitCount = 0;
-	u32 m_gameState = PLAYING;
+	GameState m_gameState = GameState::Playing;
 	s32 m_playerScore = 0;
 	f64 m_accuracy = 0;
 	Time m_playedTime = Time::Zero;

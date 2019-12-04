@@ -25,5 +25,6 @@ protected:
 protected:
 	void OnCreate() override;
 	void Tick(Time dt) override;
+	void OnDestroy() override;
 };
 } // namespace ME

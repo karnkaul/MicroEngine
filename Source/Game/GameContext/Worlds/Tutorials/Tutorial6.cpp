@@ -1,4 +1,5 @@
 #include <array>
+#include "GameLoop/GameLoop.h"
 #include "Engine/GameServices.h"
 #include "Engine/Physics/ColliderData.h"
 #include "../../ObjectPool.h"
@@ -28,7 +29,7 @@ void Tutorial6::OnCreate()
 
 void Tutorial6::OnStarting()
 {
-	m_gameState = PLAYING;
+	m_gameState = GameState::Playing;
 	m_playedTime = Time::Zero;
 	m_bubblesToSpawn = INIT_BUBBLES;
 	m_incrTimer = Time::Seconds(5);
@@ -40,9 +41,14 @@ void Tutorial6::OnStarting()
 		}
 		else if (frame.IsReleased(KeyCode::Escape))
 		{
-			g_pContext->LoadWorld(PREV_WORLD);
+			bool bPrevWorldExists = g_pContext->LoadWorld(PREV_WORLD);
+			if (!bPrevWorldExists)
+			{
+				LOG_I("[%s] Previous world not found, exiting game", m_name.data());
+				GameLoop::Stop();
+			}
 		}
-		else if (m_gameState == PLAYING)
+		else if (m_gameState == GameState::Playing)
 		{
 			if (frame.IsReleased(KeyType::MOUSE_BTN_0) || frame.IsReleased(KeyCode::LControl))
 			{
@@ -66,7 +72,7 @@ void Tutorial6::OnStarting()
 				}
 			}
 		}
-		else if (m_gameState == ROCKETDESTROYED)
+		else if (m_gameState == GameState::RocketDestroyed)
 		{
 			if (frame.IsReleased(KeyCode::R))
 			{
@@ -231,7 +237,7 @@ void Tutorial6::Tick(Time dt)
 	}
 	if (auto pBubbles = FindPool(m_hBubbles))
 	{
-		if (pBubbles->Spawned() < m_bubblesToSpawn && m_gameState == PLAYING)
+		if (pBubbles->Spawned() < m_bubblesToSpawn && m_gameState == GameState::Playing)
 		{
 			std::string name = "Bubble_";
 			name += std::to_string(m_bubbleCount++);
@@ -244,7 +250,7 @@ void Tutorial6::Tick(Time dt)
 	}
 
 	auto pPlayerStatistics = FindObject<GameObject>(m_hPlayerStatistics);
-	if (pPlayerStatistics && m_gameState == PLAYING)
+	if (pPlayerStatistics && m_gameState == GameState::Playing)
 	{
 		if (m_projectileCount > 0)
 		{
@@ -274,7 +280,7 @@ void Tutorial6::Tick(Time dt)
 
 void Tutorial6::OnRocketDestruction()
 {
-	m_gameState = ROCKETDESTROYED;
+	m_gameState = GameState::RocketDestroyed;
 	if (auto pRocket = FindObject<Rocket>(m_hRocket))
 	{
 		pRocket->Destroy();
