@@ -59,4 +59,13 @@ bool Bubble::OnHit(Collision::Info info)
 	}
 	return false;
 }
+
+void Bubble::NextTTL()
+{
+	// Decrement the time to live of the bubble by one second
+	if (m_ttl > Time::Zero)
+	{
+		m_ttl -= Time::Seconds(1);
+	}
+}
 } // namespace ME

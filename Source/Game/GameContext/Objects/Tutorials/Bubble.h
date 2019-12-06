@@ -26,5 +26,6 @@ protected:
 
 public:
 	bool OnHit(Collision::Info info);
+	void NextTTL();
 };
 } // namespace ME

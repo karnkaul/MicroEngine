@@ -7,6 +7,13 @@ namespace ME
 class Tutorial6 : public GameWorld
 {
 protected:
+	struct Timers
+	{
+		Time bubbleSpawn = Time::Seconds(5);
+		Time bubbleTTL = Time::Seconds(60);
+	};
+	static const Timers m_defaultTimer;
+
 	enum class GameState
 	{
 		Playing = 0,
@@ -31,7 +38,7 @@ protected:
 	s32 m_playerScore = 0;
 	f64 m_accuracy = 0;
 	Time m_playedTime = Time::Zero;
-	Time m_incrTimer = Time::Seconds(5);
+	Timers m_delta;
 
 protected:
 	void OnCreate() override;

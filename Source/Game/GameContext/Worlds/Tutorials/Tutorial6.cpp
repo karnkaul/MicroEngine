@@ -18,7 +18,10 @@ static const std::string NEXT_WORLD = "Temp";
 static const std::string CURRENT_WORLD = "Tutorial6";
 static const std::string PREV_WORLD = "Tutorial5";
 constexpr u32 INIT_BUBBLES = 5;
+// const Tutorial6::Timers Tutorial6::m_defaultTimer;
 } // namespace
+
+const Tutorial6::Timers Tutorial6::m_defaultTimer;
 
 void Tutorial6::OnCreate()
 {
@@ -32,7 +35,7 @@ void Tutorial6::OnStarting()
 	m_gameState = GameState::Playing;
 	m_playedTime = Time::Zero;
 	m_bubblesToSpawn = INIT_BUBBLES;
-	m_incrTimer = Time::Seconds(5);
+	m_delta = m_defaultTimer;
 
 	auto onInput = [this](const Input::Frame& frame) -> bool {
 		if (frame.IsReleased(KeyCode::Space))
@@ -221,12 +224,13 @@ void Tutorial6::OnStarting()
 void Tutorial6::Tick(Time dt)
 {
 	m_playedTime += dt;
-	m_incrTimer -= dt;
+	m_delta.bubbleSpawn -= dt;
+	m_delta.bubbleTTL -= dt;
 
-	if (m_incrTimer <= Time::Zero)
+	if (m_delta.bubbleSpawn <= Time::Zero)
 	{
 		++m_bubblesToSpawn;
-		m_incrTimer = Time::Seconds(5);
+		m_delta.bubbleSpawn = m_defaultTimer.bubbleSpawn;
 	}
 
 	if (auto pRocket = FindObject<Chaser>(m_hRocket))
@@ -246,6 +250,12 @@ void Tutorial6::Tick(Time dt)
 			const Fixed nY = -Fixed(0.8f);
 			pBubble->m_transform.SetPosition(g_pGFX->WorldProjection({nX, nY}));
 			pBubble->SetEnabled(true);
+
+			if (m_delta.bubbleTTL <= Time::Zero)
+			{
+				// This isn't working since pBubble is only a GameObject pointer not a Bubble pointer
+				//pBubble->NextTTL();
+			}
 		}
 	}
 
@@ -294,11 +304,6 @@ void Tutorial6::OnRocketDestruction()
 	if (auto pProjectiles = FindPool(m_hProjectiles))
 	{
 		pProjectiles->DestroyAll();
-	}
-
-	if (auto pPlayerStatistics = FindObject<GameObject>(m_hPlayerStatistics))
-	{
-		pPlayerStatistics->SetEnabled(false);
 	}
 
 	if (auto pMainText = FindObject<GameObject>(m_hMainText))
