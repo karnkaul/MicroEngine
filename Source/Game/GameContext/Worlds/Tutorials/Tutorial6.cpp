@@ -18,10 +18,9 @@ static const std::string NEXT_WORLD = "Temp";
 static const std::string CURRENT_WORLD = "Tutorial6";
 static const std::string PREV_WORLD = "Tutorial5";
 constexpr u32 INIT_BUBBLES = 5;
-// const Tutorial6::Timers Tutorial6::m_defaultTimer;
 } // namespace
 
-const Tutorial6::Timers Tutorial6::m_defaultTimer;
+const Tutorial6::Timers Tutorial6::s_defaultTimer;
 
 void Tutorial6::OnCreate()
 {
@@ -35,7 +34,7 @@ void Tutorial6::OnStarting()
 	m_gameState = GameState::Playing;
 	m_playedTime = Time::Zero;
 	m_bubblesToSpawn = INIT_BUBBLES;
-	m_delta = m_defaultTimer;
+	m_delta = s_defaultTimer;
 
 	auto onInput = [this](const Input::Frame& frame) -> bool {
 		if (frame.IsReleased(KeyCode::Space))
@@ -114,15 +113,27 @@ void Tutorial6::OnStarting()
 	}
 
 #if defined(DEBUGGING)
-	auto hColliderBtn = NewObject<UIButton>("ColliderButton");
-	if (auto pBtn = FindObject<UIButton>(hColliderBtn))
+	m_hColliderBtn = NewObject<UIButton>("ColliderButton");
+	if (auto pBtn = FindObject<UIButton>(m_hColliderBtn))
 	{
 		pBtn->m_layer = Layers::L1500_UI;
 		pBtn->SetUIText("Toggle Colliders").m_transform.SetPosition(g_pGFX->WorldProjection({0, -1}) + Vector2(0, 100));
+		pBtn->SetEnabled(true);
 		m_miscTokens.push_back(pBtn->Register([]() { Collider::s_bShowDebugShape = !Collider::s_bShowDebugShape; }));
-		m_uiButtons.push_back(hColliderBtn);
+		m_uiButtons.push_back(m_hColliderBtn);
 	}
 #endif
+
+	m_hRestartBtn = NewObject<UIButton>("RestartButton");
+	if (auto pBtn = FindObject<UIButton>(m_hRestartBtn))
+	{
+		pBtn->m_layer = Layers::L1500_UI;
+		pBtn->SetUIText("Restart Level").m_transform.SetPosition(g_pGFX->WorldProjection({0, -1}) + Vector2(0, 300));
+		pBtn->SetEnabled(false);
+		m_miscTokens.push_back(pBtn->Register([]() { g_pContext->LoadWorld(CURRENT_WORLD); }));
+		m_uiButtons.push_back(m_hRestartBtn);
+	}
+
 	auto hPrevButton = NewObject<UIButton>("PreviousButton");
 	if (auto pBtn = FindObject<UIButton>(hPrevButton))
 	{
@@ -230,7 +241,7 @@ void Tutorial6::Tick(Time dt)
 	if (m_delta.bubbleSpawn <= Time::Zero)
 	{
 		++m_bubblesToSpawn;
-		m_delta.bubbleSpawn = m_defaultTimer.bubbleSpawn;
+		m_delta.bubbleSpawn = s_defaultTimer.bubbleSpawn;
 	}
 
 	if (auto pRocket = FindObject<Chaser>(m_hRocket))
@@ -245,7 +256,7 @@ void Tutorial6::Tick(Time dt)
 		{
 			std::string name = "Bubble_";
 			name += std::to_string(m_bubbleCount++);
-			auto pBubble = pBubbles->NewObject(std::move(name));
+			auto pBubble = pBubbles->NewObject<Bubble>(std::move(name));
 			const Fixed nX = Maths::Random::Range(-Fixed::One, Fixed::One);
 			const Fixed nY = -Fixed(0.8f);
 			pBubble->m_transform.SetPosition(g_pGFX->WorldProjection({nX, nY}));
@@ -253,8 +264,8 @@ void Tutorial6::Tick(Time dt)
 
 			if (m_delta.bubbleTTL <= Time::Zero)
 			{
-				// This isn't working since pBubble is only a GameObject pointer not a Bubble pointer
-				//pBubble->NextTTL();
+				pBubble->NextTTL();
+				m_delta.bubbleTTL = s_defaultTimer.bubbleTTL;
 			}
 		}
 	}
@@ -310,11 +321,21 @@ void Tutorial6::OnRocketDestruction()
 	{
 		pMainText->SetText("Game Over!\nR: Reload current world\nEsc: Load previous world\nSpace: Load next world");
 	}
+
+	if (auto pColliderBtn = FindObject<UIButton>(m_hColliderBtn))
+	{
+		pColliderBtn->SetEnabled(false);
+	}
+	if (auto pRestartBtn = FindObject<UIButton>(m_hRestartBtn))
+	{
+		pRestartBtn->SetEnabled(true);
+	}
 }
 
 void Tutorial6::OnStopping()
 {
-	m_hBubbles = m_hProjectiles = m_hRocket = m_hMainText = m_hTilemap = m_hPlayerStatistics = INVALID_HANDLE;
+	m_hBubbles = m_hProjectiles = m_hRocket = m_hMainText = m_hTilemap = m_hPlayerStatistics = m_hColliderBtn = m_hRestartBtn =
+		INVALID_HANDLE;
 	m_playerScore = m_projectileHitCount = 0;
 	m_accuracy = 0.0f;
 	m_miscTokens.clear();

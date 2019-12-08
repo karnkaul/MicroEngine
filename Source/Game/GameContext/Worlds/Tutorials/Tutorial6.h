@@ -12,7 +12,7 @@ protected:
 		Time bubbleSpawn = Time::Seconds(5);
 		Time bubbleTTL = Time::Seconds(60);
 	};
-	static const Timers m_defaultTimer;
+	static const Timers s_defaultTimer;
 
 	enum class GameState
 	{
@@ -28,6 +28,8 @@ protected:
 	HObj m_hTilemap = INVALID_HANDLE;
 	HObj m_hMainText = INVALID_HANDLE;
 	HObj m_hPlayerStatistics = INVALID_HANDLE;
+	HObj m_hColliderBtn = INVALID_HANDLE;
+	HObj m_hRestartBtn = INVALID_HANDLE;
 	HRes m_hTile = INVALID_HANDLE;
 
 	u32 m_bubbleCount = 0;
