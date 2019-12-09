@@ -37,6 +37,7 @@ protected:
 	virtual void InteractBegin() = 0;
 	virtual void InteractEnd() = 0;
 
+public:
 	void SetEnabled(bool bEnabled) override;
 
 public:
