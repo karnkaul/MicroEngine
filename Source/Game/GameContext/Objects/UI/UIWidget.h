@@ -37,6 +37,8 @@ protected:
 	virtual void InteractBegin() = 0;
 	virtual void InteractEnd() = 0;
 
+	virtual void SetEnabled(bool bEnabled) override;
+
 public:
 	UIWidget& SetUIText(const TextData& data);
 	OnInteract::Token Register(OnInteract::Callback callback);
