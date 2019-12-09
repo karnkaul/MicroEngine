@@ -70,6 +70,10 @@ void UIWidget::OnCreate()
 				}
 				break;
 			}
+			case State::UnInteractable:
+			{
+				break;
+			}
 			}
 			return m_state == State::Interacting || bBlock;
 		},
@@ -81,12 +85,24 @@ void UIWidget::OnDestroy()
 	GameWorld::Active().DestroyObject(m_hText);
 }
 
-void UIWidget::SetEnabled(bool bEnabled) 
+void UIWidget::SetEnabled(bool bEnabled)
 {
 	GameObject::SetEnabled(bEnabled);
 	if (auto pText = GameWorld::Active().FindObject<GameObject>(m_hText))
 	{
 		pText->SetEnabled(bEnabled);
+	}
+}
+
+void UIWidget::SetInteractable(bool bInteractable)
+{
+	if (bInteractable)
+	{
+		m_state = State::Deselected;
+	}
+	else
+	{
+		m_state = State::UnInteractable;
 	}
 }
 

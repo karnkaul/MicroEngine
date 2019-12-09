@@ -21,6 +21,8 @@ list(APPEND SOURCES
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/UI/UIWidget.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/UI/UIButton.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/UI/UIButton.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/UI/UICheckbox.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/UI/UICheckbox.cpp"
 	
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tutorials/Bubble.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Objects/Tutorials/Bubble.cpp"

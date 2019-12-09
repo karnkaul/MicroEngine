@@ -15,6 +15,7 @@ public:
 		Deselected = 0,
 		Selected,
 		Interacting,
+		UnInteractable
 	};
 
 public:
@@ -39,6 +40,7 @@ protected:
 
 public:
 	void SetEnabled(bool bEnabled) override;
+	void SetInteractable(bool bInteractable);
 
 public:
 	UIWidget& SetUIText(const TextData& data);

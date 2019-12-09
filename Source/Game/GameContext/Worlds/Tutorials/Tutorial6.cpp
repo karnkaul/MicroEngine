@@ -8,6 +8,7 @@
 #include "../../Objects/Tutorials/Projectile.h"
 #include "../../Objects/Tutorials/Rocket.h"
 #include "../../Objects/UI/UIButton.h"
+#include "../../Objects/UI/UICheckbox.h"
 #include "Tutorial6.h"
 
 namespace ME
@@ -128,7 +129,7 @@ void Tutorial6::OnStarting()
 	if (auto pBtn = FindObject<UIButton>(m_hRestartBtn))
 	{
 		pBtn->m_layer = Layers::L1500_UI;
-		pBtn->SetUIText("Restart Level").m_transform.SetPosition(g_pGFX->WorldProjection({0, -1}) + Vector2(0, 300));
+		pBtn->SetUIText("Restart Level").m_transform.SetPosition(g_pGFX->WorldProjection({0, -1}) + Vector2(0, 100));
 		pBtn->SetEnabled(false);
 		m_miscTokens.push_back(pBtn->Register([]() { g_pContext->LoadWorld(CURRENT_WORLD); }));
 		m_uiButtons.push_back(m_hRestartBtn);
@@ -150,6 +151,23 @@ void Tutorial6::OnStarting()
 		pBtn->SetUIText(">>").m_transform.SetPosition(g_pGFX->WorldProjection({1, 1}) + Vector2(-100, -100));
 		m_miscTokens.push_back(pBtn->Register([]() { g_pContext->LoadWorld(NEXT_WORLD); }));
 		m_uiButtons.push_back(hNextButton);
+	}
+
+	auto hTestCheckbox = NewObject<UICheckbox>("TestCheckbox");
+	if (auto pChbx = FindObject<UICheckbox>(hTestCheckbox))
+	{
+		pChbx->m_layer = Layers::L1500_UI;
+		m_miscTokens.push_back(pChbx->Register([this]() {
+			if (m_gameState == GameState::Playing)
+			{
+				OnRocketDestruction();
+			}
+			else
+			{
+				g_pContext->LoadWorld(CURRENT_WORLD);
+			}
+		}));
+		m_uiButtons.push_back(hTestCheckbox);
 	}
 
 	m_bubbleCount = 0;
@@ -329,6 +347,7 @@ void Tutorial6::OnRocketDestruction()
 	if (auto pRestartBtn = FindObject<UIButton>(m_hRestartBtn))
 	{
 		pRestartBtn->SetEnabled(true);
+		pRestartBtn->SetInteractable(false); // Need to remove this in final game. Here for testing
 	}
 }
 
