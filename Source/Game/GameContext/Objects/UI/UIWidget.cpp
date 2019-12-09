@@ -18,6 +18,10 @@ void UIWidget::OnCreate()
 	}
 	RegisterInput(
 		[this](const Input::Frame& frame) -> bool {
+			if (!m_flags[ToIdx(Flags::Enabled)])
+			{
+				return false;
+			}
 			Vector2 mousePos = frame.mouseInput.worldPosition;
 			Rect2 bounds = Bounds();
 			AABBData aabb(bounds.BottomLeft() + m_transform.WorldPosition(), bounds.TopRight() + m_transform.WorldPosition());
@@ -75,6 +79,15 @@ void UIWidget::OnCreate()
 void UIWidget::OnDestroy()
 {
 	GameWorld::Active().DestroyObject(m_hText);
+}
+
+void UIWidget::SetEnabled(bool bEnabled) 
+{
+	GameObject::SetEnabled(bEnabled);
+	if (auto pText = GameWorld::Active().FindObject<GameObject>(m_hText))
+	{
+		pText->SetEnabled(bEnabled);
+	}
 }
 
 UIWidget& UIWidget::SetUIText(const TextData& data)
