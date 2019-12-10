@@ -10,7 +10,7 @@ void UIButton::OnCreate()
 		ShapeData data;
 		data.oOutline = Colour::White;
 		data.oSize = {75, 75};
-		data.oFill = Colour(200, 225, 255);
+		data.oFill = s_defaultColours.deselected;
 		SetShape(data);
 	}
 	{
@@ -24,7 +24,7 @@ void UIButton::Select()
 {
 	{
 		ShapeData data;
-		data.oFill = Colour(150, 175, 200);
+		data.oFill = s_defaultColours.selected;
 		data.oBorder = 3;
 		SetShape(data);
 	}
@@ -39,7 +39,7 @@ void UIButton::Deselect()
 {
 	{
 		ShapeData data;
-		data.oFill = Colour(200, 225, 255);
+		data.oFill = s_defaultColours.deselected;
 		data.oBorder = 0;
 		SetShape(data);
 	}
@@ -54,7 +54,7 @@ void UIButton::InteractBegin()
 {
 	{
 		ShapeData data;
-		data.oFill = Colour(100, 125, 155);
+		data.oFill = s_defaultColours.clicked;
 		data.oBorder = 3;
 		SetShape(data);
 	}

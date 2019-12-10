@@ -6,7 +6,7 @@ namespace ME
 class UICheckbox : public UIWidget
 {
 protected:
-	bool isChecked = false;
+	bool m_bIsChecked = false;
 
 protected:
 	void OnCreate() override;
@@ -18,6 +18,7 @@ protected:
 	void InteractEnd() override;
 
 public:
-	void ToggleChecked();
+	void SetChecked(bool bChecked);
+	bool GetChecked();
 };
 } // namespace ME

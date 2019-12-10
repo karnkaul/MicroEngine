@@ -18,6 +18,14 @@ public:
 		UnInteractable
 	};
 
+	struct Colours
+	{
+		Colour deselected = Colour(200, 225, 255);
+		Colour selected = Colour(150, 175, 200);
+		Colour clicked = Colour(100, 125, 155);
+	};
+	static const Colours s_defaultColours;
+
 public:
 	Vector2 textPad = Vector2(20, 20);
 

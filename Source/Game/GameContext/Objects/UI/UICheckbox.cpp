@@ -6,23 +6,38 @@ void UICheckbox::OnCreate()
 {
 	UIWidget::OnCreate();
 	Instantiate(Primitive::Type::Rectangle);
-	{
-		ShapeData data;
-		data.oOutline = Colour::White;
-		data.oSize = {25, 25};
-		data.oBorder = 3;
-		data.oFill = Colour(200, 225, 255);
-		SetShape(data);
-	}
+	ShapeData data;
+	data.oOutline = Colour::White;
+	data.oSize = {25, 25};
+	data.oBorder = 3;
+	data.oFill = s_defaultColours.deselected;
+	SetShape(data);
 }
 
-void UICheckbox::Select() {}
+void UICheckbox::Select()
+{
+	ShapeData data;
+	data.oFill = s_defaultColours.selected;
+	SetShape(data);
+}
 
-void UICheckbox::Deselect(){}
+void UICheckbox::Deselect()
+{
+	ShapeData data;
+	if (GetChecked())
+	{
+		data.oFill = s_defaultColours.clicked;
+	}
+	else
+	{
+		data.oFill = s_defaultColours.deselected;
+	}
+	SetShape(data);
+}
 
 void UICheckbox::InteractBegin()
 {
-	ToggleChecked();
+	SetChecked(!m_bIsChecked);
 }
 
 void UICheckbox::InteractEnd()
@@ -30,18 +45,23 @@ void UICheckbox::InteractEnd()
 	m_onInteract();
 }
 
-void UICheckbox::ToggleChecked()
+void UICheckbox::SetChecked(bool bChecked)
 {
 	ShapeData data;
-	if (isChecked)
+	if (bChecked)
 	{
-		data.oFill = Colour(200, 225, 255);
+		data.oFill = s_defaultColours.clicked;
 	}
 	else
 	{
-		data.oFill = Colour(100, 125, 155);
+		data.oFill = s_defaultColours.deselected;
 	}
 	SetShape(data);
-	isChecked = !isChecked;
+	m_bIsChecked = bChecked;
+}
+
+bool UICheckbox::GetChecked()
+{
+	return m_bIsChecked;
 }
 } // namespace ME

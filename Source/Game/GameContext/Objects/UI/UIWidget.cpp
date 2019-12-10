@@ -4,6 +4,8 @@
 
 namespace ME
 {
+const UIWidget::Colours UIWidget::s_defaultColours;
+
 void UIWidget::OnCreate()
 {
 	m_hText = GameWorld::Active().NewObject<GameObject>(m_name + "_Text");
