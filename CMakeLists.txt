@@ -12,7 +12,7 @@ set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "")
 
 project(MicroEngine)
 ## Version
-set(BUILD_VERSION "0.0.0.1" CACHE STRING "Build Version" FORCE)
+set(BUILD_VERSION "1.0.0.0" CACHE STRING "Build Version" FORCE)
 set(COMMIT_HASH "[unknown]" CACHE STRING "Commit hash" FORCE)
 execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
 	WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
