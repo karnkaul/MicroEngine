@@ -14,4 +14,4 @@ protected:
 	void Tick(Time dt) override;
 	void OnStopping() override;
 };
-}
+} // namespace ME

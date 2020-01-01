@@ -6,7 +6,7 @@ namespace ME
 {
 class Tutorial5 : public GameWorld
 {
-public: 
+public:
 	s32 m_playerScore = 0;
 
 protected:

@@ -17,6 +17,7 @@ protected:
 	HRes m_hShipTex = INVALID_HANDLE;
 	// A "sprite sheet" (the general term, and also the class) is still one texture (image)!
 	HRes m_hExhaustTex = INVALID_HANDLE;
+	HRes m_hExplodeTex = INVALID_HANDLE;
 	// This rocket instance will ask its owning world to instantiate another GameObject, to
 	// use for the exhaust.
 	HObj m_hExhaust = INVALID_HANDLE;

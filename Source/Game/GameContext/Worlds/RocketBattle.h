@@ -51,4 +51,4 @@ protected:
 private:
 	void SetPlayerStats();
 };
-}
+} // namespace ME

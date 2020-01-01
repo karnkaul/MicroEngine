@@ -4,9 +4,9 @@
 #include "Engine/Physics/ColliderData.h"
 #include "../ObjectPool.h"
 #include "../Objects/Tilemap.h"
-#include "../Objects/Tutorials/Bubble.h"
-#include "../Objects/Tutorials/Projectile.h"
-#include "../Objects/Tutorials/Rocket.h"
+#include "../Objects/Bubble.h"
+#include "../Objects/Projectile.h"
+#include "../Objects/Rocket.h"
 #include "../Objects/UI/UIButton.h"
 #include "../Objects/UI/UICheckbox.h"
 #include "RocketBattle.h"
@@ -77,7 +77,7 @@ void RocketBattleWorld::OnStarting()
 		}
 		else if (m_gameState == GameState::RocketDestroyed)
 		{
-			if (frame.IsReleased(KeyCode::R))
+			if (frame.IsReleased(KeyCode::Space))
 			{
 				g_pContext->LoadWorld(CURRENT_WORLD);
 			}
@@ -169,7 +169,7 @@ void RocketBattleWorld::OnStarting()
 				};
 				auto token = pBubble->GetCollision().AddCircle(onCollision, pBubble->m_diameter);
 				m_miscTokens.push_back(token);
-				pBubble->m_layer = Layers::L0100_DEFAULT - 10;
+				pBubble->m_layer = Layers::L0100_DEFAULT;
 				return pBubble;
 			}
 			return nullptr;
@@ -263,7 +263,6 @@ void RocketBattleWorld::Tick(Time dt)
 		}
 	}
 
-	
 	if (m_gameState == GameState::Playing)
 	{
 		if (m_projectileCount > 0)
@@ -296,7 +295,7 @@ void RocketBattleWorld::OnRocketDestruction()
 
 	if (auto pMainText = FindObject<GameObject>(m_hMainText))
 	{
-		pMainText->SetText("Game Over!\nR: Reload current world\nEsc: Load previous world\nSpace: Load next world");
+		pMainText->SetText("  !Game Over!\n[ Space ] Restart\n[  Esc  ] Exit");
 	}
 
 	if (auto pColliderBtn = FindObject<UIButton>(m_hColliderBtn))

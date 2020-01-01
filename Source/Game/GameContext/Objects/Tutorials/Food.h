@@ -11,7 +11,6 @@ public:
 	Fixed m_diameter = 40;
 
 protected:
-	
 	void OnCreate() override;
 	void Tick(Time dt) override;
 

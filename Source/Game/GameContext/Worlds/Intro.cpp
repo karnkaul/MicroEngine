@@ -40,12 +40,12 @@ void IntroWorld::OnStarting()
 	});
 }
 
-void IntroWorld::Tick(Time dt) 
+void IntroWorld::Tick(Time dt)
 {
 	m_elapsed += dt;
 	if (auto pText = FindObject<GameObject>(m_hSubtitle))
 	{
-		Fixed a = Fixed(m_elapsed.AsSeconds()).Cos();
+		Fixed a = Fixed(m_elapsed.AsSeconds() * 2).Cos();
 		UByte alpha((u8)(a * 255).ToU32());
 		TextData data;
 		data.oFill = {255, 255, 255, alpha};
@@ -59,4 +59,4 @@ void IntroWorld::OnStopping()
 	m_elapsed = Time::Zero;
 	m_hSubtitle = INVALID_HANDLE;
 }
-}
+} // namespace ME
