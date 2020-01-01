@@ -39,8 +39,10 @@ list(APPEND SOURCES
 
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/GameWorld.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/GameWorld.cpp"
-	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/GameWorld.h"
-	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/GameWorld.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Intro.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Intro.cpp"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/RocketBattle.h"
+	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/RocketBattle.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Tutorial0.h"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/Tutorial0.cpp"
 	"${CMAKE_CURRENT_LIST_DIR}/Game/GameContext/Worlds/Tutorials/TutorialKing.h"

@@ -53,7 +53,7 @@ s32 GameLoop::Run(s32 argc, char** argv)
 	// Create a viewport (render window)
 	ViewportData data;
 	data.viewportSize = g_pGFX->GetViewportSize();
-	data.title = "Untitled Game";
+	data.title = "Rocket Battle";
 	uApp->CreateViewport(data);
 	// Construct Worlds and start the game
 	uApp->StartGame();

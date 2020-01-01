@@ -148,7 +148,8 @@ add_dependencies(${PROJECT_NAME}
 	sfml-window
 	sfml-system
 )
-set(EXE_NAME Untitled$<$<NOT:$<CONFIG:Release>>:-$<CONFIG>>${EXE_SUFFIX})
+
+set(EXE_NAME RocketBattle$<$<AND:$<NOT:$<CONFIG:Release>>,$<NOT:$<CONFIG:RelWithDebInfo>>>:-$<CONFIG>>${EXE_SUFFIX})
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME ${EXE_NAME})
 set_target_properties(RunCMake PROPERTIES FOLDER CMake)
 post_target()
