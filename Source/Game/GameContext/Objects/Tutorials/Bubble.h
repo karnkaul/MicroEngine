@@ -23,5 +23,9 @@ protected:
 	void OnCreate() override;
 	void OnRespawn() override;
 	void Tick(Time dt) override;
+
+public:
+	bool OnHit(Collision::Info info);
+	void NextTTL();
 };
 } // namespace ME

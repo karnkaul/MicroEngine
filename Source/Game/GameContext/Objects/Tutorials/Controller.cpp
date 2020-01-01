@@ -2,6 +2,7 @@
 #include "Engine/GData.h"
 #include "Engine/GameServices.h"
 #include "Controller.h"
+#include "Bubble.h"
 
 namespace ME
 {

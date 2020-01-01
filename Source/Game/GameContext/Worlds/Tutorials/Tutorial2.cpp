@@ -80,7 +80,7 @@ void Tutorial2::Tick(Time dt)
 			// It's just easier to use sprintf than mangle about with std::fixed,
 			// to fully control the output format
 			std::array<char, 8> buf;
-			SPRINTF(buf.data(), buf.size(), "%.1f", m_rectElapsed.AsSeconds());
+			std::snprintf(buf.data(), buf.size(), "%.1f", m_rectElapsed.AsSeconds());
 			// Although this whole string could be constructed in one line,
 			// appending disparate chunks like this is much more efficient
 			std::string text = "Rect is ded... (in ";

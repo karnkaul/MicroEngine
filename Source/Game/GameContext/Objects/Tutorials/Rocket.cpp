@@ -73,4 +73,13 @@ void Rocket::Tick(Time dt)
 	// Base class is Chaser, not GameObject!
 	Chaser::Tick(dt);
 }
+
+void Rocket::OnDestroy()
+{
+	if (auto pExhaust = GameWorld::Active().FindObject<GameObject>(m_hExhaust))
+	{
+		// Destroy exhaust too
+		pExhaust->Destroy();
+	}
+}
 } // namespace ME
