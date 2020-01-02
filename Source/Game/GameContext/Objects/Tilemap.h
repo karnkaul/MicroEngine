@@ -15,6 +15,9 @@ protected:
 	void OnDestroy() override;
 
 public:
+	void SetEnabled(bool bEnabled) override;
+
+public:
 	void FillSpace(Vector2 space, Texture& texture);
 	void Clear();
 };

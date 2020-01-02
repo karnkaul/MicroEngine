@@ -25,11 +25,15 @@ protected:
 	HPool m_hProjectiles = INVALID_HANDLE;
 	HObj m_hRocket = INVALID_HANDLE;
 	HObj m_hTilemap = INVALID_HANDLE;
-	HObj m_hMainText = INVALID_HANDLE;
-	HObj m_hPlayerStatistics = INVALID_HANDLE;
 	HObj m_hColliderBtn = INVALID_HANDLE;
 	HObj m_hRestartBtn = INVALID_HANDLE;
 	HRes m_hTile = INVALID_HANDLE;
+
+	HObj m_hLeftTop = INVALID_HANDLE;
+	HObj m_hMidTop = INVALID_HANDLE;
+	HObj m_hRightTop = INVALID_HANDLE;
+	HObj m_hMidCentre0 = INVALID_HANDLE;
+	HObj m_hMidCentre1 = INVALID_HANDLE;
 
 	u32 m_bubbleCount = 0;
 	u32 m_bubblesToSpawn = 0;

@@ -1,4 +1,5 @@
 #include <array>
+#include <sstream>
 #include "GameLoop/GameLoop.h"
 #include "Engine/GameServices.h"
 #include "Engine/Physics/ColliderData.h"
@@ -86,28 +87,51 @@ void RocketBattleWorld::OnStarting()
 	};
 	RegisterInput(std::move(onInput));
 
-	m_hMainText = NewObject<GameObject>("MainText");
-	if (auto pText = FindObject<GameObject>(m_hMainText))
+	m_hLeftTop = NewObject<GameObject>("LeftTop");
+	m_hMidTop = NewObject<GameObject>("MidTop");
+	m_hRightTop = NewObject<GameObject>("RightTop");
+	m_hMidCentre0 = NewObject<GameObject>("MidCentre0");
+	m_hMidCentre1 = NewObject<GameObject>("MidCentre1");
+	auto instantiateText = [&](const HObj& hObj, const Vector2& nPos, const Vector2& offset, u32 size = 24) -> GameObject* {
+		if (auto pObj = FindObject<GameObject>(hObj))
+		{
+			pObj->SetEnabled(true);
+			pObj->Instantiate(Primitive::Type::Text);
+			TextData data;
+			data.oCharSize = size;
+			pObj->SetText(data);
+			pObj->m_transform.SetPosition(g_pGFX->WorldProjection(nPos) + offset);
+			return pObj;
+		}
+		return nullptr;
+	};
+	instantiateText(m_hLeftTop, {-1, 1}, {100, -100});
+	auto pMidTop = instantiateText(m_hMidTop, {0, 1}, {0, -100}, 50);
+	instantiateText(m_hRightTop, {1, 1}, {-100, -100});
+	auto pMidCentre0 = instantiateText(m_hMidCentre0, {0, 0}, {0, 100}, 65);
+	auto pMidCentre1 = instantiateText(m_hMidCentre1, {0, 0}, {0, -100});
+	if (pMidTop)
 	{
-		pText->Instantiate(Primitive::Type::Text);
 		TextData data;
+		data.oFill = Colour::Yellow;
+		pMidTop->SetText(data);
+	}
+	if (pMidCentre0)
+	{
+		TextData data;
+		data.oFill = Colour(250, 30, 30);
+		pMidCentre0->SetText(data);
+	}
+	if (pMidCentre1)
+	{
+		TextData data;
+		data.oFill = Colour::Cyan;
 		data.oText = "\n [  Tab  ] Chase/Rotate"
 					 "\n [ Mouse ] Target"
 					 "\n [  MB0  ] Fire";
-		data.oCharSize = 20;
-		pText->SetText(data);
+		pMidCentre1->SetText(data);
 	}
-	m_hPlayerStatistics = NewObject<GameObject>("PlayerStatistics");
-	if (auto pPlayerStatistics = FindObject<GameObject>(m_hPlayerStatistics))
-	{
-		pPlayerStatistics->SetEnabled(true);
-		pPlayerStatistics->Instantiate(Primitive::Type::Text);
-		TextData data;
-		data.oCharSize = 24;
-		pPlayerStatistics->SetText(data);
-		SetPlayerStats();
-		pPlayerStatistics->m_transform.SetPosition(g_pGFX->WorldProjection({Fixed(0.0f), Fixed(0.6f)}));
-	}
+	SetPlayerStats();
 	m_hRocket = NewObject<Rocket>("Rocket");
 	if (auto pRocket = FindObject<Rocket>(m_hRocket))
 	{
@@ -134,15 +158,6 @@ void RocketBattleWorld::OnStarting()
 		pBtn->SetEnabled(false);
 		m_miscTokens.push_back(pBtn->Register([]() { g_pContext->LoadWorld(CURRENT_WORLD); }));
 		m_uiButtons.push_back(m_hRestartBtn);
-	}
-
-	auto hBackButton = NewObject<UIButton>("BackButton");
-	if (auto pBtn = FindObject<UIButton>(hBackButton))
-	{
-		pBtn->m_layer = Layers::L1500_UI;
-		pBtn->SetUIText("Back").m_transform.SetPosition(g_pGFX->WorldProjection({-1, 1}) + Vector2(100, -100));
-		m_miscTokens.push_back(pBtn->Register(&LoadPreviousWorld));
-		m_uiButtons.push_back(hBackButton);
 	}
 
 	m_bubbleCount = 0;
@@ -240,7 +255,7 @@ void RocketBattleWorld::Tick(Time dt)
 	if (auto pRocket = FindObject<Chaser>(m_hRocket))
 	{
 		SpriteData data;
-		data.oFill = pRocket->m_state == Chaser::State::Chasing ? Colour::Red : Colour::White;
+		data.oFill = pRocket->m_state == Chaser::State::Chasing ? Colour(243, 31, 65) : Colour::White;
 		pRocket->SetSprite(data);
 	}
 	if (auto pBubbles = FindPool(m_hBubbles))
@@ -282,22 +297,22 @@ void RocketBattleWorld::OnRocketDestruction()
 	{
 		pRocket->Destroy();
 	}
-
 	if (auto pBubbles = FindPool(m_hBubbles))
 	{
 		pBubbles->DestroyAll();
 	}
-
 	if (auto pProjectiles = FindPool(m_hProjectiles))
 	{
 		pProjectiles->DestroyAll();
 	}
-
-	if (auto pMainText = FindObject<GameObject>(m_hMainText))
+	if (auto pMidCentre0 = FindObject<GameObject>(m_hMidCentre0))
 	{
-		pMainText->SetText("  !Game Over!\n[ Space ] Restart\n[  Esc  ] Exit");
+		pMidCentre0->SetText("GAME OVER");
 	}
-
+	if (auto pMidCentre1 = FindObject<GameObject>(m_hMidCentre1))
+	{
+		pMidCentre1->SetText("[ Space ] Restart\n[  Esc  ] Exit");
+	}
 	if (auto pColliderBtn = FindObject<UIButton>(m_hColliderBtn))
 	{
 		pColliderBtn->SetEnabled(false);
@@ -306,12 +321,16 @@ void RocketBattleWorld::OnRocketDestruction()
 	{
 		pRestartBtn->SetEnabled(true);
 	}
+	if (auto pTilemap = FindObject<Tilemap>(m_hTilemap))
+	{
+		pTilemap->SetEnabled(false);
+	}
 }
 
 void RocketBattleWorld::OnStopping()
 {
-	m_hBubbles = m_hProjectiles = m_hRocket = m_hMainText = m_hTilemap = m_hPlayerStatistics = m_hColliderBtn = m_hRestartBtn =
-		INVALID_HANDLE;
+	m_hBubbles = m_hProjectiles = m_hRocket = m_hTilemap = m_hColliderBtn = m_hRestartBtn = INVALID_HANDLE;
+	m_hLeftTop = m_hMidTop = m_hRightTop = m_hMidCentre0 = m_hMidCentre1 = INVALID_HANDLE;
 	m_playerScore = m_projectileHitCount = 0;
 	m_accuracy = 0.0f;
 	m_miscTokens.clear();
@@ -320,25 +339,22 @@ void RocketBattleWorld::OnStopping()
 
 void RocketBattleWorld::SetPlayerStats()
 {
-	auto pPlayerStatistics = FindObject<GameObject>(m_hPlayerStatistics);
-	if (pPlayerStatistics)
+	static std::array<char, 8> s_buf;
+	if (auto pLeftTop = FindObject<GameObject>(m_hLeftTop))
 	{
-		std::array<char, 7> buf;
-		std::snprintf(buf.data(), buf.size(), "%3.2f", m_accuracy);
-		std::string text = "Score: ";
-		text += std::to_string(m_playerScore);
-		text += "\nAccuracy: ";
-		text += std::to_string(m_projectileHitCount);
-		text += "/";
-		text += std::to_string(m_projectileCount);
-		text += " (";
-		text += buf.data();
-		text += "%)\n";
-		buf.fill('\0');
-		std::snprintf(buf.data(), buf.size(), "%5.0f", m_playedTime.AsSeconds());
-		text += buf.data();
-		text += " s\n";
-		pPlayerStatistics->SetText(text);
+		std::snprintf(s_buf.data(), s_buf.size(), "%3.2f", m_accuracy);
+		std::stringstream text;
+		text << m_projectileHitCount << "/" << m_projectileCount << "\n" << s_buf.data() << "%";
+		pLeftTop->SetText(text.str());
+	}
+	if (auto pMidTop = FindObject<GameObject>(m_hMidTop))
+	{
+		pMidTop->SetText(std::to_string(m_playerScore));
+	}
+	if (auto pRightTop = FindObject<GameObject>(m_hRightTop))
+	{
+		std::snprintf(s_buf.data(), s_buf.size(), "%us", (u32)m_playedTime.AsSeconds());
+		pRightTop->SetText(std::string(s_buf.data()));
 	}
 }
 } // namespace ME
