@@ -20,6 +20,16 @@ void Tilemap::OnDestroy()
 	Clear();
 }
 
+void Tilemap::SetEnabled(bool bEnabled)
+{
+	Core::RemoveIf<HPrim>(m_prims, [](auto hPrim) { return g_pRenderer->Find(hPrim) == nullptr; });
+	for (auto hPrim : m_prims)
+	{
+		g_pRenderer->Find(hPrim)->m_bEnabled = bEnabled;
+	}
+	GameObject::SetEnabled(bEnabled);
+}
+
 void Tilemap::OnDespawn()
 {
 	Core::RemoveIf<HPrim>(m_prims, [](auto hPrim) { return g_pRenderer->Find(hPrim) == nullptr; });

@@ -13,7 +13,6 @@ public:
 	};
 
 private:
-	
 	std::vector<Token> m_callbackTokens;
 	HObj m_hMainText = INVALID_HANDLE;
 	HObj m_hPlayer = INVALID_HANDLE;

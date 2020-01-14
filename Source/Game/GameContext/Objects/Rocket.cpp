@@ -1,6 +1,7 @@
 #include "Engine/GameServices.h"
 #include "Rocket.h"
 #include "Bubble.h"
+#include "AnimatedSprite.h"
 
 namespace ME
 {
@@ -20,6 +21,7 @@ void Rocket::OnCreate()
 		SetSprite(data);
 		// Check out this texture: you'll notice it's like a flip-book
 		m_hExhaustTex = g_pResources->Load<Texture>("Textures/Exhaust_128x128_2x4.png");
+		m_hExplodeTex = g_pResources->Load<Texture>("Textures/Explode_512x512_5x5.png");
 		if (auto pExhaustTex = g_pResources->Find<Texture>(m_hExhaustTex))
 		{
 			// Spritesheet::Autobuild takes in a texture (to obtain its size), and the number of columns and rows
@@ -76,6 +78,25 @@ void Rocket::Tick(Time dt)
 
 void Rocket::OnDestroy()
 {
+	if (auto pExplodeTex = g_pResources->Find<Texture>(m_hExplodeTex))
+	{
+		auto hExplosion = GameWorld::Active().NewObject<AnimatedSprite>("Rocket-Explosion");
+		if (auto pExplosion = GameWorld::Active().FindObject<AnimatedSprite>(hExplosion))
+		{
+			pExplosion->Instantiate(Primitive::Type::Sprite);
+			Spritesheet explodeSheet;
+			explodeSheet.m_period = Time::Seconds(0.5f);
+			explodeSheet.Autobuild(*pExplodeTex, 5, 5);
+			SpriteData data;
+			data.pTexture = pExplodeTex;
+			data.oTexCoords = explodeSheet.m_texCoords[explodeSheet.m_index];
+			pExplosion->SetSprite(data);
+			pExplosion->m_sheet = std::move(explodeSheet);
+			pExplosion->m_bAnimate = pExplosion->m_bSelfDestruct = true;
+			pExplosion->m_transform.SetPosition(m_transform.WorldPosition());
+			pExplosion->SetEnabled(true);
+		}
+	}
 	if (auto pExhaust = GameWorld::Active().FindObject<GameObject>(m_hExhaust))
 	{
 		// Destroy exhaust too

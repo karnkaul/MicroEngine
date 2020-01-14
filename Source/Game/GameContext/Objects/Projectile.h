@@ -1,6 +1,6 @@
 #pragma once
-#include "../GameObject.h"
-#include "../Collision.h"
+#include "GameObject.h"
+#include "Collision.h"
 
 namespace ME
 {

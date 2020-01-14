@@ -1,6 +1,6 @@
 #include "TutorialKing.h"
 #include "Engine/GameServices.h"
-#include "../../Objects/Tutorials/Controller.h"
+#include "../../Objects/Controller.h"
 #include "../../Objects/Tutorials/Food.h"
 
 namespace ME

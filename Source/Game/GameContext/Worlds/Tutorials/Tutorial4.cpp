@@ -1,5 +1,5 @@
 #include "Engine/GameServices.h"
-#include "../../Objects/Tutorials/Controller.h"
+#include "../../Objects/Controller.h"
 #include "Tutorial4.h"
 
 namespace ME

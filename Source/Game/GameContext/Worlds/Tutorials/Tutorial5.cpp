@@ -2,10 +2,10 @@
 #include "Engine/Physics/ColliderData.h"
 #include "../../ObjectPool.h"	   // Check out this class first
 #include "../../Objects/Tilemap.h" // Check out this class first
-#include "../../Objects/Tutorials/Bubble.h"
-#include "../../Objects/Tutorials/Projectile.h" // Check out this class first
-#include "../../Objects/Tutorials/Rocket.h"		// Check out this class first
-#include "../../Objects/UI/UIButton.h"			// Check out this class first
+#include "../../Objects/Bubble.h"
+#include "../../Objects/Projectile.h"  // Check out this class first
+#include "../../Objects/Rocket.h"	   // Check out this class first
+#include "../../Objects/UI/UIButton.h" // Check out this class first
 #include "Tutorial5.h"
 
 namespace ME

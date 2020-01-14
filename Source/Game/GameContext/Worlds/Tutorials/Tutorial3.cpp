@@ -1,6 +1,6 @@
 #include "Engine/GameServices.h"
 #include "Tutorial3.h"
-#include "../../Objects/Tutorials/Bubble.h" // Check out this class first
+#include "../../Objects/Bubble.h" // Check out this class first
 
 namespace ME
 {

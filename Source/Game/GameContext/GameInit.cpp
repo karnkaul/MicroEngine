@@ -1,14 +1,7 @@
 #include "GameInit.h"
 // Include all GameWorld headers
-#include "Worlds/Tutorials/Tutorial0.h"
-#include "Worlds/Tutorials/TutorialKing.h"
-#include "Worlds/Tutorials/Tutorial1.h"
-#include "Worlds/Tutorials/Tutorial2.h"
-#include "Worlds/Tutorials/Tutorial3.h"
-#include "Worlds/Tutorials/Tutorial4.h"
-#include "Worlds/Tutorials/Tutorial5.h"
-#include "Worlds/Tutorials/Tutorial6.h"
-#include "Worlds/Tutorials/Temp.h"
+#include "Worlds/Intro.h"
+#include "Worlds/RocketBattle.h"
 
 namespace ME
 {
@@ -16,7 +9,7 @@ void GameInit::CreateWorlds()
 {
 	// Construct all GameWorlds in use. While the order is irrelevant in code,
 	// for readability, keep it in chronological order (of development).
-	ConstructWorld<Tutorial6>("Tutorial6");
-	ConstructWorld<Temp>("Temp");
+	ConstructWorld<IntroWorld>("Intro");
+	ConstructWorld<RocketBattleWorld>("RocketBattle");
 }
 } // namespace ME

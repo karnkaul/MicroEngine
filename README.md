@@ -1,4 +1,4 @@
-## Untitled Game
+## Rocket Battle
 
 ![](https://github.com/karnkaul/MicroEngine/workflows/CI/badge.svg)
 ![](https://github.com/karnkaul/MicroEngine/workflows/CI_dev/badge.svg)

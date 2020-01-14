@@ -1,5 +1,5 @@
 #include "Food.h"
-#include "Controller.h"
+#include "../Controller.h"
 
 namespace ME
 {
@@ -21,7 +21,7 @@ void Food::OnHit(Collision::Info info)
 	}
 }
 
-void Food::Tick(Time dt) 
+void Food::Tick(Time dt)
 {
 	GameObject::Tick(dt);
 }
